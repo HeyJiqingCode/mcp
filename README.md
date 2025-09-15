@@ -14,7 +14,6 @@ This project contains three MCP servers, each focused on specific AI functional 
 
 ```
 mcp/
-├── README.md                    # This file
 ├── ai-foundry-agent/           # Azure AI Foundry Agent MCP Server
 │   ├── README.md
 │   ├── Dockerfile
@@ -27,13 +26,14 @@ mcp/
 │   ├── requirements.txt
 │   ├── mcp.json
 │   └── src/
-└── deep-research-agent/        # Deep Research Agent MCP Server
-    ├── README.md
-    ├── Dockerfile
-    ├── LICENSE
-    ├── DifyAgent.yml
-    ├── mcp.json
-    └── src/
+├── deep-research-agent/        # Deep Research Agent MCP Server
+│   ├── README.md
+│   ├── Dockerfile
+│   ├── LICENSE
+│   ├── DifyAgent.yml
+│   ├── mcp.json
+│   └── src/
+└── README.md                    # This file
 ```
 
 ## MCP Server Overview
