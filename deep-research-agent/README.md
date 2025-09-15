@@ -22,7 +22,7 @@ git clone https://github.com/HeyJiqingCode/mcp.git
 
 **2/ Install dependencies**:
 ```bash
-cd deep-research-agent/
+cd mcp/deep-research-agent/
 python -m venv .venv
 source .venv/bin/activate
 pip install -r src/mcp/requirements.txt
@@ -76,7 +76,7 @@ git clone https://github.com/HeyJiqingCode/mcp.git
 
 **2/ Build Docker Image**
 ```bash
-cd deep-research-agent/
+cd mcp/deep-research-agent/
 docker build -t deep-research-mcp:0.0.1 -f Dockerfile .
 ```
 

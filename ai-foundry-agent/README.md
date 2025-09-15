@@ -22,7 +22,7 @@ git clone https://github.com/HeyJiqingCode/mcp.git
 
 **2/ Install dependencies**:
 ```bash
-cd ai-foundry-agent/
+cd mcp/ai-foundry-agent/
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -76,7 +76,7 @@ git clone https://github.com/HeyJiqingCode/mcp.git
 
 **2/ Build Docker Image**
 ```bash
-cd ai-foundry-agent/
+cd mcp/ai-foundry-agent/
 docker build -t azure-ai-foundry-agent-mcp:1.0.0 -f Dockerfile .
 ```
 

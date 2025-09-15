@@ -21,7 +21,7 @@ git clone https://github.com/HeyJiqingCode/mcp.git
 
 **2/ Install dependencies**:
 ```bash
-cd bing-search-agent/
+cd mcp/bing-search-agent/
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -78,7 +78,7 @@ git clone https://github.com/HeyJiqingCode/mcp.git
 
 **2/ Build Docker Image**
 ```bash
-cd bing-search-agent/
+cd mcp/bing-search-agent/
 docker build -t bing-search-mcp:1.0.0 -f Dockerfile .
 ```
 
