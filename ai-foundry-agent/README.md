@@ -57,7 +57,7 @@ python src/mcp/server.py --transport streamable-http
   "mcpServers": {
     "AIFoundryAgent": {
       "type": "streamableHttp",
-      "url": "http://127.0.0.1:8000/mcp/",
+      "url": "http://127.0.0.1:8000/mcp",
       "headers": {
          "Content-Type": "application/json",
          "Authorization": "Bearer your_token"
@@ -96,7 +96,7 @@ docker run -itd -p 8000:8000 --name AIFoundryAgent \
   "mcpServers": {
     "AIFoundryAgent": {
       "type": "streamableHttp",
-      "url": "http://127.0.0.1:8000/mcp/",
+      "url": "http://127.0.0.1:8000/mcp",
       "headers": {
          "Content-Type": "application/json",
          "Authorization": "Bearer your_token"
