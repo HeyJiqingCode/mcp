@@ -80,7 +80,7 @@ docker build -t azure-ai-search-mcp:1.0.0 -f Dockerfile .
 
 **3/ Run the container**:
 ```bash
-docker run -itd -p 8000:8000 --name AIFoundryAgent \
+docker run -itd -p 8000:8000 --name AzureAISearch \
   -e AZURE_SEARCH_ENDPOINT=https://your-search-service.search.windows.net \
   -e AZURE_SEARCH_QUERY_KEY=your-query-key \
   azure-ai-search-mcp:1.0.0
