@@ -317,6 +317,10 @@ async def semantic_search(
     include_vectors: bool = False,
     api_key: Optional[str] = None,
     endpoint: Optional[str] = None,
+    query_caption: Optional[str] = "extractive",
+    query_answer: Optional[str] = None,
+    query_answer_count: Optional[int] = None,
+    query_answer_threshold: Optional[float] = None,
 ) -> Dict[str, Any]:
     """Execute semantic ranking against a configured index.
 
@@ -337,6 +341,10 @@ async def semantic_search(
         Defaults to False to reduce payload size.
     api_key / endpoint: Optional[str]
         Override default connection information.
+    query_caption / query_answer: Optional[str]
+        Semantic caption and answer modes (`"extractive"`, `"summary"`, etc.).
+    query_answer_count / query_answer_threshold: Optional
+        Controls for the number of answers and confidence threshold.
 
     Returns
     -------
@@ -358,6 +366,14 @@ async def semantic_search(
         search_kwargs["select"] = _comma_split(select)
     if filter:
         search_kwargs["filter"] = filter
+    if query_caption:
+        search_kwargs["query_caption"] = query_caption
+    if query_answer:
+        search_kwargs["query_answer"] = query_answer
+        if query_answer_count is not None:
+            search_kwargs["query_answer_count"] = query_answer_count
+        if query_answer_threshold is not None:
+            search_kwargs["query_answer_threshold"] = query_answer_threshold
 
     result = await _execute_search(
         endpoint=resolved_endpoint,
