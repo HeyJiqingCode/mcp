@@ -9,6 +9,7 @@ A Model Context Protocol (MCP) server that exposes Azure AI Search capabilities 
 - Combine keyword and vector retrieval (hybrid search).
 - Apply semantic reranking on hybrid results for richer answers.
 - Support integrated vectorization when your index has an attached vectorizer (no manual embeddings required).
+- Tools pick up `AZURE_SEARCH_ENDPOINT` and `AZURE_SEARCH_QUERY_KEY` from the runtime environment, so you only need to pass endpoint or api_key when you want to override those defaults for a specific call. The `_resolve_endpoint` / `_resolve_key` helpers enforce that fallback chain.
 
 ## Quick Start
 
