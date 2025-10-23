@@ -38,7 +38,6 @@ mcp/
 │   ├── README.md
 │   ├── Dockerfile
 │   ├── LICENSE
-│   ├── DifyAgent.yml
 │   ├── mcp.json
 │   └── src/
 └── README.md                    # This file
