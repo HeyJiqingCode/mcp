@@ -19,17 +19,20 @@ mcp/
 │   ├── README.md
 │   ├── Dockerfile
 │   ├── requirements.txt
+│   ├── LICENSE
 │   ├── mcp.json
 │   └── src/
 ├── bing-search-agent/          # Bing Search Agent MCP Server
 │   ├── README.md
 │   ├── Dockerfile
 │   ├── requirements.txt
+│   ├── LICENSE
 │   ├── mcp.json
 │   └── src/
 ├── deep-research-agent/        # Deep Research Agent MCP Server
 │   ├── README.md
 │   ├── Dockerfile
+│   ├── requirements.txt
 │   ├── LICENSE
 │   ├── DifyAgent.yml
 │   ├── mcp.json
@@ -37,9 +40,11 @@ mcp/
 ├── ai-search/                  # Azure AI Search MCP Server
 │   ├── README.md
 │   ├── Dockerfile
+│   ├── requirements.txt
 │   ├── LICENSE
 │   ├── mcp.json
 │   └── src/
+├── LICENSE
 └── README.md                    # This file
 ```
 
