@@ -90,6 +90,7 @@ Provides multi-mode retrieval over Azure AI Search, covering keyword, semantic, 
 - Vector similarity powered by built-in vectorizers (no manual embedding management)
 - Hybrid retrieval that fuses lexical and vector results, plus semantic hybrid mode
 - Consistent response shaping (paging, select, filter) across all tool endpoints
+- Tools pick up `AZURE_SEARCH_ENDPOINT` and `AZURE_SEARCH_QUERY_KEY` from the runtime environment, so you only need to pass endpoint or api_key when you want to override those defaults for a specific call. The `_resolve_endpoint` / `_resolve_key` helpers enforce that fallback chain.
 
 **Detailed**: Please refer to [Azure AI Search README](./ai-search/README.md)
 
