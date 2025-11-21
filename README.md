@@ -9,7 +9,7 @@ This project contains four MCP servers, each focused on specific AI functional a
 - **[Azure AI Foundry Agent](./ai-foundry-agent/)** - Azure AI Foundry agent management and interaction
 - **[Bing Search Agent](./bing-search-agent/)** - Intelligent web search and information retrieval
 - **[Deep Research Agent](./deep-research-agent/)** - Deep research and comprehensive analysis
-- **[Azure AI Search](./ai-search/)** - Multi-mode retrieval over Azure AI Search (keyword, semantic, vector, hybrid and agentic retrieval)
+- **[Azure AI Search](./ai-search/)** - Multi-mode retrieval over Azure AI Search (keyword, semantic, vector, hybrid and the preview agentic retrieval)
 
 ## Project Structure
 
