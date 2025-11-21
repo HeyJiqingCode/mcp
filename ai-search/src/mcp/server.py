@@ -1,11 +1,14 @@
 import asyncio
 import io
+import json
 import logging
 import os
 import sys
 from argparse import ArgumentParser
 from typing import Any, Dict, List, Optional
+from urllib.parse import quote
 
+import aiohttp
 from azure.core.credentials import AzureKeyCredential
 from azure.search.documents.aio import SearchClient
 from azure.search.documents.models import VectorizableTextQuery
@@ -46,8 +49,10 @@ mcp = FastMCP("Azure AI Search MCP Server")
 
 AZURE_SEARCH_ENDPOINT = os.getenv("AZURE_SEARCH_ENDPOINT")
 DEFAULT_QUERY_KEY = os.getenv("AZURE_SEARCH_QUERY_KEY")
+DEFAULT_ADMIN_KEY = os.getenv("AZURE_SEARCH_ADMIN_KEY")
 HTTP_TIMEOUT_SECONDS = int(os.getenv("AZURE_SEARCH_TIMEOUT", "30"))
 VECTOR_FIELD_SUFFIXES = ("_vector", "_vectors", "_embedding", "_embeddings")
+AGENTIC_API_VERSION = "2025-11-01-preview"
 
 
 def _resolve_endpoint(endpoint: Optional[str] = None) -> str:
@@ -67,49 +72,127 @@ def _resolve_key(explicit_key: Optional[str]) -> str:
     raise RuntimeError("Azure Search API key is not configured. Provide api_key or set AZURE_SEARCH_QUERY_KEY.")
 
 
+def _resolve_admin_key(explicit_key: Optional[str]) -> str:
+    if explicit_key:
+        return explicit_key
+    if DEFAULT_ADMIN_KEY:
+        return DEFAULT_ADMIN_KEY
+    raise RuntimeError(
+        "Agentic retrieval requires an admin key. Provide api_key or set AZURE_SEARCH_ADMIN_KEY."
+    )
+
+
 async def _maybe_await(result: Any) -> Any:
     if asyncio.iscoroutine(result):
         return await result
     return result
 
 
+def _build_messages_from_query(query: str) -> List[Dict[str, Any]]:
+    return [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": query,
+                }
+            ],
+        }
+    ]
+
+
 def _normalize_document(document: Dict[str, Any]) -> Dict[str, Any]:
     def _default(obj: Any) -> Any:
+        # Handle datetime objects
         if hasattr(obj, "isoformat"):
             try:
                 return obj.isoformat()
             except Exception:  # pragma: no cover - fallback path
                 return str(obj)
+        # Handle objects with as_dict method
         if hasattr(obj, "as_dict"):
             try:
-                return obj.as_dict()
+                result = obj.as_dict()
+                # Recursively normalize the dict result
+                if isinstance(result, dict):
+                    return {k: _default(v) for k, v in result.items()}
+                return result
             except Exception:  # pragma: no cover - fallback path
                 return str(obj)
+        # Handle objects with __dict__
         if hasattr(obj, "__dict__") and obj.__dict__:
             try:
                 return {key: _default(value) for key, value in obj.__dict__.items() if not key.startswith("_")}
             except Exception:  # pragma: no cover
                 return str(obj)
-        return obj
+        # Handle basic types
+        if isinstance(obj, (str, int, float, bool, type(None))):
+            return obj
+        # Handle lists
+        if isinstance(obj, list):
+            return [_default(item) for item in obj]
+        # Handle dicts
+        if isinstance(obj, dict):
+            return {k: _default(v) for k, v in obj.items()}
+        # Fallback: convert to string
+        return str(obj)
 
     serialized: Dict[str, Any] = {}
     for key, value in document.items():
-        if isinstance(value, list):
-            serialized[key] = [_default(item) for item in value]
-        else:
-            serialized[key] = _default(value)
+        serialized[key] = _default(value)
     return serialized
 
 
-def _strip_vector_fields_from_results(results: List[Dict[str, Any]]) -> None:
+def _serialize_highlights(value: Any) -> Optional[str]:
+    if value is None:
+        return None
+    return value if isinstance(value, str) else str(value)
+
+
+def _serialize_facet_entry(item: Any) -> Dict[str, Any]:
+    if hasattr(item, "value") or hasattr(item, "count"):
+        return {
+            "value": getattr(item, "value", None),
+            "count": getattr(item, "count", None),
+        }
+    if isinstance(item, dict):
+        return {
+            "value": item.get("value"),
+            "count": item.get("count"),
+        }
+    return {"value": str(item), "count": None}
+
+
+def _serialize_facets(raw: Any) -> Optional[Dict[str, Any]]:
+    if isinstance(raw, dict):
+        facets: Dict[str, Any] = {}
+        for facet_key, facet_values in raw.items():
+            if isinstance(facet_values, list):
+                facets[facet_key] = [_serialize_facet_entry(item) for item in facet_values]
+            else:
+                facets[facet_key] = str(facet_values)
+        return facets
+    return str(raw) if raw else None
+
+
+def _strip_vector_fields_from_documents(documents: List[Dict[str, Any]]) -> None:
     def _is_vector_field(field_name: str) -> bool:
         lower_name = field_name.lower()
         return any(lower_name.endswith(suffix) for suffix in VECTOR_FIELD_SUFFIXES)
 
-    for document in results:
+    for document in documents:
         vector_keys = [key for key in document.keys() if isinstance(key, str) and _is_vector_field(key)]
         for key in vector_keys:
             document.pop(key, None)
+
+
+def _postprocess_documents(result: Dict[str, Any], *, include_vectors: bool) -> Dict[str, Any]:
+    if not include_vectors:
+        documents = result.get("documents")
+        if isinstance(documents, list):
+            _strip_vector_fields_from_documents(documents)
+    return result
 
 
 async def _collect_results(result_iterator: Any) -> Dict[str, Any]:
@@ -133,25 +216,27 @@ async def _collect_results(result_iterator: Any) -> Dict[str, Any]:
             if target == "count":
                 count = raw
             elif target == "answers":
-                answers = [
-                    {
-                        "key": getattr(answer, "key", None),
-                        "text": getattr(answer, "text", None),
-                        "highlights": getattr(answer, "highlights", None),
-                        "score": getattr(answer, "score", None),
-                    }
-                    for answer in raw
-                ]
+                answers = []
+                for answer in raw:
+                    answers.append(
+                        {
+                            "key": str(getattr(answer, "key", "")) if getattr(answer, "key", None) is not None else None,
+                            "text": str(getattr(answer, "text", "")) if getattr(answer, "text", None) is not None else None,
+                            "score": float(getattr(answer, "score", 0.0)) if getattr(answer, "score", None) is not None else None,
+                            "highlights": _serialize_highlights(getattr(answer, "highlights", None)),
+                        }
+                    )
             elif target == "facets":
-                facets = raw
+                facets = _serialize_facets(raw)
             elif target == "captions":
-                captions = [
-                    {
-                        "text": getattr(caption, "text", None),
-                        "highlights": getattr(caption, "highlights", None),
-                    }
-                    for caption in raw
-                ]
+                captions = []
+                for caption in raw:
+                    captions.append(
+                        {
+                            "text": str(getattr(caption, "text", "")) if getattr(caption, "text", None) is not None else None,
+                            "highlights": _serialize_highlights(getattr(caption, "highlights", None)),
+                        }
+                    )
 
     continuation_token = None
     if hasattr(result_iterator, "get_continuation_token"):
@@ -160,14 +245,21 @@ async def _collect_results(result_iterator: Any) -> Dict[str, Any]:
         except Exception:  # pragma: no cover - defensive
             continuation_token = None
 
-    return {
-        "count": count,
-        "results": items,
-        "answers": answers,
-        "facets": facets,
-        "captions": captions,
-        "continuation_token": continuation_token,
-    }
+    # Build response dict, only include non-None values
+    response = {"documents": items}
+
+    if count is not None:
+        response["count"] = count
+    if answers is not None:
+        response["answers"] = answers
+    if facets is not None:
+        response["facets"] = facets
+    if captions is not None:
+        response["captions"] = captions
+    if continuation_token is not None:
+        response["continuation_token"] = continuation_token
+
+    return response
 
 
 async def _create_search_client(
@@ -271,7 +363,7 @@ async def simple_search(
     Returns
     -------
     dict
-        Contains `results`, `count`, optional `facets`, and `continuation_token`.
+        Response containing `documents`, `count`, optional `facets`, and `continuation_token`.
     """
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_key(api_key)
@@ -297,9 +389,7 @@ async def simple_search(
         search_text=query,
         search_kwargs=search_kwargs,
     )
-    if not include_vectors and "results" in result:
-        _strip_vector_fields_from_results(result["results"])
-    return result
+    return _postprocess_documents(result, include_vectors=include_vectors)
 
 
 @mcp.tool(
@@ -349,7 +439,7 @@ async def semantic_search(
     Returns
     -------
     dict
-        Includes `results`, `count`, optional `answers`, `captions`, and continuation metadata.
+        Response containing `documents`, `count`, optional `answers`, `captions`, and continuation metadata.
     """
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_key(api_key)
@@ -382,9 +472,7 @@ async def semantic_search(
         search_text=query,
         search_kwargs=search_kwargs,
     )
-    if not include_vectors and "results" in result:
-        _strip_vector_fields_from_results(result["results"])
-    return result
+    return _postprocess_documents(result, include_vectors=include_vectors)
 
 
 @mcp.tool(
@@ -431,7 +519,7 @@ async def vector_search(
     Returns
     -------
     dict
-        Includes `results`, `count`, and `continuation_token`.
+        Response containing `documents`, `count`, and `continuation_token`.
     """
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_key(api_key)
@@ -461,9 +549,7 @@ async def vector_search(
         search_text=None,
         search_kwargs=search_kwargs,
     )
-    if not include_vectors and "results" in result:
-        _strip_vector_fields_from_results(result["results"])
-    return result
+    return _postprocess_documents(result, include_vectors=include_vectors)
 
 
 @mcp.tool(
@@ -513,7 +599,7 @@ async def hybrid_search(
     Returns
     -------
     dict
-        Contains merged `results`, `count`, and continuation metadata.
+        Response containing merged `documents`, `count`, and continuation metadata.
     """
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_key(api_key)
@@ -545,9 +631,7 @@ async def hybrid_search(
         search_text=query,
         search_kwargs=search_kwargs,
     )
-    if not include_vectors and "results" in result:
-        _strip_vector_fields_from_results(result["results"])
-    return result
+    return _postprocess_documents(result, include_vectors=include_vectors)
 
 
 @mcp.tool(
@@ -608,7 +692,7 @@ async def semantic_hybrid_search(
     Returns
     -------
     dict
-        Includes `results`, `count`, optional `answers`, `captions`, and continuation metadata.
+        Response containing `documents`, `count`, optional `answers`, `captions`, and continuation metadata.
     """
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_key(api_key)
@@ -650,9 +734,123 @@ async def semantic_hybrid_search(
         search_text=query,
         search_kwargs=search_kwargs,
     )
-    if not include_vectors and "results" in result:
-        _strip_vector_fields_from_results(result["results"])
-    return result
+    return _postprocess_documents(result, include_vectors=include_vectors)
+
+
+@mcp.tool(
+    name="agentic_retrieval",
+    description="Run the Azure AI Search agentic retrieval pipeline against a knowledge base (2025-11-01-preview).",
+)
+async def agentic_retrieval(
+    knowledge_base_name: str,
+    query: str,
+    intent_query: Optional[str] = None,
+    reasoning_effort: Optional[str] = None,
+    output_mode: str = "answerSynthesis",
+    include_activity: bool = True,
+    max_runtime_seconds: Optional[int] = None,
+    max_output_size: Optional[int] = None,
+    knowledge_source_overrides: Optional[str] = None,
+    knowledge_source_name: Optional[str] = None,
+    knowledge_source_kind: str = "searchIndex",
+    knowledge_source_filter: Optional[str] = None,
+    include_references: Optional[bool] = None,
+    include_reference_source_data: Optional[bool] = None,
+    always_query_source: Optional[bool] = None,
+    reranker_threshold: Optional[float] = None,
+    api_key: Optional[str] = None,
+    endpoint: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Invoke the knowledge base retrieve action.
+
+    This wraps the REST API documented at
+    https://learn.microsoft.com/en-us/rest/api/searchservice/knowledge-retrieval/retrieve?view=rest-searchservice-2025-11-01-preview
+    so you can execute the multi-step agentic pipeline (query planning, multi-source retrieval,
+    optional answer synthesis) from an MCP workflow.
+    Notes
+    -----
+    * Requires an **admin** API key (query keys are rejected by the backend).
+    * `query` is mandatory; optionally provide `intent_query` when you want to bypass model query planning.
+    """
+
+    resolved_endpoint = _resolve_endpoint(endpoint)
+    key = _resolve_admin_key(api_key)
+
+    request_body: Dict[str, Any] = {
+        "includeActivity": include_activity,
+        "outputMode": output_mode,
+    }
+
+    if not query:
+        raise ValueError("`query` must be provided for agentic retrieval requests.")
+    request_body["messages"] = _build_messages_from_query(query)
+
+    if intent_query:
+        request_body.setdefault("intents", []).append({"type": "semantic", "search": intent_query})
+
+    if reasoning_effort:
+        effort_kind = reasoning_effort.lower()
+        if effort_kind not in {"minimal", "low", "medium"}:
+            raise ValueError("reasoning_effort must be one of: minimal, low, medium")
+        request_body["retrievalReasoningEffort"] = {"kind": effort_kind}
+
+    if max_runtime_seconds is not None:
+        request_body["maxRuntimeInSeconds"] = max_runtime_seconds
+    if max_output_size is not None:
+        request_body["maxOutputSize"] = max_output_size
+
+    if knowledge_source_overrides:
+        try:
+            overrides = json.loads(knowledge_source_overrides)
+        except json.JSONDecodeError as exc:
+            raise ValueError("knowledge_source_overrides must be valid JSON") from exc
+        if isinstance(overrides, dict):
+            overrides = [overrides]
+        if not isinstance(overrides, list):
+            raise ValueError("knowledge_source_overrides must deserialize to a list or object")
+        request_body["knowledgeSourceParams"] = overrides
+    elif knowledge_source_name:
+        source: Dict[str, Any] = {
+            "knowledgeSourceName": knowledge_source_name,
+            "kind": knowledge_source_kind,
+        }
+        if knowledge_source_filter:
+            if knowledge_source_kind == "remoteSharePoint":
+                source["filterExpressionAddOn"] = knowledge_source_filter
+            else:
+                source["filterAddOn"] = knowledge_source_filter
+        if include_references is not None:
+            source["includeReferences"] = include_references
+        if include_reference_source_data is not None:
+            source["includeReferenceSourceData"] = include_reference_source_data
+        if always_query_source is not None:
+            source["alwaysQuerySource"] = always_query_source
+        if reranker_threshold is not None:
+            source["rerankerThreshold"] = reranker_threshold
+        request_body["knowledgeSourceParams"] = [source]
+
+    url = (
+        f"{resolved_endpoint}/knowledgebases('{quote(knowledge_base_name, safe='')}')/retrieve"
+        f"?api-version={AGENTIC_API_VERSION}"
+    )
+
+    timeout_budget = max(HTTP_TIMEOUT_SECONDS, (max_runtime_seconds or 0) + 5)
+    headers = {
+        "api-key": key,
+        "Content-Type": "application/json",
+    }
+
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=timeout_budget)) as session:
+        async with session.post(url, headers=headers, json=request_body) as resp:
+            text = await resp.text()
+            if resp.status not in (200, 206):
+                raise RuntimeError(f"Agentic retrieval failed ({resp.status}): {text}")
+            try:
+                data = json.loads(text)
+            except json.JSONDecodeError:
+                data = {"raw": text}
+            data["_status_code"] = resp.status
+            return data
 
 
 def main() -> None:

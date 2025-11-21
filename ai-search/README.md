@@ -1,6 +1,6 @@
 # Azure AI Search MCP Server
 
-A Model Context Protocol (MCP) server that exposes Azure AI Search capabilities across multiple retrieval modes (keyword, semantic, vector, and hybrid).
+A Model Context Protocol (MCP) server that exposes Azure AI Search capabilities across multiple retrieval modes (keyword, semantic, vector, hybrid, plus the new agentic retrieval preview APIs).
 
 ## Features
 - Execute keyword searches using simple syntax.
@@ -8,8 +8,9 @@ A Model Context Protocol (MCP) server that exposes Azure AI Search capabilities 
 - Perform pure vector similarity search.
 - Combine keyword and vector retrieval (hybrid search).
 - Apply semantic reranking on hybrid results for richer answers.
+- Call Azure AI Search agentic retrieval (knowledge base multi-query pipeline, REST `2025-11-01-preview`).
 - Support integrated vectorization when your index has an attached vectorizer (no manual embeddings required).
-- Tools pick up `AZURE_SEARCH_ENDPOINT` and `AZURE_SEARCH_QUERY_KEY` from the runtime environment, so you only need to pass endpoint or api_key when you want to override those defaults for a specific call. The `_resolve_endpoint` / `_resolve_key` helpers enforce that fallback chain.
+- Tools read `AZURE_SEARCH_ENDPOINT` and key env vars at runtime. Traditional search tools fall back to `AZURE_SEARCH_QUERY_KEY`, while the agentic tool falls back to `AZURE_SEARCH_ADMIN_KEY`. Pass `endpoint`/`api_key` parameters only when you need to override per-call.
 
 ## Quick Start
 
@@ -30,12 +31,15 @@ pip install -r requirements.txt
 
 **3/ Create a `.env` file**
 ```bash
-# Azure AI Search Endpoint and Query Key
+# Azure AI Search Endpoint
 AZURE_SEARCH_ENDPOINT=https://your-search-service.search.windows.net
+
+# Azure AI Search Keys (QueryKey AdminKey)
 AZURE_SEARCH_QUERY_KEY=your-query-key
+AZURE_SEARCH_ADMIN_KEY=your-admin-key   # required for agentic_retrieval
 
 # Timeout (Optional)
-AZURE_SEARCH_TIMEOUT=120
+# AZURE_SEARCH_TIMEOUT=120
 ```
 
 **4/ Run the server**:
@@ -76,7 +80,7 @@ git clone https://github.com/HeyJiqingCode/mcp.git
 **2/ Build Docker Image**
 ```bash
 cd mcp/ai-search/
-docker build -t azure-ai-search-mcp:1.0.0 -f Dockerfile .
+docker build -t azure-ai-search-mcp:1.1.0 -f Dockerfile .
 ```
 
 **3/ Run the container**:
@@ -84,7 +88,8 @@ docker build -t azure-ai-search-mcp:1.0.0 -f Dockerfile .
 docker run -itd -p 8000:8000 --name AzureAISearch \
   -e AZURE_SEARCH_ENDPOINT=https://your-search-service.search.windows.net \
   -e AZURE_SEARCH_QUERY_KEY=your-query-key \
-  azure-ai-search-mcp:1.0.0
+  -e AZURE_SEARCH_ADMIN_KEY=your-admin-key \
+  azure-ai-search-mcp:1.1.0
 ```
 
 **4/ Add MCP Server for HTTP transport**
@@ -106,7 +111,7 @@ docker run -itd -p 8000:8000 --name AzureAISearch \
 ## Available Tools
 
 Each tool accepts an optional `api_key` and `endpoint` so you can override defaults at invocation time. All responses include:
-- `results`: list of documents (with `@search.score`, etc.).
+- `documents`: list of normalized documents (with `@search.score`, etc.).
 - `count`: total number of documents matched (if available).
 - `answers`, `captions`, `facets`: when returned by the service.
 - `continuation_token`: set if further paging is available.
@@ -228,6 +233,40 @@ index_name, query, vector_fields, semantic_configuration, vector_text, k=50, top
   }
 }
 ```
+
+### `agentic_retrieval`
+
+Run the Azure AI Search agentic retrieval pipeline (knowledge base multi-query orchestration, preview). Requires `AZURE_SEARCH_ADMIN_KEY` or an admin key passed via `api_key`.
+
+**Parameters (frequently used):**
+
+- `knowledge_base_name` (str, required)
+- `query` (str, required)
+- `intent_query` (Optional[str])
+- `reasoning_effort` (Optional[str]) – `minimal`, `low`, or `medium`
+- `output_mode` (str) – `answerSynthesis` or `extractiveData`
+- `include_activity` (bool)
+- `max_runtime_seconds`, `max_output_size` (Optional[int])
+- `knowledge_source_overrides` (Optional[str], JSON array/dict)
+- Convenience knobs (`knowledge_source_name`, `knowledge_source_kind`, `knowledge_source_filter`, `include_references`, `include_reference_source_data`, `always_query_source`, `reranker_threshold`)
+- `api_key`, `endpoint`
+
+**Example Usage:**
+
+```json
+{
+  "tool": "agentic_retrieval",
+  "arguments": {
+    "knowledge_base_name": "kb-support",
+    "query": "How do I reset my VPN password?",
+    "reasoning_effort": "low",
+    "output_mode": "answerSynthesis",
+    "include_activity": true
+  }
+}
+```
+
+Response mirrors the REST contract (`response`, `references`, `activity`, `_status_code`). See [Knowledge Retrieval - Retrieve](https://learn.microsoft.com/en-us/rest/api/searchservice/knowledge-retrieval/retrieve?view=rest-searchservice-2025-11-01-preview) for schema details.
 
 ## More Details
 

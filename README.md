@@ -86,15 +86,16 @@ Comprehensive research functionality powered by Azure AI Agents, supporting mult
 
 ### Azure AI Search
 
-Provides multi-mode retrieval over Azure AI Search, covering keyword, semantic, vector, and hybrid queries.
+Provides multi-mode retrieval over Azure AI Search, covering keyword, semantic, vector, hybrid, and the preview agentic retrieval (knowledge base) pipeline.
 
 **Key Features**:
 - Simple BM25 keyword search with filtering and field projection
 - Semantic reranking (with optional captions/answers) using configured semantic profiles
 - Vector similarity powered by built-in vectorizers (no manual embedding management)
 - Hybrid retrieval that fuses lexical and vector results, plus semantic hybrid mode
-- Consistent response shaping (paging, select, filter) across all tool endpoints
-- Tools pick up `AZURE_SEARCH_ENDPOINT` and `AZURE_SEARCH_QUERY_KEY` from the runtime environment, so you only need to pass endpoint or api_key when you want to override those defaults for a specific call. The `_resolve_endpoint` / `_resolve_key` helpers enforce that fallback chain.
+- Agentic retrieval preview support (knowledge bases, multi-query reasoning, answer synthesis / extractive data)
+- Consistent response shaping (paging, select, filter) across tool endpoints
+- Automatic key fallback: standard tools read `AZURE_SEARCH_QUERY_KEY`, while the agentic tool uses `AZURE_SEARCH_ADMIN_KEY`; pass `api_key` only when overriding per-call
 
 **Detailed**: Please refer to [Azure AI Search README](./ai-search/README.md)
 
