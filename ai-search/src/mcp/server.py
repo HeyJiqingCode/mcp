@@ -737,9 +737,60 @@ async def semantic_hybrid_search(
     return _postprocess_documents(result, include_vectors=include_vectors)
 
 
+def _parse_key_value_configs(config_str: str) -> List[Dict[str, Any]]:
+    if not config_str or not config_str.strip():
+        return []
+
+    # Split by semicolon for multiple sources
+    source_entries = [entry.strip() for entry in config_str.split(";") if entry.strip()]
+
+    sources = []
+    for entry in source_entries:
+        # Parse key-value pairs for a single source
+        pairs = [pair.strip() for pair in entry.split(",") if pair.strip()]
+
+        source_config: Dict[str, Any] = {}
+
+        for pair in pairs:
+            if "=" not in pair:
+                raise ValueError(f"Invalid key-value pair: '{pair}'. Expected format: 'key=value'")
+
+            key, value = pair.split("=", 1)
+            key = key.strip()
+            value = value.strip()
+
+            if not key or not value:
+                raise ValueError(f"Empty key or value in pair: '{pair}'")
+
+            # Type conversion logic
+            # Boolean values
+            if value.lower() in ("true", "false"):
+                source_config[key] = value.lower() == "true"
+            else:
+                # Try numeric conversion
+                try:
+                    if "." in value:
+                        source_config[key] = float(value)
+                    else:
+                        source_config[key] = int(value)
+                except ValueError:
+                    # Keep as string
+                    source_config[key] = value
+
+        # Validate required fields
+        if "knowledgeSourceName" not in source_config:
+            raise ValueError(f"Missing required 'knowledgeSourceName' in source config: '{entry}'")
+        if "kind" not in source_config:
+            raise ValueError(f"Missing required 'kind' in source config: '{entry}'")
+
+        sources.append(source_config)
+
+    return sources
+
+
 @mcp.tool(
     name="agentic_retrieval",
-    description="Run the Azure AI Search agentic retrieval pipeline against a knowledge base (2025-11-01-preview).",
+    description="Run Azure AI Search agentic retrieval pipeline. Use knowledge_source_configs in key=value format: 'knowledgeSourceName=ks1, kind=searchIndex, filterAddOn=filter_expr; knowledgeSourceName=ks2, kind=web, count=10'. Each source independently configured with type-specific parameters (2025-11-01-preview).",
 )
 async def agentic_retrieval(
     knowledge_base_name: str,
@@ -750,27 +801,65 @@ async def agentic_retrieval(
     include_activity: bool = True,
     max_runtime_seconds: Optional[int] = None,
     max_output_size: Optional[int] = None,
-    knowledge_source_overrides: Optional[str] = None,
-    knowledge_source_name: Optional[str] = None,
-    knowledge_source_kind: str = "searchIndex",
-    knowledge_source_filter: Optional[str] = None,
-    include_references: Optional[bool] = None,
-    include_reference_source_data: Optional[bool] = None,
-    always_query_source: Optional[bool] = None,
-    reranker_threshold: Optional[float] = None,
+    knowledge_source_configs: Optional[str] = None,
     api_key: Optional[str] = None,
     endpoint: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Invoke the knowledge base retrieve action.
+    """Invoke the Azure AI Search knowledge base agentic retrieval pipeline.
 
     This wraps the REST API documented at
     https://learn.microsoft.com/en-us/rest/api/searchservice/knowledge-retrieval/retrieve?view=rest-searchservice-2025-11-01-preview
-    so you can execute the multi-step agentic pipeline (query planning, multi-source retrieval,
-    optional answer synthesis) from an MCP workflow.
+
+    Supports multiple knowledge sources and flexible configuration options.
+
+    Parameters
+    ----------
+    knowledge_base_name : str
+        Name of the knowledge base to query.
+    query : str
+        User query or question (mandatory).
+    intent_query : Optional[str]
+        Optional explicit search intent to bypass model query planning.
+    reasoning_effort : Optional[str]
+        Retrieval reasoning effort level: "minimal", "low", or "medium".
+    output_mode : str
+        Output mode: "answerSynthesis" (default) or "extractedData".
+    include_activity : bool
+        Whether to include activity logs in the response (default True).
+    max_runtime_seconds : Optional[int]
+        Maximum execution time in seconds.
+    max_output_size : Optional[int]
+        Maximum output size in tokens.
+    knowledge_source_configs : Optional[str]
+        Knowledge source(s) configuration in key=value format. Use REST API camelCase field names.
+        Format: "knowledgeSourceName=name, kind=type, key=value; knowledgeSourceName=name2, ..."
+        Separators: , (pairs) ; (sources)
+
+        Required: knowledgeSourceName, kind
+        Common params: includeReferences, alwaysQuerySource, rerankerThreshold, includeReferenceSourceData
+        SearchIndex: filterAddOn
+        Web: count, freshness, language, market
+        RemoteSharePoint: filterExpressionAddOn
+    api_key : Optional[str]
+        Override default admin API key for this call.
+    endpoint : Optional[str]
+        Override default Azure Search endpoint.
+
+    Returns
+    -------
+    Dict[str, Any]
+        Agentic retrieval response containing answers, references, and activity logs.
+
     Notes
     -----
     * Requires an **admin** API key (query keys are rejected by the backend).
-    * `query` is mandatory; optionally provide `intent_query` when you want to bypass model query planning.
+    * Use key=value format in knowledge_source_configs for flexible per-source configuration.
+    * Each source can be independently configured with type-specific parameters.
+    * Boolean values: use "true" or "false" (lowercase).
+    * Numeric values: integers and floats are automatically converted.
+    * Spacing after commas and semicolons is flexible (automatically trimmed).
+    * Agentic retrieval automatically selects appropriate search fields and handles
+      vectorization when the index has a configured vectorizer.
     """
 
     resolved_endpoint = _resolve_endpoint(endpoint)
@@ -799,35 +888,13 @@ async def agentic_retrieval(
     if max_output_size is not None:
         request_body["maxOutputSize"] = max_output_size
 
-    if knowledge_source_overrides:
+    # Parse knowledge source configurations using key-value format
+    if knowledge_source_configs:
         try:
-            overrides = json.loads(knowledge_source_overrides)
-        except json.JSONDecodeError as exc:
-            raise ValueError("knowledge_source_overrides must be valid JSON") from exc
-        if isinstance(overrides, dict):
-            overrides = [overrides]
-        if not isinstance(overrides, list):
-            raise ValueError("knowledge_source_overrides must deserialize to a list or object")
-        request_body["knowledgeSourceParams"] = overrides
-    elif knowledge_source_name:
-        source: Dict[str, Any] = {
-            "knowledgeSourceName": knowledge_source_name,
-            "kind": knowledge_source_kind,
-        }
-        if knowledge_source_filter:
-            if knowledge_source_kind == "remoteSharePoint":
-                source["filterExpressionAddOn"] = knowledge_source_filter
-            else:
-                source["filterAddOn"] = knowledge_source_filter
-        if include_references is not None:
-            source["includeReferences"] = include_references
-        if include_reference_source_data is not None:
-            source["includeReferenceSourceData"] = include_reference_source_data
-        if always_query_source is not None:
-            source["alwaysQuerySource"] = always_query_source
-        if reranker_threshold is not None:
-            source["rerankerThreshold"] = reranker_threshold
-        request_body["knowledgeSourceParams"] = [source]
+            sources = _parse_key_value_configs(knowledge_source_configs)
+            request_body["knowledgeSourceParams"] = sources
+        except ValueError as exc:
+            raise ValueError(f"Failed to parse knowledge_source_configs: {exc}") from exc
 
     url = (
         f"{resolved_endpoint}/knowledgebases('{quote(knowledge_base_name, safe='')}')/retrieve"

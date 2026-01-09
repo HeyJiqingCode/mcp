@@ -247,9 +247,36 @@ Run the Azure AI Search agentic retrieval pipeline (knowledge base multi-query o
 - `output_mode` (str) – `answerSynthesis` or `extractiveData`
 - `include_activity` (bool)
 - `max_runtime_seconds`, `max_output_size` (Optional[int])
-- `knowledge_source_overrides` (Optional[str], JSON array/dict)
-- Convenience knobs (`knowledge_source_name`, `knowledge_source_kind`, `knowledge_source_filter`, `include_references`, `include_reference_source_data`, `always_query_source`, `reranker_threshold`)
+- `knowledge_source_configs` (Optional[str]) – Key-value format for configuring knowledge sources. Format: `"knowledgeSourceName=name, kind=type, param=value; knowledgeSourceName=name2, ..."`. Each source can be independently configured with type-specific parameters.
 - `api_key`, `endpoint`
+
+**Knowledge Source Configuration:**
+
+Use `knowledge_source_configs` to specify one or more knowledge sources with per-source settings. Parameters can be in **any order** - the parser is order-independent.
+
+**Supported Parameters by Source Type:**
+
+| Parameter | Type | searchIndex | web | remoteSharePoint | Description |
+|-----------|------|-------------|-----|------------------|-------------|
+| `knowledgeSourceName` | string | ✅ Required | ✅ Required | ✅ Required | Knowledge source name |
+| `kind` | string | ✅ Required | ✅ Required | ✅ Required | Source type |
+| `includeReferences` | bool | ✅ | ✅ | ✅ | Include document references |
+| `alwaysQuerySource` | bool | ✅ | ✅ | ✅ | Force querying even if not needed |
+| `rerankerThreshold` | float | ✅ | ✅ | ✅ | Minimum reranker score threshold |
+| `includeReferenceSourceData` | bool | ✅ | ✅ | ✅ | Include source data in references |
+| `filterAddOn` | string | ✅ | ❌ | ❌ | OData filter expression |
+| `count` | int | ❌ | ✅ | ❌ | Number of results |
+| `freshness` | string | ❌ | ✅ | ❌ | Result freshness (day/week/month) |
+| `language` | string | ❌ | ✅ | ❌ | Result language (e.g., zh-CN) |
+| `market` | string | ❌ | ✅ | ❌ | Result market (e.g., zh-CN) |
+| `filterExpressionAddOn` | string | ❌ | ❌ | ✅ | KQL filter expression |
+
+**Format Rules:**
+- Parameters can be specified in **any order**
+- Use `,` to separate key-value pairs within a source
+- Use `;` to separate multiple sources
+- Boolean values: `true` or `false` (lowercase)
+- **Note**: Search field selection is handled automatically by the API based on index configuration
 
 **Example Usage:**
 
@@ -261,7 +288,21 @@ Run the Azure AI Search agentic retrieval pipeline (knowledge base multi-query o
     "query": "How do I reset my VPN password?",
     "reasoning_effort": "low",
     "output_mode": "answerSynthesis",
-    "include_activity": true
+    "include_activity": true,
+    "knowledge_source_configs": "knowledgeSourceName=ks-docs, kind=searchIndex, includeReferences=true"
+  }
+}
+```
+
+**Multiple sources example:**
+
+```json
+{
+  "tool": "agentic_retrieval",
+  "arguments": {
+    "knowledge_base_name": "kb-support",
+    "query": "Latest security updates",
+    "knowledge_source_configs": "knowledgeSourceName=ks-docs, kind=searchIndex, includeReferences=true; knowledgeSourceName=ks-web, kind=web, count=10, freshness=week"
   }
 }
 ```
