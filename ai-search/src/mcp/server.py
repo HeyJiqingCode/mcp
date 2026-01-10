@@ -3,6 +3,7 @@ import io
 import json
 import logging
 import os
+import re
 import sys
 from argparse import ArgumentParser
 from typing import Any, Dict, List, Optional
@@ -788,6 +789,77 @@ def _parse_key_value_configs(config_str: str) -> List[Dict[str, Any]]:
     return sources
 
 
+def _format_agentic_response(raw_response: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Format Agentic Retrieval API response for better readability.
+
+    Transforms:
+    - [ref_id:0] -> <sup>1</sup> (0-based to 1-based)
+    - Web references -> "1. [Bing Search] [title](url)"
+    - KB references -> "1. [Knowledge Base] [rerankerScore: X.XX] Title: XXX"
+
+    Args:
+        raw_response: Raw API response from Azure AI Search
+
+    Returns:
+        Formatted response with answer and references
+    """
+    result: Dict[str, Any] = {
+        "answer": "",
+        "references": []
+    }
+
+    # Extract answer text
+    try:
+        answer_text = raw_response["response"][0]["content"][0]["text"]
+    except (KeyError, IndexError):
+        answer_text = ""
+
+    # Convert ref_id to superscript (0-based -> 1-based)
+    def replace_ref(match):
+        ref_id = int(match.group(1))
+        superscript_num = ref_id + 1
+        return f"<sup>{superscript_num}</sup>"
+
+    formatted_answer = re.sub(r'\[ref_id:(\d+)\]', replace_ref, answer_text)
+    result["answer"] = formatted_answer
+
+    # Format references
+    references = raw_response.get("references", [])
+    formatted_refs = []
+
+    for ref in references:
+        ref_type = ref.get("type", "")
+        ref_id = ref.get("id", "")
+
+        # Convert ID from 0-based to 1-based
+        try:
+            display_id = int(ref_id) + 1
+        except (ValueError, TypeError):
+            display_id = ref_id
+
+        if ref_type == "web":
+            # Web type: N. [Bing Search] [title](url)
+            title = ref.get("title", "Untitled")
+            url = ref.get("url", "")
+            formatted_refs.append(f"{display_id}. [Bing Search] [{title}]({url})")
+
+        elif ref_type in ["searchIndex", "remoteSharePoint"]:
+            # Knowledge Base type: N. [Knowledge Base] [rerankerScore: X.XX] Title: XXX
+            title = ref.get("title", "Untitled")
+            reranker_score = ref.get("rerankerScore", 0.0)
+            formatted_refs.append(
+                f"{display_id}. [Knowledge Base] [rerankerScore: {reranker_score:.2f}] Title: {title}"
+            )
+        else:
+            # Unknown type, use generic format
+            formatted_refs.append(f"{display_id}. [Unknown Type: {ref_type}]")
+
+    result["references"] = formatted_refs
+
+    return result
+
+
 @mcp.tool(
     name="agentic_retrieval",
     description="Run Azure AI Search agentic retrieval pipeline. Use knowledge_source_configs in key=value format: 'knowledgeSourceName=ks1, kind=searchIndex, filterAddOn=filter_expr; knowledgeSourceName=ks2, kind=web, count=10'. Each source independently configured with type-specific parameters (2025-11-01-preview).",
@@ -848,7 +920,10 @@ async def agentic_retrieval(
     Returns
     -------
     Dict[str, Any]
-        Agentic retrieval response containing answers, references, and activity logs.
+        Formatted agentic retrieval response with:
+        - answer: str - Formatted answer text with superscript reference IDs (<sup>N</sup>)
+        - references: List[str] - Markdown-formatted reference list
+        - _status_code: int - HTTP status code
 
     Notes
     -----
@@ -913,11 +988,14 @@ async def agentic_retrieval(
             if resp.status not in (200, 206):
                 raise RuntimeError(f"Agentic retrieval failed ({resp.status}): {text}")
             try:
-                data = json.loads(text)
+                raw_data = json.loads(text)
             except json.JSONDecodeError:
-                data = {"raw": text}
-            data["_status_code"] = resp.status
-            return data
+                raw_data = {"raw": text}
+
+            # Format the response
+            formatted_data = _format_agentic_response(raw_data)
+            formatted_data["_status_code"] = resp.status
+            return formatted_data
 
 
 def main() -> None:
