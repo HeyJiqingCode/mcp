@@ -862,7 +862,7 @@ def _format_agentic_response(raw_response: Dict[str, Any]) -> Dict[str, Any]:
 
 @mcp.tool(
     name="agentic_retrieval",
-    description="Run Azure AI Search agentic retrieval pipeline. Use knowledge_source_configs in key=value format: 'knowledgeSourceName=ks1, kind=searchIndex, filterAddOn=filter_expr; knowledgeSourceName=ks2, kind=web, count=10'. Each source independently configured with type-specific parameters (2025-11-01-preview).",
+    description="Run Azure AI Search agentic retrieval pipeline with flexible knowledge source configuration (2025-11-01-preview API).",
 )
 async def agentic_retrieval(
     knowledge_base_name: str,
