@@ -795,8 +795,8 @@ def _format_agentic_response(raw_response: Dict[str, Any]) -> Dict[str, Any]:
 
     Transforms:
     - [ref_id:0] -> <sup>1</sup> (0-based to 1-based)
-    - Web references -> "1. [Bing Search] [title](url)"
-    - KB references -> "1. [Knowledge Base] [rerankerScore: X.XX] Title: XXX"
+    - Web references -> "1. [Web] [title](url)"
+    - KB references -> "1. [KnowledgeBase: source-name] [rerankerScore: X.XX] Title: XXX"
 
     Args:
         raw_response: Raw API response from Azure AI Search
@@ -824,6 +824,15 @@ def _format_agentic_response(raw_response: Dict[str, Any]) -> Dict[str, Any]:
     formatted_answer = re.sub(r'\[ref_id:(\d+)\]', replace_ref, answer_text)
     result["answer"] = formatted_answer
 
+    # Build activity ID to knowledge source name mapping
+    activity_map = {}
+    activities = raw_response.get("activity", [])
+    for activity in activities:
+        activity_id = activity.get("id")
+        knowledge_source_name = activity.get("knowledgeSourceName")
+        if activity_id is not None and knowledge_source_name:
+            activity_map[activity_id] = knowledge_source_name
+
     # Format references
     references = raw_response.get("references", [])
     formatted_refs = []
@@ -831,6 +840,7 @@ def _format_agentic_response(raw_response: Dict[str, Any]) -> Dict[str, Any]:
     for ref in references:
         ref_type = ref.get("type", "")
         ref_id = ref.get("id", "")
+        activity_source = ref.get("activitySource")
 
         # Convert ID from 0-based to 1-based
         try:
@@ -838,22 +848,28 @@ def _format_agentic_response(raw_response: Dict[str, Any]) -> Dict[str, Any]:
         except (ValueError, TypeError):
             display_id = ref_id
 
+        # Get knowledge source name from activity
+        knowledge_source_name = activity_map.get(activity_source, "Unknown")
+
         if ref_type == "web":
-            # Web type: N. [Bing Search] [title](url)
+            # Web type: N. [Web] [title](url)
             title = ref.get("title", "Untitled")
             url = ref.get("url", "")
-            formatted_refs.append(f"{display_id}. [Bing Search] [{title}]({url})")
+            formatted_refs.append(f"{display_id}. [Web] [{title}]({url})")
 
         elif ref_type in ["searchIndex", "remoteSharePoint"]:
-            # Knowledge Base type: N. [Knowledge Base] [rerankerScore: X.XX] Title: XXX
+            # Knowledge Base type: N. [KnowledgeBase: source-name] [rerankerScore: X.XX] Title: XXX
             title = ref.get("title", "Untitled")
             reranker_score = ref.get("rerankerScore", 0.0)
             formatted_refs.append(
-                f"{display_id}. [Knowledge Base] [rerankerScore: {reranker_score:.2f}] Title: {title}"
+                f"{display_id}. [KnowledgeBase: {knowledge_source_name}] [rerankerScore: {reranker_score:.2f}] Title: {title}"
             )
         else:
             # Unknown type, use generic format
             formatted_refs.append(f"{display_id}. [Unknown Type: {ref_type}]")
+
+    # Sort references by display ID (numeric order)
+    formatted_refs.sort(key=lambda x: int(x.split('.')[0]))
 
     result["references"] = formatted_refs
 
