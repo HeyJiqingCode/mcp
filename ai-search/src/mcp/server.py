@@ -317,6 +317,113 @@ def _build_vector_query(
         vector_query.weight = weight
     return [vector_query]
 
+def _extract_page_numbers_from_documents(documents: List[Dict[str, Any]]) -> List[int]:
+    """
+    Extract unique page numbers from search result documents.
+
+    Args:
+        documents: List of document results from search
+
+    Returns:
+        Sorted list of unique page numbers
+    """
+    page_numbers = set()
+    for doc in documents:
+        # Try different possible field names for page number
+        page_from = doc.get("page_from") or doc.get("pageNumberFrom")
+        if page_from is not None:
+            try:
+                page_numbers.add(int(page_from))
+            except (ValueError, TypeError):
+                pass
+    return sorted(list(page_numbers))
+
+
+def _format_agentic_response(raw_response: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Format Agentic Retrieval API response for better readability.
+
+    Transforms:
+    - [ref_id:0] -> <sup>1</sup> (0-based to 1-based)
+    - Web references -> "1. [Web] [title](url)"
+    - KB references -> "1. [KnowledgeBase: source-name] [rerankerScore: X.XX] Title: XXX"
+
+    Args:
+        raw_response: Raw API response from Azure AI Search
+
+    Returns:
+        Formatted response with answer and references
+    """
+    result: Dict[str, Any] = {
+        "answer": "",
+        "references": []
+    }
+
+    # Extract answer text
+    try:
+        answer_text = raw_response["response"][0]["content"][0]["text"]
+    except (KeyError, IndexError):
+        answer_text = ""
+
+    # Convert ref_id to superscript (0-based -> 1-based)
+    def replace_ref(match):
+        ref_id = int(match.group(1))
+        superscript_num = ref_id + 1
+        return f"<sup>{superscript_num}</sup>"
+
+    formatted_answer = re.sub(r'\[ref_id:(\d+)\]', replace_ref, answer_text)
+    result["answer"] = formatted_answer
+
+    # Build activity ID to knowledge source name mapping
+    activity_map = {}
+    activities = raw_response.get("activity", [])
+    for activity in activities:
+        activity_id = activity.get("id")
+        knowledge_source_name = activity.get("knowledgeSourceName")
+        if activity_id is not None and knowledge_source_name:
+            activity_map[activity_id] = knowledge_source_name
+
+    # Format references
+    references = raw_response.get("references", [])
+    formatted_refs = []
+
+    for ref in references:
+        ref_type = ref.get("type", "")
+        ref_id = ref.get("id", "")
+        activity_source = ref.get("activitySource")
+
+        # Convert ID from 0-based to 1-based
+        try:
+            display_id = int(ref_id) + 1
+        except (ValueError, TypeError):
+            display_id = ref_id
+
+        # Get knowledge source name from activity
+        knowledge_source_name = activity_map.get(activity_source, "Unknown")
+
+        if ref_type == "web":
+            # Web type: N. [Web] [title](url)
+            title = ref.get("title", "Untitled")
+            url = ref.get("url", "")
+            formatted_refs.append(f"{display_id}. [Web] [{title}]({url})")
+
+        elif ref_type in ["searchIndex", "remoteSharePoint"]:
+            # Knowledge Base type: N. [KnowledgeBase: source-name] [rerankerScore: X.XX] Title: XXX
+            title = ref.get("title", "Untitled")
+            reranker_score = ref.get("rerankerScore", 0.0)
+            formatted_refs.append(
+                f"{display_id}. [KnowledgeBase: {knowledge_source_name}] [rerankerScore: {reranker_score:.2f}] Title: {title}"
+            )
+        else:
+            # Unknown type, use generic format
+            formatted_refs.append(f"{display_id}. [Unknown Type: {ref_type}]")
+
+    # Sort references by display ID (numeric order)
+    formatted_refs.sort(key=lambda x: int(x.split('.')[0]))
+
+    result["references"] = formatted_refs
+
+    return result
 
 @mcp.tool(
     name="simple_search",
@@ -788,92 +895,245 @@ def _parse_key_value_configs(config_str: str) -> List[Dict[str, Any]]:
 
     return sources
 
+@mcp.tool(
+    name="multimodal_hybrid_search",
+    description="Two-stage multimodal hybrid search: first retrieves text chunks with hybrid search + semantic reranker, then retrieves images from the same pages.",
+)
+async def multimodal_hybrid_search(
+    index_name: str,
+    query: str,
+    vector_fields: str,
+    semantic_configuration: str,
+    vector_text: str,
+    k: int = 50,
+    top: int = 10,
+    image_top: int = 10,
+    exhaustive: bool = False,
+    weight: Optional[float] = None,
+    select: Optional[str] = None,
+    additional_filter: Optional[str] = None,
+    search_fields: Optional[str] = None,
+    query_caption: Optional[str] = "extractive",
+    query_answer: Optional[str] = None,
+    query_answer_count: Optional[int] = None,
+    query_answer_threshold: Optional[float] = None,
+    include_vectors: bool = False,
+    api_key: Optional[str] = None,
+    endpoint: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Execute two-stage multimodal hybrid retrieval with semantic reranking.
 
-def _format_agentic_response(raw_response: Dict[str, Any]) -> Dict[str, Any]:
+    Stage 1: Text hybrid search (BM25 + Vector + Semantic Reranker)
+    - Filter: chunk_type=text
+    - Returns: All text results and extracts page numbers
+
+    Stage 2: Image hybrid search (BM25 + Vector + Semantic Reranker)
+    - Filter: chunk_type=image AND page_from IN (pages from stage 1)
+    - Returns: All image results from the same pages
+
+    Parameters
+    ----------
+    index_name: str
+        Target index name.
+    query: str
+        Natural-language or keyword query for lexical search.
+    vector_fields: str
+        Comma-separated vector field names.
+    semantic_configuration: str
+        Semantic configuration name defined on the index.
+    vector_text: str
+        Raw query text used for vectorization.
+    k / top: int, optional
+        Vector candidate count and final text result count (top defaults to 10).
+    image_top: int, optional
+        Maximum number of image results to return from stage 2 (default 10).
+    exhaustive / weight: optional
+        Controls for vector recall and weighting.
+    query_caption / query_answer: Optional[str]
+        Semantic caption and answer modes (`"extractive"`, `"summary"`, etc.).
+    query_answer_count / query_answer_threshold: Optional
+        Controls for the number of answers and confidence threshold.
+    select: Optional[str]
+        Fields to return in results.
+    additional_filter: Optional[str]
+        Additional OData filter expression to apply to both stages.
+    search_fields: Optional[str]
+        Fields to search in.
+    include_vectors: bool, optional
+        When True, keep vector-valued fields in the response payload (default False).
+    api_key / endpoint: Optional[str]
+        Override default connection information.
+
+    Returns
+    -------
+    dict
+        Response containing:
+        - results: List of organized results, one per text document, each with:
+            - page_from: Starting page number
+            - page_to: Ending page number
+            - source_document: Document filename
+            - text_content: Full text content
+            - reranker_score: Semantic reranker score
+            - search_score: Hybrid search score
+            - images: Markdown-formatted image links (newline-separated)
+        - total_pages: Number of result pages
+        - text_count: Total text document count
+        - image_count: Total image document count
+        - answers: Optional semantic answers
+        - captions: Optional semantic captions
     """
-    Format Agentic Retrieval API response for better readability.
+    resolved_endpoint = _resolve_endpoint(endpoint)
+    key = _resolve_key(api_key)
 
-    Transforms:
-    - [ref_id:0] -> <sup>1</sup> (0-based to 1-based)
-    - Web references -> "1. [Web] [title](url)"
-    - KB references -> "1. [KnowledgeBase: source-name] [rerankerScore: X.XX] Title: XXX"
+    vector_queries = _build_vector_query(
+        vector_text=vector_text,
+        vector_fields=vector_fields,
+        k=k,
+        exhaustive=exhaustive,
+        weight=weight,
+    )
 
-    Args:
-        raw_response: Raw API response from Azure AI Search
+    # Stage 1: Text hybrid search with semantic reranking
+    text_filter = "chunk_type eq 'text'"
+    if additional_filter:
+        text_filter = f"({text_filter}) and ({additional_filter})"
 
-    Returns:
-        Formatted response with answer and references
-    """
-    result: Dict[str, Any] = {
-        "answer": "",
-        "references": []
+    text_search_kwargs: Dict[str, Any] = {
+        "vector_queries": vector_queries,
+        "query_type": "semantic",
+        "semantic_configuration_name": semantic_configuration,
+        "top": top,
+        "include_total_count": True,
+        "filter": text_filter,
+    }
+    if query_caption:
+        text_search_kwargs["query_caption"] = query_caption
+    if query_answer:
+        text_search_kwargs["query_answer"] = query_answer
+        if query_answer_count is not None:
+            text_search_kwargs["query_answer_count"] = query_answer_count
+        if query_answer_threshold is not None:
+            text_search_kwargs["query_answer_threshold"] = query_answer_threshold
+    if select:
+        text_search_kwargs["select"] = _comma_split(select)
+    if search_fields:
+        text_search_kwargs["search_fields"] = _comma_split(search_fields)
+
+    logger.info("Stage 1: Executing text hybrid search with filter: %s", text_filter)
+    text_result = await _execute_search(
+        endpoint=resolved_endpoint,
+        key=key,
+        index_name=index_name,
+        search_text=query,
+        search_kwargs=text_search_kwargs,
+    )
+    text_result = _postprocess_documents(text_result, include_vectors=include_vectors)
+
+    # Extract page numbers from text results
+    text_documents = text_result.get("documents", [])
+    page_numbers = _extract_page_numbers_from_documents(text_documents)
+    logger.info("Stage 1 completed: Found %d text documents across %d pages: %s",
+                len(text_documents), len(page_numbers), page_numbers)
+
+    # Stage 2: Image hybrid search filtered by pages from stage 1
+    image_result = {"documents": [], "count": 0}
+    if page_numbers:
+        # Build filter for images on the same pages
+        page_filter_parts = [f"page_from eq {page}" for page in page_numbers]
+        image_filter = f"(chunk_type eq 'image') and ({' or '.join(page_filter_parts)})"
+        if additional_filter:
+            image_filter = f"({image_filter}) and ({additional_filter})"
+
+        image_search_kwargs: Dict[str, Any] = {
+            "vector_queries": vector_queries,
+            "query_type": "semantic",
+            "semantic_configuration_name": semantic_configuration,
+            "top": image_top,
+            "include_total_count": True,
+            "filter": image_filter,
+        }
+        if select:
+            image_search_kwargs["select"] = _comma_split(select)
+        if search_fields:
+            image_search_kwargs["search_fields"] = _comma_split(search_fields)
+
+        logger.info("Stage 2: Executing image hybrid search with filter: %s", image_filter)
+        image_result = await _execute_search(
+            endpoint=resolved_endpoint,
+            key=key,
+            index_name=index_name,
+            search_text=query,
+            search_kwargs=image_search_kwargs,
+        )
+        image_result = _postprocess_documents(image_result, include_vectors=include_vectors)
+        logger.info("Stage 2 completed: Found %d image documents", len(image_result.get("documents", [])))
+    else:
+        logger.info("Stage 2 skipped: No pages found in text results")
+
+    # Organize results by page - one result per text document
+    def _organize_multimodal_results(
+        text_docs: List[Dict[str, Any]],
+        image_docs: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """Organize text and image results by page, one result per text document."""
+
+        # Group images by page
+        images_by_page = {}
+        for doc in image_docs:
+            page_from = doc.get("page_from") or doc.get("pageNumberFrom")
+            if page_from is None:
+                continue
+
+            if page_from not in images_by_page:
+                images_by_page[page_from] = []
+
+            # Try multiple possible image path fields
+            source_path = doc.get("imagePath") or doc.get("source_path") or doc.get("image_path")
+            if source_path:
+                # Extract filename for alt text
+                filename = source_path.split("/")[-1] if "/" in source_path else source_path
+                images_by_page[page_from].append(f"![{filename}]({source_path})")
+
+        # Create one result per text document
+        results = []
+        for doc in text_docs:
+            page_from = doc.get("page_from") or doc.get("pageNumberFrom")
+            page_to = doc.get("page_to") or doc.get("pageNumberTo")
+
+            if page_from is None:
+                continue
+
+            result = {
+                "page_from": page_from,
+                "page_to": page_to,
+                "source_document": doc.get("source_document"),
+                "text_content": doc.get("content"),
+                "reranker_score": doc.get("@search.reranker_score"),
+                "search_score": doc.get("@search.score"),
+                "images": "\n".join(images_by_page.get(page_from, []))
+            }
+            results.append(result)
+
+        # Sort by page number
+        return sorted(results, key=lambda x: x["page_from"])
+
+    organized_results = _organize_multimodal_results(text_documents, image_result.get("documents", []))
+
+    # Combine results
+    combined_result: Dict[str, Any] = {
+        "results": organized_results,
+        "total_pages": len(organized_results),
+        "text_count": text_result.get("count", 0),
+        "image_count": image_result.get("count", 0),
     }
 
-    # Extract answer text
-    try:
-        answer_text = raw_response["response"][0]["content"][0]["text"]
-    except (KeyError, IndexError):
-        answer_text = ""
+    # Include answers and captions from text search if present
+    if "answers" in text_result:
+        combined_result["answers"] = text_result["answers"]
+    if "captions" in text_result:
+        combined_result["captions"] = text_result["captions"]
 
-    # Convert ref_id to superscript (0-based -> 1-based)
-    def replace_ref(match):
-        ref_id = int(match.group(1))
-        superscript_num = ref_id + 1
-        return f"<sup>{superscript_num}</sup>"
-
-    formatted_answer = re.sub(r'\[ref_id:(\d+)\]', replace_ref, answer_text)
-    result["answer"] = formatted_answer
-
-    # Build activity ID to knowledge source name mapping
-    activity_map = {}
-    activities = raw_response.get("activity", [])
-    for activity in activities:
-        activity_id = activity.get("id")
-        knowledge_source_name = activity.get("knowledgeSourceName")
-        if activity_id is not None and knowledge_source_name:
-            activity_map[activity_id] = knowledge_source_name
-
-    # Format references
-    references = raw_response.get("references", [])
-    formatted_refs = []
-
-    for ref in references:
-        ref_type = ref.get("type", "")
-        ref_id = ref.get("id", "")
-        activity_source = ref.get("activitySource")
-
-        # Convert ID from 0-based to 1-based
-        try:
-            display_id = int(ref_id) + 1
-        except (ValueError, TypeError):
-            display_id = ref_id
-
-        # Get knowledge source name from activity
-        knowledge_source_name = activity_map.get(activity_source, "Unknown")
-
-        if ref_type == "web":
-            # Web type: N. [Web] [title](url)
-            title = ref.get("title", "Untitled")
-            url = ref.get("url", "")
-            formatted_refs.append(f"{display_id}. [Web] [{title}]({url})")
-
-        elif ref_type in ["searchIndex", "remoteSharePoint"]:
-            # Knowledge Base type: N. [KnowledgeBase: source-name] [rerankerScore: X.XX] Title: XXX
-            title = ref.get("title", "Untitled")
-            reranker_score = ref.get("rerankerScore", 0.0)
-            formatted_refs.append(
-                f"{display_id}. [KnowledgeBase: {knowledge_source_name}] [rerankerScore: {reranker_score:.2f}] Title: {title}"
-            )
-        else:
-            # Unknown type, use generic format
-            formatted_refs.append(f"{display_id}. [Unknown Type: {ref_type}]")
-
-    # Sort references by display ID (numeric order)
-    formatted_refs.sort(key=lambda x: int(x.split('.')[0]))
-
-    result["references"] = formatted_refs
-
-    return result
+    return combined_result
 
 
 @mcp.tool(
