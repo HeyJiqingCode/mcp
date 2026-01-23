@@ -1162,7 +1162,8 @@ async def multimodal_hybrid_search(
             # Add page anchor to the URL (SharePoint format: #page=N)
             if processed_doc_path:
                 processed_doc_path_with_page = f"{processed_doc_path}#page={page_from}"
-                source_document_path = f"![{source_document}]({processed_doc_path_with_page})"
+                # Document link uses [text](url), not ![text](url) which is for images
+                source_document_path = f"[{source_document}]({processed_doc_path_with_page})"
             else:
                 source_document_path = source_document
 
