@@ -909,18 +909,18 @@ async def multimodal_hybrid_search(
     top: int = 10,
     image_top: int = 10,
     exhaustive: bool = False,
-    weight: Optional[float] = None,
-    select: Optional[str] = None,
-    additional_filter: Optional[str] = None,
-    search_fields: Optional[str] = None,
-    query_caption: Optional[str] = "extractive",
-    query_answer: Optional[str] = None,
-    query_answer_count: Optional[int] = None,
-    query_answer_threshold: Optional[float] = None,
+    weight: float = 0.0,
+    select: str = "",
+    additional_filter: str = "",
+    search_fields: str = "",
+    query_caption: str = "extractive",
+    query_answer: str = "",
+    query_answer_count: int = 0,
+    query_answer_threshold: float = 0.0,
     include_vectors: bool = False,
-    sharepoint_prefix: Optional[str] = None,
-    api_key: Optional[str] = None,
-    endpoint: Optional[str] = None,
+    sharepoint_prefix: str = "",
+    api_key: str = "",
+    endpoint: str = "",
 ) -> Dict[str, Any]:
     """Execute two-stage multimodal hybrid retrieval with semantic reranking.
 
@@ -986,8 +986,21 @@ async def multimodal_hybrid_search(
         - answers: Optional semantic answers
         - captions: Optional semantic captions
     """
-    resolved_endpoint = _resolve_endpoint(endpoint)
-    key = _resolve_key(api_key)
+    # Convert empty strings and sentinel values to None for optional parameters
+    weight = None if weight == 0.0 else weight
+    select = None if select == "" else select
+    additional_filter = None if additional_filter == "" else additional_filter
+    search_fields = None if search_fields == "" else search_fields
+    # query_caption has default "extractive", don't convert
+    query_answer = None if query_answer == "" else query_answer
+    query_answer_count = None if query_answer_count == 0 else query_answer_count
+    query_answer_threshold = None if query_answer_threshold == 0.0 else query_answer_threshold
+    sharepoint_prefix = None if sharepoint_prefix == "" else sharepoint_prefix
+    api_key_param = None if api_key == "" else api_key
+    endpoint_param = None if endpoint == "" else endpoint
+
+    resolved_endpoint = _resolve_endpoint(endpoint_param)
+    key = _resolve_key(api_key_param)
 
     vector_queries = _build_vector_query(
         vector_text=vector_text,
