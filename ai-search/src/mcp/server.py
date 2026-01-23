@@ -1128,11 +1128,10 @@ async def multimodal_hybrid_search(
             if source_path:
                 # Replace prefix if sharepoint_prefix is provided
                 processed_path = _replace_path_prefix(source_path, sharepoint_prefix)
-                # Add page anchor to image path
-                processed_path_with_page = f"{processed_path}#{page_from}"
+                # Images don't need page anchors (only PDFs do)
                 # Extract filename for alt text
                 filename = source_path.split("/")[-1] if "/" in source_path else source_path
-                images_by_page[page_from].append(f"![{filename}]({processed_path_with_page})")
+                images_by_page[page_from].append(f"![{filename}]({processed_path})")
 
         # Create one result per text document
         results = []
@@ -1149,9 +1148,9 @@ async def multimodal_hybrid_search(
 
             # Replace prefix if sharepoint_prefix is provided
             processed_doc_path = _replace_path_prefix(source_path, sharepoint_prefix)
-            # Add page anchor to the URL
+            # Add page anchor to the URL (SharePoint format: #page=N)
             if processed_doc_path:
-                processed_doc_path_with_page = f"{processed_doc_path}#{page_from}"
+                processed_doc_path_with_page = f"{processed_doc_path}#page={page_from}"
                 source_document_path = f"![{source_document}]({processed_doc_path_with_page})"
             else:
                 source_document_path = source_document
