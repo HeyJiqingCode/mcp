@@ -1126,12 +1126,10 @@ async def multimodal_hybrid_search(
             # Try multiple possible image path fields
             source_path = doc.get("imagePath") or doc.get("source_path") or doc.get("image_path")
             if source_path:
-                # Replace prefix if sharepoint_prefix is provided
-                processed_path = _replace_path_prefix(source_path, sharepoint_prefix)
-                # Images don't need page anchors (only PDFs do)
+                # Images keep original blob path (no prefix replacement)
                 # Extract filename for alt text
                 filename = source_path.split("/")[-1] if "/" in source_path else source_path
-                images_by_page[page_from].append(f"![{filename}]({processed_path})")
+                images_by_page[page_from].append(f"![{filename}]({source_path})")
 
         # Create one result per text document
         results = []
