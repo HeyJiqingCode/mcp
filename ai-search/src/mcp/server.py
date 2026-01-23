@@ -7,7 +7,7 @@ import re
 import sys
 from argparse import ArgumentParser
 from typing import Any, Dict, List, Optional
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 import aiohttp
 from azure.core.credentials import AzureKeyCredential
@@ -918,6 +918,7 @@ async def multimodal_hybrid_search(
     query_answer_count: Optional[int] = None,
     query_answer_threshold: Optional[float] = None,
     include_vectors: bool = False,
+    sharepoint_prefix: Optional[str] = None,
     api_key: Optional[str] = None,
     endpoint: Optional[str] = None,
 ) -> Dict[str, Any]:
@@ -961,6 +962,9 @@ async def multimodal_hybrid_search(
         Fields to search in.
     include_vectors: bool, optional
         When True, keep vector-valued fields in the response payload (default False).
+    sharepoint_prefix: Optional[str]
+        SharePoint URL prefix to replace the blob storage path prefix in source_path.
+        If provided, the blob storage prefix will be replaced with this SharePoint prefix.
     api_key / endpoint: Optional[str]
         Override default connection information.
 
@@ -971,7 +975,7 @@ async def multimodal_hybrid_search(
         - results: List of organized results, one per text document, each with:
             - page_from: Starting page number
             - page_to: Ending page number
-            - source_document: Document filename
+            - source_document_path: Markdown-formatted document link ![filename](path)
             - text_content: Full text content
             - reranker_score: Semantic reranker score
             - search_score: Hybrid search score
@@ -1073,9 +1077,41 @@ async def multimodal_hybrid_search(
     # Organize results by page - one result per text document
     def _organize_multimodal_results(
         text_docs: List[Dict[str, Any]],
-        image_docs: List[Dict[str, Any]]
+        image_docs: List[Dict[str, Any]],
+        sharepoint_prefix: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """Organize text and image results by page, one result per text document."""
+
+        def _replace_path_prefix(original_path: str, new_prefix: Optional[str]) -> str:
+            """Replace blob storage path prefix with SharePoint prefix and ensure proper URL encoding."""
+            if not new_prefix or not original_path:
+                return original_path
+
+            # Extract filename from the original path (already URL-encoded)
+            filename = original_path.split("/")[-1] if "/" in original_path else original_path
+
+            # Parse and encode the new prefix
+            # Split into protocol, domain, and path parts
+            if "://" in new_prefix:
+                protocol_domain, path_part = new_prefix.split("://", 1)
+                protocol = protocol_domain + "://"
+
+                # Split domain and path
+                if "/" in path_part:
+                    domain, path = path_part.split("/", 1)
+                    # Decode first to handle both encoded and unencoded input, then encode
+                    path_segments = path.rstrip("/").split("/")
+                    encoded_segments = [quote(unquote(seg), safe="") for seg in path_segments]
+                    encoded_path = "/".join(encoded_segments)
+                    new_prefix = f"{protocol}{domain}/{encoded_path}/"
+                else:
+                    new_prefix = f"{protocol}{path_part}/"
+            else:
+                # If no protocol, just ensure it ends with '/'
+                if not new_prefix.endswith("/"):
+                    new_prefix += "/"
+
+            return new_prefix + filename
 
         # Group images by page
         images_by_page = {}
@@ -1090,9 +1126,13 @@ async def multimodal_hybrid_search(
             # Try multiple possible image path fields
             source_path = doc.get("imagePath") or doc.get("source_path") or doc.get("image_path")
             if source_path:
+                # Replace prefix if sharepoint_prefix is provided
+                processed_path = _replace_path_prefix(source_path, sharepoint_prefix)
+                # Add page anchor to image path
+                processed_path_with_page = f"{processed_path}#{page_from}"
                 # Extract filename for alt text
                 filename = source_path.split("/")[-1] if "/" in source_path else source_path
-                images_by_page[page_from].append(f"![{filename}]({source_path})")
+                images_by_page[page_from].append(f"![{filename}]({processed_path_with_page})")
 
         # Create one result per text document
         results = []
@@ -1103,10 +1143,23 @@ async def multimodal_hybrid_search(
             if page_from is None:
                 continue
 
+            # Format source document path as Markdown link
+            source_document = doc.get("source_document", "")
+            source_path = doc.get("source_path", "")
+
+            # Replace prefix if sharepoint_prefix is provided
+            processed_doc_path = _replace_path_prefix(source_path, sharepoint_prefix)
+            # Add page anchor to the URL
+            if processed_doc_path:
+                processed_doc_path_with_page = f"{processed_doc_path}#{page_from}"
+                source_document_path = f"![{source_document}]({processed_doc_path_with_page})"
+            else:
+                source_document_path = source_document
+
             result = {
                 "page_from": page_from,
                 "page_to": page_to,
-                "source_document": doc.get("source_document"),
+                "source_document_path": source_document_path,
                 "text_content": doc.get("content"),
                 "reranker_score": doc.get("@search.reranker_score"),
                 "search_score": doc.get("@search.score"),
@@ -1117,7 +1170,11 @@ async def multimodal_hybrid_search(
         # Sort by page number
         return sorted(results, key=lambda x: x["page_from"])
 
-    organized_results = _organize_multimodal_results(text_documents, image_result.get("documents", []))
+    organized_results = _organize_multimodal_results(
+        text_documents,
+        image_result.get("documents", []),
+        sharepoint_prefix
+    )
 
     # Combine results
     combined_result: Dict[str, Any] = {
