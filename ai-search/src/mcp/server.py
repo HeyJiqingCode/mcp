@@ -434,13 +434,13 @@ async def simple_search(
     query: str,
     top: int = 5,
     skip: int = 0,
-    search_fields: Optional[str] = None,
-    select: Optional[str] = None,
-    filter: Optional[str] = None,
+    search_fields: str = "",
+    select: str = "",
+    filter: str = "",
     search_mode: str = "any",
     include_vectors: bool = False,
-    api_key: Optional[str] = None,
-    endpoint: Optional[str] = None,
+    api_key: str = "",
+    endpoint: str = "",
 ) -> Dict[str, Any]:
     """Run a standard keyword search against Azure AI Search.
 
@@ -473,6 +473,13 @@ async def simple_search(
     dict
         Response containing `documents`, `count`, optional `facets`, and `continuation_token`.
     """
+    # Convert empty strings to None for optional parameters
+    search_fields = None if search_fields == "" else search_fields
+    select = None if select == "" else select
+    filter = None if filter == "" else filter
+    api_key = None if api_key == "" else api_key
+    endpoint = None if endpoint == "" else endpoint
+
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_key(api_key)
     search_kwargs: Dict[str, Any] = {
@@ -510,15 +517,15 @@ async def semantic_search(
     semantic_configuration: str,
     top: int = 5,
     skip: int = 0,
-    select: Optional[str] = None,
-    filter: Optional[str] = None,
+    select: str = "",
+    filter: str = "",
     include_vectors: bool = False,
-    api_key: Optional[str] = None,
-    endpoint: Optional[str] = None,
-    query_caption: Optional[str] = "extractive",
-    query_answer: Optional[str] = None,
-    query_answer_count: Optional[int] = None,
-    query_answer_threshold: Optional[float] = None,
+    api_key: str = "",
+    endpoint: str = "",
+    query_caption: str = "extractive",
+    query_answer: str = "",
+    query_answer_count: int = 0,
+    query_answer_threshold: float = 0.0,
 ) -> Dict[str, Any]:
     """Execute semantic ranking against a configured index.
 
@@ -549,6 +556,16 @@ async def semantic_search(
     dict
         Response containing `documents`, `count`, optional `answers`, `captions`, and continuation metadata.
     """
+    # Convert empty strings and sentinel values to None
+    select = None if select == "" else select
+    filter = None if filter == "" else filter
+    api_key = None if api_key == "" else api_key
+    endpoint = None if endpoint == "" else endpoint
+    # query_caption has default "extractive", don't convert to None
+    query_answer = None if query_answer == "" else query_answer
+    query_answer_count = None if query_answer_count == 0 else query_answer_count
+    query_answer_threshold = None if query_answer_threshold == 0.0 else query_answer_threshold
+
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_key(api_key)
 
@@ -593,12 +610,12 @@ async def vector_search(
     vector_text: str,
     k: int = 10,
     exhaustive: bool = False,
-    weight: Optional[float] = None,
-    select: Optional[str] = None,
-    filter: Optional[str] = None,
+    weight: float = 0.0,
+    select: str = "",
+    filter: str = "",
     include_vectors: bool = False,
-    api_key: Optional[str] = None,
-    endpoint: Optional[str] = None,
+    api_key: str = "",
+    endpoint: str = "",
 ) -> Dict[str, Any]:
     """Perform pure vector similarity search.
 
@@ -629,6 +646,13 @@ async def vector_search(
     dict
         Response containing `documents`, `count`, and `continuation_token`.
     """
+    # Convert empty strings and sentinel values to None
+    weight = None if weight == 0.0 else weight
+    select = None if select == "" else select
+    filter = None if filter == "" else filter
+    api_key = None if api_key == "" else api_key
+    endpoint = None if endpoint == "" else endpoint
+
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_key(api_key)
 
@@ -672,13 +696,13 @@ async def hybrid_search(
     k: int = 10,
     top: int = 10,
     exhaustive: bool = False,
-    weight: Optional[float] = None,
-    select: Optional[str] = None,
-    filter: Optional[str] = None,
-    search_fields: Optional[str] = None,
+    weight: float = 0.0,
+    select: str = "",
+    filter: str = "",
+    search_fields: str = "",
     include_vectors: bool = False,
-    api_key: Optional[str] = None,
-    endpoint: Optional[str] = None,
+    api_key: str = "",
+    endpoint: str = "",
 ) -> Dict[str, Any]:
     """Combine lexical and vector retrieval in a single request.
 
@@ -709,6 +733,14 @@ async def hybrid_search(
     dict
         Response containing merged `documents`, `count`, and continuation metadata.
     """
+    # Convert empty strings and sentinel values to None
+    weight = None if weight == 0.0 else weight
+    select = None if select == "" else select
+    filter = None if filter == "" else filter
+    search_fields = None if search_fields == "" else search_fields
+    api_key = None if api_key == "" else api_key
+    endpoint = None if endpoint == "" else endpoint
+
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_key(api_key)
 
@@ -755,17 +787,17 @@ async def semantic_hybrid_search(
     k: int = 50,
     top: int = 10,
     exhaustive: bool = False,
-    weight: Optional[float] = None,
-    select: Optional[str] = None,
-    filter: Optional[str] = None,
-    search_fields: Optional[str] = None,
-    query_caption: Optional[str] = "extractive",
-    query_answer: Optional[str] = None,
-    query_answer_count: Optional[int] = None,
-    query_answer_threshold: Optional[float] = None,
+    weight: float = 0.0,
+    select: str = "",
+    filter: str = "",
+    search_fields: str = "",
+    query_caption: str = "extractive",
+    query_answer: str = "",
+    query_answer_count: int = 0,
+    query_answer_threshold: float = 0.0,
     include_vectors: bool = False,
-    api_key: Optional[str] = None,
-    endpoint: Optional[str] = None,
+    api_key: str = "",
+    endpoint: str = "",
 ) -> Dict[str, Any]:
     """Run hybrid retrieval with semantic reranking.
 
@@ -802,6 +834,18 @@ async def semantic_hybrid_search(
     dict
         Response containing `documents`, `count`, optional `answers`, `captions`, and continuation metadata.
     """
+    # Convert empty strings and sentinel values to None
+    weight = None if weight == 0.0 else weight
+    select = None if select == "" else select
+    filter = None if filter == "" else filter
+    search_fields = None if search_fields == "" else search_fields
+    # query_caption has default "extractive", don't convert
+    query_answer = None if query_answer == "" else query_answer
+    query_answer_count = None if query_answer_count == 0 else query_answer_count
+    query_answer_threshold = None if query_answer_threshold == 0.0 else query_answer_threshold
+    api_key = None if api_key == "" else api_key
+    endpoint = None if endpoint == "" else endpoint
+
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_key(api_key)
 
@@ -1211,15 +1255,15 @@ async def multimodal_hybrid_search(
 async def agentic_retrieval(
     knowledge_base_name: str,
     query: str,
-    intent_query: Optional[str] = None,
-    reasoning_effort: Optional[str] = None,
+    intent_query: str = "",
+    reasoning_effort: str = "",
     output_mode: str = "answerSynthesis",
     include_activity: bool = True,
-    max_runtime_seconds: Optional[int] = None,
-    max_output_size: Optional[int] = None,
-    knowledge_source_configs: Optional[str] = None,
-    api_key: Optional[str] = None,
-    endpoint: Optional[str] = None,
+    max_runtime_seconds: int = 0,
+    max_output_size: int = 0,
+    knowledge_source_configs: str = "",
+    api_key: str = "",
+    endpoint: str = "",
 ) -> Dict[str, Any]:
     """Invoke the Azure AI Search knowledge base agentic retrieval pipeline.
 
@@ -1280,6 +1324,14 @@ async def agentic_retrieval(
     * Agentic retrieval automatically selects appropriate search fields and handles
       vectorization when the index has a configured vectorizer.
     """
+    # Convert empty strings and sentinel values to None
+    intent_query = None if intent_query == "" else intent_query
+    reasoning_effort = None if reasoning_effort == "" else reasoning_effort
+    max_runtime_seconds = None if max_runtime_seconds == 0 else max_runtime_seconds
+    max_output_size = None if max_output_size == 0 else max_output_size
+    knowledge_source_configs = None if knowledge_source_configs == "" else knowledge_source_configs
+    api_key = None if api_key == "" else api_key
+    endpoint = None if endpoint == "" else endpoint
 
     resolved_endpoint = _resolve_endpoint(endpoint)
     key = _resolve_admin_key(api_key)
