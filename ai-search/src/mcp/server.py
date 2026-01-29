@@ -52,7 +52,6 @@ AZURE_SEARCH_ENDPOINT = os.getenv("AZURE_SEARCH_ENDPOINT")
 DEFAULT_QUERY_KEY = os.getenv("AZURE_SEARCH_QUERY_KEY")
 DEFAULT_ADMIN_KEY = os.getenv("AZURE_SEARCH_ADMIN_KEY")
 HTTP_TIMEOUT_SECONDS = int(os.getenv("AZURE_SEARCH_TIMEOUT", "30"))
-VECTOR_FIELD_SUFFIXES = ("_vector", "_vectors", "_embedding", "_embeddings")
 AGENTIC_API_VERSION = "2025-11-01-preview"
 
 
@@ -175,25 +174,6 @@ def _serialize_facets(raw: Any) -> Optional[Dict[str, Any]]:
                 facets[facet_key] = str(facet_values)
         return facets
     return str(raw) if raw else None
-
-
-def _strip_vector_fields_from_documents(documents: List[Dict[str, Any]]) -> None:
-    def _is_vector_field(field_name: str) -> bool:
-        lower_name = field_name.lower()
-        return any(lower_name.endswith(suffix) for suffix in VECTOR_FIELD_SUFFIXES)
-
-    for document in documents:
-        vector_keys = [key for key in document.keys() if isinstance(key, str) and _is_vector_field(key)]
-        for key in vector_keys:
-            document.pop(key, None)
-
-
-def _postprocess_documents(result: Dict[str, Any], *, include_vectors: bool) -> Dict[str, Any]:
-    if not include_vectors:
-        documents = result.get("documents")
-        if isinstance(documents, list):
-            _strip_vector_fields_from_documents(documents)
-    return result
 
 
 async def _collect_results(result_iterator: Any) -> Dict[str, Any]:
@@ -438,7 +418,6 @@ async def simple_search(
     select: str = "",
     filter: str = "",
     search_mode: str = "any",
-    include_vectors: bool = False,
     api_key: str = "",
     endpoint: str = "",
 ) -> Dict[str, Any]:
@@ -462,9 +441,6 @@ async def simple_search(
         OData filter expression applied before keyword search.
     search_mode: str, optional
         "any" (default) or "all" to control precision/recall.
-    include_vectors: bool, optional
-        When True, vector-valued fields (e.g., *_vector) are retained in the payload.
-        Defaults to False to avoid returning large embedding arrays.
     api_key / endpoint: Optional[str]
         Override default query key or endpoint for this call.
 
@@ -497,14 +473,13 @@ async def simple_search(
     if selected:
         search_kwargs["select"] = selected
 
-    result = await _execute_search(
+    return await _execute_search(
         endpoint=resolved_endpoint,
         key=key,
         index_name=index_name,
         search_text=query,
         search_kwargs=search_kwargs,
     )
-    return _postprocess_documents(result, include_vectors=include_vectors)
 
 
 @mcp.tool(
@@ -519,7 +494,6 @@ async def semantic_search(
     skip: int = 0,
     select: str = "",
     filter: str = "",
-    include_vectors: bool = False,
     api_key: str = "",
     endpoint: str = "",
     query_caption: str = "extractive",
@@ -541,9 +515,6 @@ async def semantic_search(
         Pagination controls (top defaults to 5).
     select / filter: Optional[str]
         Shape the fields returned and pre-filter documents.
-    include_vectors: bool, optional
-        When True, keep vector-valued fields (e.g., *_vector) in the response payload.
-        Defaults to False to reduce payload size.
     api_key / endpoint: Optional[str]
         Override default connection information.
     query_caption / query_answer: Optional[str]
@@ -590,14 +561,13 @@ async def semantic_search(
         if query_answer_threshold is not None:
             search_kwargs["query_answer_threshold"] = query_answer_threshold
 
-    result = await _execute_search(
+    return await _execute_search(
         endpoint=resolved_endpoint,
         key=key,
         index_name=index_name,
         search_text=query,
         search_kwargs=search_kwargs,
     )
-    return _postprocess_documents(result, include_vectors=include_vectors)
 
 
 @mcp.tool(
@@ -613,7 +583,6 @@ async def vector_search(
     weight: float = 0.0,
     select: str = "",
     filter: str = "",
-    include_vectors: bool = False,
     api_key: str = "",
     endpoint: str = "",
 ) -> Dict[str, Any]:
@@ -635,9 +604,6 @@ async def vector_search(
         Weight assigned to the vector query (relevant when mixing multiple vectors).
     select / filter: Optional[str]
         Restrict fields returned or apply filters before vector scoring.
-    include_vectors: bool, optional
-        When True, keep vector-valued fields (e.g., *_vector) in the response payload.
-        Defaults to False to reduce payload size.
     api_key / endpoint: Optional[str]
         Override default connection information.
 
@@ -674,14 +640,13 @@ async def vector_search(
     if filter:
         search_kwargs["filter"] = filter
 
-    result = await _execute_search(
+    return await _execute_search(
         endpoint=resolved_endpoint,
         key=key,
         index_name=index_name,
         search_text=None,
         search_kwargs=search_kwargs,
     )
-    return _postprocess_documents(result, include_vectors=include_vectors)
 
 
 @mcp.tool(
@@ -700,7 +665,6 @@ async def hybrid_search(
     select: str = "",
     filter: str = "",
     search_fields: str = "",
-    include_vectors: bool = False,
     api_key: str = "",
     endpoint: str = "",
 ) -> Dict[str, Any]:
@@ -722,9 +686,6 @@ async def hybrid_search(
         Control vector search exhaustive mode and weighting.
     select / filter / search_fields: Optional[str]
         Customize returned fields, filters, or lexical scope.
-    include_vectors: bool, optional
-        When True, keep vector-valued fields (e.g., *_vector) in the response payload.
-        Defaults to False to reduce payload size.
     api_key / endpoint: Optional[str]
         Override default connection information.
 
@@ -764,14 +725,13 @@ async def hybrid_search(
     if search_fields:
         search_kwargs["search_fields"] = _comma_split(search_fields)
 
-    result = await _execute_search(
+    return await _execute_search(
         endpoint=resolved_endpoint,
         key=key,
         index_name=index_name,
         search_text=query,
         search_kwargs=search_kwargs,
     )
-    return _postprocess_documents(result, include_vectors=include_vectors)
 
 
 @mcp.tool(
@@ -795,7 +755,6 @@ async def semantic_hybrid_search(
     query_answer: str = "",
     query_answer_count: int = 0,
     query_answer_threshold: float = 0.0,
-    include_vectors: bool = False,
     api_key: str = "",
     endpoint: str = "",
 ) -> Dict[str, Any]:
@@ -823,9 +782,6 @@ async def semantic_hybrid_search(
         Controls for the number of answers and confidence threshold.
     select / filter / search_fields: Optional[str]
         Additional shaping of results and filters.
-    include_vectors: bool, optional
-        When True, keep vector-valued fields (e.g., *_vector) in the response payload.
-        Defaults to False to reduce payload size.
     api_key / endpoint: Optional[str]
         Override default connection information.
 
@@ -879,14 +835,13 @@ async def semantic_hybrid_search(
     if search_fields:
         search_kwargs["search_fields"] = _comma_split(search_fields)
 
-    result = await _execute_search(
+    return await _execute_search(
         endpoint=resolved_endpoint,
         key=key,
         index_name=index_name,
         search_text=query,
         search_kwargs=search_kwargs,
     )
-    return _postprocess_documents(result, include_vectors=include_vectors)
 
 
 def _parse_key_value_configs(config_str: str) -> List[Dict[str, Any]]:
@@ -961,7 +916,6 @@ async def multimodal_hybrid_search(
     query_answer: str = "",
     query_answer_count: int = 0,
     query_answer_threshold: float = 0.0,
-    include_vectors: bool = False,
     sharepoint_prefix: str = "",
     api_key: str = "",
     endpoint: str = "",
@@ -1004,8 +958,6 @@ async def multimodal_hybrid_search(
         Additional OData filter expression to apply to both stages.
     search_fields: Optional[str]
         Fields to search in.
-    include_vectors: bool, optional
-        When True, keep vector-valued fields in the response payload (default False).
     sharepoint_prefix: Optional[str]
         SharePoint URL prefix to replace the blob storage path prefix in source_path.
         If provided, the blob storage prefix will be replaced with this SharePoint prefix.
@@ -1088,7 +1040,6 @@ async def multimodal_hybrid_search(
         search_text=query,
         search_kwargs=text_search_kwargs,
     )
-    text_result = _postprocess_documents(text_result, include_vectors=include_vectors)
 
     # Extract page numbers from text results
     text_documents = text_result.get("documents", [])
@@ -1126,7 +1077,6 @@ async def multimodal_hybrid_search(
             search_text=query,
             search_kwargs=image_search_kwargs,
         )
-        image_result = _postprocess_documents(image_result, include_vectors=include_vectors)
         logger.info("Stage 2 completed: Found %d image documents", len(image_result.get("documents", [])))
     else:
         logger.info("Stage 2 skipped: No pages found in text results")
