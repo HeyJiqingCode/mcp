@@ -4,7 +4,7 @@ import time
 import logging
 import datetime
 from typing import Dict, Annotated, Optional, Tuple
-from pydantic import Field
+from pydantic import Field, WithJsonSchema
 
 from fastmcp import FastMCP, Context
 from azure.ai.projects.aio import AIProjectClient
@@ -28,6 +28,8 @@ uvicorn_logger.setLevel(logging.WARNING)
 
 # Initialize FastMCP server
 mcp = FastMCP("Deep Research Server")
+
+MCPCompatibleInt = Annotated[int, WithJsonSchema({"type": "number"})]
 
 # Simple conversation_id -> thread_id mapping
 conversation_threads: Dict[str, str] = {}
@@ -180,7 +182,7 @@ async def deep_research(
     language: Annotated[str, Field(description="The language to use for the report in ISO 639-1 format, e.g., 'en' for English, 'zh' for Chinese")] = "zh",
     research_scope: Annotated[str, Field(description="Research report detail level: 'overview', 'brief', 'detailed', 'focused', 'comprehensive'")] = "overview",
     interactive: Annotated[bool, Field(description="Whether to ask clarifying questions before starting research")] = True,
-    timeout_seconds: Annotated[int, Field(description="Maximum time to wait for completion (1800-3600 seconds)", ge=1800, le=3600)] = 1800
+    timeout_seconds: Annotated[MCPCompatibleInt, Field(description="Maximum time to wait for completion (1800-3600 seconds)", ge=1800, le=3600)] = 1800
 ) -> str:
     """Perform deep research with conversation-based context management"""
     

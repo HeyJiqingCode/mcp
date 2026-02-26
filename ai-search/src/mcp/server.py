@@ -6,7 +6,7 @@ import os
 import re
 import sys
 from argparse import ArgumentParser
-from typing import Any, Dict, List, Optional
+from typing import Annotated, Any, Dict, List, Optional
 from urllib.parse import quote, unquote
 
 import aiohttp
@@ -15,6 +15,13 @@ from azure.search.documents.aio import SearchClient
 from azure.search.documents.models import VectorizableTextQuery
 from dotenv import load_dotenv
 from fastmcp import FastMCP
+
+try:
+    from pydantic import WithJsonSchema
+
+    MCPCompatibleInt = Annotated[int, WithJsonSchema({"type": "number"})]
+except ImportError:  # pragma: no cover - compatibility fallback
+    MCPCompatibleInt = int
 
 load_dotenv()
 
@@ -412,8 +419,8 @@ def _format_agentic_response(raw_response: Dict[str, Any]) -> Dict[str, Any]:
 async def simple_search(
     index_name: str,
     query: str,
-    top: int = 5,
-    skip: int = 0,
+    top: MCPCompatibleInt = 5,
+    skip: MCPCompatibleInt = 0,
     search_fields: str = "",
     select: str = "",
     filter: str = "",
@@ -490,15 +497,15 @@ async def semantic_search(
     index_name: str,
     query: str,
     semantic_configuration: str,
-    top: int = 5,
-    skip: int = 0,
+    top: MCPCompatibleInt = 5,
+    skip: MCPCompatibleInt = 0,
     select: str = "",
     filter: str = "",
     api_key: str = "",
     endpoint: str = "",
     query_caption: str = "extractive",
     query_answer: str = "",
-    query_answer_count: int = 0,
+    query_answer_count: MCPCompatibleInt = 0,
     query_answer_threshold: float = 0.0,
 ) -> Dict[str, Any]:
     """Execute semantic ranking against a configured index.
@@ -578,7 +585,7 @@ async def vector_search(
     index_name: str,
     vector_fields: str,
     vector_text: str,
-    k: int = 10,
+    k: MCPCompatibleInt = 10,
     exhaustive: bool = False,
     weight: float = 0.0,
     select: str = "",
@@ -658,8 +665,8 @@ async def hybrid_search(
     query: str,
     vector_fields: str,
     vector_text: str,
-    k: int = 10,
-    top: int = 10,
+    k: MCPCompatibleInt = 10,
+    top: MCPCompatibleInt = 10,
     exhaustive: bool = False,
     weight: float = 0.0,
     select: str = "",
@@ -744,8 +751,8 @@ async def semantic_hybrid_search(
     vector_fields: str,
     semantic_configuration: str,
     vector_text: str,
-    k: int = 50,
-    top: int = 10,
+    k: MCPCompatibleInt = 50,
+    top: MCPCompatibleInt = 10,
     exhaustive: bool = False,
     weight: float = 0.0,
     select: str = "",
@@ -753,7 +760,7 @@ async def semantic_hybrid_search(
     search_fields: str = "",
     query_caption: str = "extractive",
     query_answer: str = "",
-    query_answer_count: int = 0,
+    query_answer_count: MCPCompatibleInt = 0,
     query_answer_threshold: float = 0.0,
     api_key: str = "",
     endpoint: str = "",
@@ -904,9 +911,9 @@ async def multimodal_hybrid_search(
     vector_fields: str,
     semantic_configuration: str,
     vector_text: str,
-    k: int = 50,
-    top: int = 10,
-    image_top: int = 10,
+    k: MCPCompatibleInt = 50,
+    top: MCPCompatibleInt = 10,
+    image_top: MCPCompatibleInt = 10,
     exhaustive: bool = False,
     weight: float = 0.0,
     select: str = "",
@@ -914,7 +921,7 @@ async def multimodal_hybrid_search(
     search_fields: str = "",
     query_caption: str = "extractive",
     query_answer: str = "",
-    query_answer_count: int = 0,
+    query_answer_count: MCPCompatibleInt = 0,
     query_answer_threshold: float = 0.0,
     sharepoint_prefix: str = "",
     api_key: str = "",
@@ -1209,8 +1216,8 @@ async def agentic_retrieval(
     reasoning_effort: str = "",
     output_mode: str = "answerSynthesis",
     include_activity: bool = True,
-    max_runtime_seconds: int = 0,
-    max_output_size: int = 0,
+    max_runtime_seconds: MCPCompatibleInt = 0,
+    max_output_size: MCPCompatibleInt = 0,
     knowledge_source_configs: str = "",
     api_key: str = "",
     endpoint: str = "",
