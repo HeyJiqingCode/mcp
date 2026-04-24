@@ -6,7 +6,7 @@ import os
 import re
 import sys
 from argparse import ArgumentParser
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Final, List, Optional
 from urllib.parse import quote, unquote
 
 import aiohttp
@@ -51,8 +51,12 @@ mcp = FastMCP("Azure AI Search MCP Server")
 AZURE_SEARCH_ENDPOINT = os.getenv("AZURE_SEARCH_ENDPOINT")
 DEFAULT_QUERY_KEY = os.getenv("AZURE_SEARCH_QUERY_KEY")
 DEFAULT_ADMIN_KEY = os.getenv("AZURE_SEARCH_ADMIN_KEY")
-HTTP_TIMEOUT_SECONDS = int(os.getenv("AZURE_SEARCH_TIMEOUT", "30"))
-AGENTIC_API_VERSION = "2025-11-01-preview"
+HTTP_TIMEOUT_SECONDS: Final[int] = int(os.getenv("AZURE_SEARCH_TIMEOUT", "30"))
+AGENTIC_HTTP_TIMEOUT_SECONDS: Final[int] = int(
+    os.getenv("AZURE_SEARCH_AGENTIC_TIMEOUT", os.getenv("AZURE_SEARCH_TIMEOUT", "90"))
+)
+AGENTIC_TIMEOUT_BUFFER_SECONDS: Final[int] = int(os.getenv("AZURE_SEARCH_AGENTIC_TIMEOUT_BUFFER", "30"))
+AGENTIC_API_VERSION: Final[str] = "2025-11-01-preview"
 
 
 def _resolve_endpoint(endpoint: Optional[str] = None) -> str:
@@ -100,6 +104,20 @@ def _build_messages_from_query(query: str) -> List[Dict[str, Any]]:
             ],
         }
     ]
+
+
+def _build_agentic_timeout_budget(max_runtime_seconds: Optional[int]) -> int:
+    """计算 Agentic Retrieval 的客户端超时预算。
+
+    参数:
+        max_runtime_seconds: 请求体中的服务端最大运行时长；为 None 时表示未显式限制。
+
+    返回:
+        int: 供 aiohttp 使用的总超时秒数，包含服务端运行时间和额外缓冲。
+    """
+    requested_runtime_seconds: int = max_runtime_seconds or 0
+    buffered_runtime_seconds: int = requested_runtime_seconds + AGENTIC_TIMEOUT_BUFFER_SECONDS
+    return max(AGENTIC_HTTP_TIMEOUT_SECONDS, buffered_runtime_seconds)
 
 
 def _normalize_document(document: Dict[str, Any]) -> Dict[str, Any]:
@@ -1215,64 +1233,23 @@ async def agentic_retrieval(
     api_key: str = "",
     endpoint: str = "",
 ) -> Dict[str, Any]:
-    """Invoke the Azure AI Search knowledge base agentic retrieval pipeline.
+    """调用 Azure AI Search Knowledge Base 的 Agentic Retrieval 接口。
 
-    This wraps the REST API documented at
-    https://learn.microsoft.com/en-us/rest/api/searchservice/knowledge-retrieval/retrieve?view=rest-searchservice-2025-11-01-preview
+    参数:
+        knowledge_base_name: 要查询的 knowledge base 名称。
+        query: 用户问题或查询文本，不能为空。
+        intent_query: 可选的显式检索意图，用于绕过默认的查询规划。
+        reasoning_effort: 检索推理强度，可选值为 minimal、low、medium。
+        output_mode: 输出模式，支持 answerSynthesis 或 extractedData。
+        include_activity: 是否在结果中返回 activity 调试信息。
+        max_runtime_seconds: 服务端允许的最大运行时长（秒）。
+        max_output_size: 输出 token 上限。
+        knowledge_source_configs: 知识源配置字符串，使用 key=value 形式并以分号分隔多个来源。
+        api_key: 可选的管理员密钥覆盖值。
+        endpoint: 可选的 Azure Search 终结点覆盖值。
 
-    Supports multiple knowledge sources and flexible configuration options.
-
-    Parameters
-    ----------
-    knowledge_base_name : str
-        Name of the knowledge base to query.
-    query : str
-        User query or question (mandatory).
-    intent_query : Optional[str]
-        Optional explicit search intent to bypass model query planning.
-    reasoning_effort : Optional[str]
-        Retrieval reasoning effort level: "minimal", "low", or "medium".
-    output_mode : str
-        Output mode: "answerSynthesis" (default) or "extractedData".
-    include_activity : bool
-        Whether to include activity logs in the response (default True).
-    max_runtime_seconds : Optional[int]
-        Maximum execution time in seconds.
-    max_output_size : Optional[int]
-        Maximum output size in tokens.
-    knowledge_source_configs : Optional[str]
-        Knowledge source(s) configuration in key=value format. Use REST API camelCase field names.
-        Format: "knowledgeSourceName=name, kind=type, key=value; knowledgeSourceName=name2, ..."
-        Separators: , (pairs) ; (sources)
-
-        Required: knowledgeSourceName, kind
-        Common params: includeReferences, alwaysQuerySource, rerankerThreshold, includeReferenceSourceData
-        SearchIndex: filterAddOn
-        Web: count, freshness, language, market
-        RemoteSharePoint: filterExpressionAddOn
-    api_key : Optional[str]
-        Override default admin API key for this call.
-    endpoint : Optional[str]
-        Override default Azure Search endpoint.
-
-    Returns
-    -------
-    Dict[str, Any]
-        Formatted agentic retrieval response with:
-        - answer: str - Formatted answer text with superscript reference IDs (<sup>N</sup>)
-        - references: List[str] - Markdown-formatted reference list
-        - _status_code: int - HTTP status code
-
-    Notes
-    -----
-    * Requires an **admin** API key (query keys are rejected by the backend).
-    * Use key=value format in knowledge_source_configs for flexible per-source configuration.
-    * Each source can be independently configured with type-specific parameters.
-    * Boolean values: use "true" or "false" (lowercase).
-    * Numeric values: integers and floats are automatically converted.
-    * Spacing after commas and semicolons is flexible (automatically trimmed).
-    * Agentic retrieval automatically selects appropriate search fields and handles
-      vectorization when the index has a configured vectorizer.
+    返回:
+        Dict[str, Any]: 格式化后的检索结果，包含 answer、references 以及 _status_code。
     """
     # Convert empty strings and sentinel values to None
     intent_query = None if intent_query == "" else intent_query
@@ -1322,26 +1299,34 @@ async def agentic_retrieval(
         f"?api-version={AGENTIC_API_VERSION}"
     )
 
-    timeout_budget = max(HTTP_TIMEOUT_SECONDS, (max_runtime_seconds or 0) + 5)
+    timeout_budget: int = _build_agentic_timeout_budget(max_runtime_seconds)
     headers = {
         "api-key": key,
         "Content-Type": "application/json",
     }
 
-    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=timeout_budget)) as session:
-        async with session.post(url, headers=headers, json=request_body) as resp:
-            text = await resp.text()
-            if resp.status not in (200, 206):
-                raise RuntimeError(f"Agentic retrieval failed ({resp.status}): {text}")
-            try:
-                raw_data = json.loads(text)
-            except json.JSONDecodeError:
-                raw_data = {"raw": text}
+    try:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=timeout_budget)) as session:
+            async with session.post(url, headers=headers, json=request_body) as resp:
+                text = await resp.text()
+                if resp.status not in (200, 206):
+                    raise RuntimeError(f"Agentic retrieval failed ({resp.status}): {text}")
+                try:
+                    raw_data = json.loads(text)
+                except json.JSONDecodeError:
+                    raw_data = {"raw": text}
 
-            # Format the response
-            formatted_data = _format_agentic_response(raw_data)
-            formatted_data["_status_code"] = resp.status
-            return formatted_data
+                # Format the response
+                formatted_data = _format_agentic_response(raw_data)
+                formatted_data["_status_code"] = resp.status
+                return formatted_data
+    except asyncio.TimeoutError as exc:
+        raise RuntimeError(
+            "Agentic retrieval timed out while waiting for Azure AI Search to respond. "
+            f"Client timeout budget={timeout_budget}s. "
+            "Increase AZURE_SEARCH_AGENTIC_TIMEOUT, increase AZURE_SEARCH_AGENTIC_TIMEOUT_BUFFER, "
+            "or reduce request complexity/max_runtime_seconds for long-running answerSynthesis or multi-source queries."
+        ) from exc
 
 
 def main() -> None:
