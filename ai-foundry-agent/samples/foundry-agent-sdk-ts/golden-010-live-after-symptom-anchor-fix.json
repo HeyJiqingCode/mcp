@@ -1,0 +1,239 @@
+{
+  "generated_at": "2026-05-10T07:15:56.167Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-010-only\\golden_test_cases.golden_010.manifest.json",
+    "manifest_name": "golden-010-only-live-batch",
+    "manifest_version": 2,
+    "authoritative_dataset_id": "golden_010"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "golden_010"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "golden_010",
+      "dataset_name": "golden-010-only",
+      "evaluation_target": "response_contract_v2",
+      "evaluation_version": 2,
+      "file": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-010-only\\golden_test_cases.direct_answer.golden_010.json",
+      "split_type": "direct_answer",
+      "role": "regression_split",
+      "total_cases": 1,
+      "selected_cases": 1,
+      "summary": {
+        "cases": 1,
+        "errors": 0,
+        "mode_passed": 1,
+        "first_turn_focus_passed": 1,
+        "contract_passed": 1,
+        "historical_facts_passed": 1,
+        "suspected_direction_passed": 1,
+        "recommended_action_passed": 1,
+        "escalation_passed": 1,
+        "forbidden_claim_passed": 1,
+        "fully_passed": 1,
+        "structured_final_answers": 1,
+        "legacy_final_answer_passed": 1
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_010",
+          "source_case_id": "case_000046",
+          "scenario_type": "symptom_only_drive_enable",
+          "expected_mode": "direct_answer",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014) / CONTURA 6206 configurable / Integration** 的历史案例里，出现过与你原话非常接近的异常：**“Antriebe gehen nicht ein”**。该案例记录的部件是 **Scale**，登记原因是 **“Maßstab an X verschoben”**，处理记录是 **“Maßstab an X richtig hin geschoben”**。\n- 也是在 **Oberkochen (1014) / CONTURA 6206 configurable / Integration**，另一个相关案例记录为 **X-Drive**，异常是 **“X Antrieb war nicht fest”**，并伴随 **Pos Controller / PosCtrlAuto XYZ** 报错；处理记录是 **“Fehlersuche und dann x Antrieb befestigt”**。\n- 同机型 **CONTURA 6206 configurable** 的跨工厂案例里，多次出现 **X-Drive not functioning / x-drive would not move / X-drive malfunction**，历史原因集中在：\n  - **Bad X Drive**\n  - **X-drive assembled outside of allowed specifications**\n  - **Assembly error**\n  - **X-band tension incorrect**\n- 这些跨工厂案例的处理多为 **修正 X-Drive 装配**、**调整张力**、**重做 drive** 或 **更换 X Drive**。  \n- 另外在 **Oberkochen** 还有一条更偏驱动装配端的相关记录：**X-Drive** 出现 **“kupplung auf Welle festgefressen bei Motor”**，原因写的是 **“kupplung Unrund”**，处理为 **更换 motor mit Kupplung**。\n\n## 当前怀疑方向\n- **较强怀疑方向 1：X 轴测量链/位置反馈侧问题，而不一定先指向伺服本体。**  \n  你这次的原始症状 **“Antriebe gehen nicht ein”**，在 Oberkochen 的最贴近历史锚点里，直接对应到 **Scale / “Maßstab an X verschoben”**。这说明历史上同一句症状，曾经是 **X 轴 Maßstab（Scale）位置偏了**，导致驱动无法正常进入。\n- **较强怀疑方向 2：X-Drive 安装固定或装配状态异常。**  \n  同样是 Oberkochen + Contura 6206 + Integration，历史上还有 **“X Antrieb war nicht fest”** 这个强锚点，且与 **PosCtrlAuto XYZ** 相关。也就是说，第二条高相似历史不是“伺服坏了”，而是 **X-Antrieb / X-Drive 的固定或装配状态不对**。\n- 所以基于历史证据，当前更像是先从 **“Maßstab an X verschoben”** 和 **“X Antrieb war nicht fest”** 这两条锚点去看，而不是一上来就把结论定成伺服故障。  \n- 当然，**伺服/驱动总成本体异常仍然是可疑分支之一**，因为跨工厂确实有 **Bad X Drive**、**x-drive would not move** 这类记录；但就“同工厂 + 同机型 + 同阶段 + 原话最像”的证据看，它目前不是最优先怀疑对象。\n\n## 建议先做的检查或操作\n- 先做**低风险的外观与安装状态确认**，重点放在 **X 轴相关的 Scale / Maßstab** 和 **X-Drive / X-Antrieb**：\n  1. **目视检查 X 轴 Scale（Maßstab）是否有明显移位、未到位、装配位置异常。**\n  2. **确认 X-Antrieb / X-Drive 的固定状态**：是否有明显松动、未紧固到位、装配姿态不对。\n  3. 如果现场允许做**不拆解的基准复位/重新确认到位状态**，先按标准作业把相关安装位置重新确认一遍，再复测是否仍然“进不去”。\n  4. 若 HMI/控制界面能安全查看，顺手确认是否伴随 **Pos Controller / PosCtrlAuto XYZ** 一类信息；这能帮助判断更偏 **位置反馈链** 还是 **X-Drive 固定/装配**。\n- 这一步建议先**不直接更换伺服、不直接拆驱动总成**，因为最贴近的 Oberkochen 历史案例首先落在 **Scale 位置** 和 **X-Drive 固定** 两类问题上。\n\n## 何时升级给维修工程师\n- 如果你按上面的低风险检查做完后，**Scale/Maßstab 看起来已到位、X-Antrieb 固定也无明显异常，但复测后仍失败**，就应**升级给维修工程师**。\n- 如果检查过程中发现：\n  - **X-Drive / X-Antrieb 明显松动**\n  - 有 **PosCtrlAuto XYZ** 或类似位置控制异常持续出现\n  - 听到异常机械声、卡滞声、磨擦声\n  - 怀疑涉及 **联轴器、张力、驱动内部装配**  \n  这些都不适合继续靠现场猜测，应该**升级给维修工程师**。\n- 如果同一台机已经重复出现“**Antriebe gehen nicht ein**”，或者你做了重新确认到位后 **复测后仍失败**，也应立即**升级给维修工程师**（escalate to engineer）。\n- 尤其当后续需要进入 **X-Drive 重调、联轴器检查、驱动更换、伺服判定** 这类维护动作时，应停止继续试探，由维修工程师处理。",
+          "second_turn_text": null,
+          "final_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014) / CONTURA 6206 configurable / Integration** 的历史案例里，出现过与你原话非常接近的异常：**“Antriebe gehen nicht ein”**。该案例记录的部件是 **Scale**，登记原因是 **“Maßstab an X verschoben”**，处理记录是 **“Maßstab an X richtig hin geschoben”**。\n- 也是在 **Oberkochen (1014) / CONTURA 6206 configurable / Integration**，另一个相关案例记录为 **X-Drive**，异常是 **“X Antrieb war nicht fest”**，并伴随 **Pos Controller / PosCtrlAuto XYZ** 报错；处理记录是 **“Fehlersuche und dann x Antrieb befestigt”**。\n- 同机型 **CONTURA 6206 configurable** 的跨工厂案例里，多次出现 **X-Drive not functioning / x-drive would not move / X-drive malfunction**，历史原因集中在：\n  - **Bad X Drive**\n  - **X-drive assembled outside of allowed specifications**\n  - **Assembly error**\n  - **X-band tension incorrect**\n- 这些跨工厂案例的处理多为 **修正 X-Drive 装配**、**调整张力**、**重做 drive** 或 **更换 X Drive**。  \n- 另外在 **Oberkochen** 还有一条更偏驱动装配端的相关记录：**X-Drive** 出现 **“kupplung auf Welle festgefressen bei Motor”**，原因写的是 **“kupplung Unrund”**，处理为 **更换 motor mit Kupplung**。\n\n## 当前怀疑方向\n- **较强怀疑方向 1：X 轴测量链/位置反馈侧问题，而不一定先指向伺服本体。**  \n  你这次的原始症状 **“Antriebe gehen nicht ein”**，在 Oberkochen 的最贴近历史锚点里，直接对应到 **Scale / “Maßstab an X verschoben”**。这说明历史上同一句症状，曾经是 **X 轴 Maßstab（Scale）位置偏了**，导致驱动无法正常进入。\n- **较强怀疑方向 2：X-Drive 安装固定或装配状态异常。**  \n  同样是 Oberkochen + Contura 6206 + Integration，历史上还有 **“X Antrieb war nicht fest”** 这个强锚点，且与 **PosCtrlAuto XYZ** 相关。也就是说，第二条高相似历史不是“伺服坏了”，而是 **X-Antrieb / X-Drive 的固定或装配状态不对**。\n- 所以基于历史证据，当前更像是先从 **“Maßstab an X verschoben”** 和 **“X Antrieb war nicht fest”** 这两条锚点去看，而不是一上来就把结论定成伺服故障。  \n- 当然，**伺服/驱动总成本体异常仍然是可疑分支之一**，因为跨工厂确实有 **Bad X Drive**、**x-drive would not move** 这类记录；但就“同工厂 + 同机型 + 同阶段 + 原话最像”的证据看，它目前不是最优先怀疑对象。\n\n## 建议先做的检查或操作\n- 先做**低风险的外观与安装状态确认**，重点放在 **X 轴相关的 Scale / Maßstab** 和 **X-Drive / X-Antrieb**：\n  1. **目视检查 X 轴 Scale（Maßstab）是否有明显移位、未到位、装配位置异常。**\n  2. **确认 X-Antrieb / X-Drive 的固定状态**：是否有明显松动、未紧固到位、装配姿态不对。\n  3. 如果现场允许做**不拆解的基准复位/重新确认到位状态**，先按标准作业把相关安装位置重新确认一遍，再复测是否仍然“进不去”。\n  4. 若 HMI/控制界面能安全查看，顺手确认是否伴随 **Pos Controller / PosCtrlAuto XYZ** 一类信息；这能帮助判断更偏 **位置反馈链** 还是 **X-Drive 固定/装配**。\n- 这一步建议先**不直接更换伺服、不直接拆驱动总成**，因为最贴近的 Oberkochen 历史案例首先落在 **Scale 位置** 和 **X-Drive 固定** 两类问题上。\n\n## 何时升级给维修工程师\n- 如果你按上面的低风险检查做完后，**Scale/Maßstab 看起来已到位、X-Antrieb 固定也无明显异常，但复测后仍失败**，就应**升级给维修工程师**。\n- 如果检查过程中发现：\n  - **X-Drive / X-Antrieb 明显松动**\n  - 有 **PosCtrlAuto XYZ** 或类似位置控制异常持续出现\n  - 听到异常机械声、卡滞声、磨擦声\n  - 怀疑涉及 **联轴器、张力、驱动内部装配**  \n  这些都不适合继续靠现场猜测，应该**升级给维修工程师**。\n- 如果同一台机已经重复出现“**Antriebe gehen nicht ein**”，或者你做了重新确认到位后 **复测后仍失败**，也应立即**升级给维修工程师**（escalate to engineer）。\n- 尤其当后续需要进入 **X-Drive 重调、联轴器检查、驱动更换、伺服判定** 这类维护动作时，应停止继续试探，由维修工程师处理。",
+          "first_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014) / CONTURA 6206 configurable / Integration** 的历史案例里，出现过与你原话非常接近的异常：**“Antriebe gehen nicht ein”**。该案例记录的部件是 **Scale**，登记原因是 **“Maßstab an X verschoben”**，处理记录是 **“Maßstab an X richtig hin geschoben”**。\n- 也是在 **Oberkochen (1014) / CONTURA 6206 configurable / Integration**，另一个相关案例记录为 **X-Drive**，异常是 **“X Antrieb war nicht fest”**，并伴随 **Pos Controller / PosCtrlAuto XYZ** 报错；处理记录是 **“Fehlersuche und dann x Antrieb befestigt”**。\n- 同机型 **CONTURA 6206 configurable** 的跨工厂案例里，多次出现 **X-Drive not functioning / x-drive would not move / X-drive malfunction**，历史原因集中在：\n  - **Bad X Drive**\n  - **X-drive assembled outside of allowed specifications**\n  - **Assembly error**\n  - **X-band tension incorrect**\n- 这些跨工厂案例的处理多为 **修正 X-Drive 装配**、**调整张力**、**重做 drive** 或 **更换 X Drive**。  \n- 另外在 **Oberkochen** 还有一条更偏驱动装配端的相关记录：**X-Drive** 出现 **“kupplung auf Welle festgefressen bei Motor”**，原因写的是 **“kupplung Unrund”**，处理为 **更换 motor mit Kupplung**。\n\n##",
+              "当前怀疑方向": "**较强怀疑方向 1：X 轴测量链/位置反馈侧问题，而不一定先指向伺服本体。**  \n  你这次的原始症状 **“Antriebe gehen nicht ein”**，在 Oberkochen 的最贴近历史锚点里，直接对应到 **Scale / “Maßstab an X verschoben”**。这说明历史上同一句症状，曾经是 **X 轴 Maßstab（Scale）位置偏了**，导致驱动无法正常进入。\n- **较强怀疑方向 2：X-Drive 安装固定或装配状态异常。**  \n  同样是 Oberkochen + Contura 6206 + Integration，历史上还有 **“X Antrieb war nicht fest”** 这个强锚点，且与 **PosCtrlAuto XYZ** 相关。也就是说，第二条高相似历史不是“伺服坏了”，而是 **X-Antrieb / X-Drive 的固定或装配状态不对**。\n- 所以基于历史证据，当前更像是先从 **“Maßstab an X verschoben”** 和 **“X Antrieb war nicht fest”** 这两条锚点去看，而不是一上来就把结论定成伺服故障。  \n- 当然，**伺服/驱动总成本体异常仍然是可疑分支之一**，因为跨工厂确实有 **Bad X Drive**、**x-drive would not move** 这类记录；但就“同工厂 + 同机型 + 同阶段 + 原话最像”的证据看，它目前不是最优先怀疑对象。\n\n##",
+              "建议先做的检查或操作": "先做**低风险的外观与安装状态确认**，重点放在 **X 轴相关的 Scale / Maßstab** 和 **X-Drive / X-Antrieb**：\n  1. **目视检查 X 轴 Scale（Maßstab）是否有明显移位、未到位、装配位置异常。**\n  2. **确认 X-Antrieb / X-Drive 的固定状态**：是否有明显松动、未紧固到位、装配姿态不对。\n  3. 如果现场允许做**不拆解的基准复位/重新确认到位状态**，先按标准作业把相关安装位置重新确认一遍，再复测是否仍然“进不去”。\n  4. 若 HMI/控制界面能安全查看，顺手确认是否伴随 **Pos Controller / PosCtrlAuto XYZ** 一类信息；这能帮助判断更偏 **位置反馈链** 还是 **X-Drive 固定/装配**。\n- 这一步建议先**不直接更换伺服、不直接拆驱动总成**，因为最贴近的 Oberkochen 历史案例首先落在 **Scale 位置** 和 **X-Drive 固定** 两类问题上。\n\n##",
+              "何时升级给维修工程师": "如果你按上面的低风险检查做完后，**Scale/Maßstab 看起来已到位、X-Antrieb 固定也无明显异常，但复测后仍失败**，就应**升级给维修工程师**。\n- 如果检查过程中发现：\n  - **X-Drive / X-Antrieb 明显松动**\n  - 有 **PosCtrlAuto XYZ** 或类似位置控制异常持续出现\n  - 听到异常机械声、卡滞声、磨擦声\n  - 怀疑涉及 **联轴器、张力、驱动内部装配**  \n  这些都不适合继续靠现场猜测，应该**升级给维修工程师**。\n- 如果同一台机已经重复出现“**Antriebe gehen nicht ein**”，或者你做了重新确认到位后 **复测后仍失败**，也应立即**升级给维修工程师**（escalate to engineer）。\n- 尤其当后续需要进入 **X-Drive 重调、联轴器检查、驱动更换、伺服判定** 这类维护动作时，应停止继续试探，由维修工程师处理。"
+            }
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014) / CONTURA 6206 configurable / Integration** 的历史案例里，出现过与你原话非常接近的异常：**“Antriebe gehen nicht ein”**。该案例记录的部件是 **Scale**，登记原因是 **“Maßstab an X verschoben”**，处理记录是 **“Maßstab an X richtig hin geschoben”**。\n- 也是在 **Oberkochen (1014) / CONTURA 6206 configurable / Integration**，另一个相关案例记录为 **X-Drive**，异常是 **“X Antrieb war nicht fest”**，并伴随 **Pos Controller / PosCtrlAuto XYZ** 报错；处理记录是 **“Fehlersuche und dann x Antrieb befestigt”**。\n- 同机型 **CONTURA 6206 configurable** 的跨工厂案例里，多次出现 **X-Drive not functioning / x-drive would not move / X-drive malfunction**，历史原因集中在：\n  - **Bad X Drive**\n  - **X-drive assembled outside of allowed specifications**\n  - **Assembly error**\n  - **X-band tension incorrect**\n- 这些跨工厂案例的处理多为 **修正 X-Drive 装配**、**调整张力**、**重做 drive** 或 **更换 X Drive**。  \n- 另外在 **Oberkochen** 还有一条更偏驱动装配端的相关记录：**X-Drive** 出现 **“kupplung auf Welle festgefressen bei Motor”**，原因写的是 **“kupplung Unrund”**，处理为 **更换 motor mit Kupplung**。\n\n##",
+              "当前怀疑方向": "**较强怀疑方向 1：X 轴测量链/位置反馈侧问题，而不一定先指向伺服本体。**  \n  你这次的原始症状 **“Antriebe gehen nicht ein”**，在 Oberkochen 的最贴近历史锚点里，直接对应到 **Scale / “Maßstab an X verschoben”**。这说明历史上同一句症状，曾经是 **X 轴 Maßstab（Scale）位置偏了**，导致驱动无法正常进入。\n- **较强怀疑方向 2：X-Drive 安装固定或装配状态异常。**  \n  同样是 Oberkochen + Contura 6206 + Integration，历史上还有 **“X Antrieb war nicht fest”** 这个强锚点，且与 **PosCtrlAuto XYZ** 相关。也就是说，第二条高相似历史不是“伺服坏了”，而是 **X-Antrieb / X-Drive 的固定或装配状态不对**。\n- 所以基于历史证据，当前更像是先从 **“Maßstab an X verschoben”** 和 **“X Antrieb war nicht fest”** 这两条锚点去看，而不是一上来就把结论定成伺服故障。  \n- 当然，**伺服/驱动总成本体异常仍然是可疑分支之一**，因为跨工厂确实有 **Bad X Drive**、**x-drive would not move** 这类记录；但就“同工厂 + 同机型 + 同阶段 + 原话最像”的证据看，它目前不是最优先怀疑对象。\n\n##",
+              "建议先做的检查或操作": "先做**低风险的外观与安装状态确认**，重点放在 **X 轴相关的 Scale / Maßstab** 和 **X-Drive / X-Antrieb**：\n  1. **目视检查 X 轴 Scale（Maßstab）是否有明显移位、未到位、装配位置异常。**\n  2. **确认 X-Antrieb / X-Drive 的固定状态**：是否有明显松动、未紧固到位、装配姿态不对。\n  3. 如果现场允许做**不拆解的基准复位/重新确认到位状态**，先按标准作业把相关安装位置重新确认一遍，再复测是否仍然“进不去”。\n  4. 若 HMI/控制界面能安全查看，顺手确认是否伴随 **Pos Controller / PosCtrlAuto XYZ** 一类信息；这能帮助判断更偏 **位置反馈链** 还是 **X-Drive 固定/装配**。\n- 这一步建议先**不直接更换伺服、不直接拆驱动总成**，因为最贴近的 Oberkochen 历史案例首先落在 **Scale 位置** 和 **X-Drive 固定** 两类问题上。\n\n##",
+              "何时升级给维修工程师": "如果你按上面的低风险检查做完后，**Scale/Maßstab 看起来已到位、X-Antrieb 固定也无明显异常，但复测后仍失败**，就应**升级给维修工程师**。\n- 如果检查过程中发现：\n  - **X-Drive / X-Antrieb 明显松动**\n  - 有 **PosCtrlAuto XYZ** 或类似位置控制异常持续出现\n  - 听到异常机械声、卡滞声、磨擦声\n  - 怀疑涉及 **联轴器、张力、驱动内部装配**  \n  这些都不适合继续靠现场猜测，应该**升级给维修工程师**。\n- 如果同一台机已经重复出现“**Antriebe gehen nicht ein**”，或者你做了重新确认到位后 **复测后仍失败**，也应立即**升级给维修工程师**（escalate to engineer）。\n- 尤其当后续需要进入 **X-Drive 重调、联轴器检查、驱动更换、伺服判定** 这类维护动作时，应停止继续试探，由维修工程师处理。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "direct_answer",
+              "observed_first_turn_mode": "structured_answer",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": false,
+              "passed": true,
+              "required_keywords": [],
+              "required_keyword_check": {
+                "matched_keywords": [],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Integration",
+                  "Antriebe gehen nicht ein",
+                  "Scale"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "最像",
+                  "更像",
+                  "Scale",
+                  "Maßstab",
+                  "X"
+                ],
+                "missing_keywords": [
+                  "编码尺"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "目视",
+                  "Maßstab"
+                ],
+                "missing_keywords": [
+                  "X轴",
+                  "推回"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "再次进不去",
+                  "刻度尺"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 1,
+    "mode_passed": 1,
+    "first_turn_focus_passed": 1,
+    "contract_passed": 1,
+    "historical_facts_passed": 1,
+    "suspected_direction_passed": 1,
+    "recommended_action_passed": 1,
+    "escalation_passed": 1,
+    "forbidden_claim_passed": 1,
+    "fully_passed": 1,
+    "structured_final_answers": 1,
+    "legacy_final_answer_passed": 1,
+    "errors": 0
+  }
+}

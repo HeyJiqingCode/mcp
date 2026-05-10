@@ -1,0 +1,612 @@
+{
+  "generated_at": "2026-05-10T05:38:24.910Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\targeted-failed-cases\\golden_test_cases.targeted_failed.manifest.json",
+    "manifest_name": "targeted-failed-live-batch",
+    "manifest_version": 2,
+    "authoritative_dataset_id": "direct_failed"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "direct_failed",
+    "clarify_failed"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "direct_failed",
+      "dataset_name": "targeted-failed-direct-answer",
+      "evaluation_target": "response_contract_v2",
+      "evaluation_version": 2,
+      "file": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\targeted-failed-cases\\golden_test_cases.direct_answer.failed.json",
+      "split_type": "direct_answer",
+      "role": "regression_split",
+      "total_cases": 1,
+      "selected_cases": 1,
+      "summary": {
+        "cases": 1,
+        "errors": 0,
+        "mode_passed": 1,
+        "first_turn_focus_passed": 1,
+        "contract_passed": 1,
+        "historical_facts_passed": 1,
+        "suspected_direction_passed": 1,
+        "recommended_action_passed": 1,
+        "escalation_passed": 1,
+        "forbidden_claim_passed": 1,
+        "fully_passed": 1,
+        "structured_final_answers": 1,
+        "legacy_final_answer_passed": 0
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_005",
+          "source_case_id": "case_000014",
+          "scenario_type": "conflicting_explanations",
+          "expected_mode": "direct_answer",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "### 历史案例事实\n- 检索到的 **Contura 6206 / Lasering** 历史案例里，和“**一做激光就跳**”最接近的，主要是 **机械干涉或轴运动异常**，不是已检索到明确的“safety 参数没写”案例。  \n- 最像的几条案例包括：  \n  1. **Bellows（风琴罩）**：历史记录写明“**做激光1号位跳驱动**”，原因是**风琴罩装配支架不平，高过 Y 导轨，移动时卡住**；处理是**返工风琴罩后继续激光**。  \n  2. **Y-Drive**：历史记录写明“**做激光时 Y 轴跳驱动**”，原因描述为**怀疑风琴罩和前后支架影响**；处理是**临时拆掉风琴罩**。  \n  3. **Granite plate（大理石/地脚相关）**：历史记录写明“**激光跳驱动，Check 不过**”，原因是**气动地脚圆锥块未处于大理石底部圆孔中心，存在干涉**；处理是**排查原因、重挑大理石、重复测试**。  \n  4. **Z-Shaft**：历史记录写明“**激光异常，线段抖动**”，原因是**Z 轴 smooth running 一端卡顿**；处理是**返工后重复做激光验证**。  \n- 另外也有不少 **环境温度/温差** 导致激光超差、线性不过、点散的案例，但这些更偏向**测量结果异常**，不是最像你说的“**一做就 ÜSA 跳**”这种触发式中断。  \n- 本次检索结果里，**没有直接检到**“Contura 6206 / Lasering / ÜSA 跳 = 控制值没写进去”这一条强匹配历史证据。\n\n### 当前怀疑方向\n- **更像的怀疑方向**：先怀疑 **Lasering 动作过程中存在机械干涉/轴运动异常**，尤其是 **Y 轴路径上的风琴罩、支架、导轨附近干涉**。这是因为历史上同机型同工位里，“一做激光就跳驱动”的相似案例，多数都落在这类原因上。  \n- **次一级怀疑方向**：大理石/地脚定位干涉，或者 Z 轴运动不顺，也可能在激光动作时触发异常。  \n- **关于你现场说的两个说法**：  \n  - “**safety**”这条，从现有检索结果看，**没有足够强的同类历史案例直接支持**。  \n  - “**控制值没写进去**”这条，这一轮检索里也**没有直接找到比机械干涉更像的历史证据**。  \n- 所以按历史相似度排序，**目前更应把机械干涉/运动卡滞当成优先怀疑方向**，但还不能当成已确认。\n\n### 建议先做的检查或操作\n只建议你先做 **低风险、操作员可执行** 的确认：\n\n1. **先不要反复强行重跑 Lasering。**  \n   如果是一做就跳，连续重试容易把“偶发干涉”变成“稳定卡滞”。\n\n2. **做一次静态目视检查，重点看 Y 轴路径相关部位。**  \n   看：\n   - 风琴罩是否鼓包、偏高、擦碰痕迹明显  \n   - 风琴罩支架、前后支架是否有歪斜、翘起  \n   - 导轨附近是否有异物、线缆、附件干涉痕迹\n\n3. **观察 ÜSA 跳之前，轴是在哪个动作点出问题。**  \n   不要求你拆机，只记录：\n   - 是一启动激光流程就跳  \n   - 还是运动到某个固定位置才跳  \n   - 是否伴随某一轴声音异常、顿挫、卡一下再跳  \n   这个信息对区分“参数类”还是“机械路径类”很关键。\n\n4. **确认现场环境是否明显异常。**  \n   只做基础确认：\n   - 现场温度是否明显偏高  \n   - 机台是否刚经历较大温差变化  \n   这一步不是首怀疑项，但可以排除历史里常见的环境因素。\n\n5. **如果现场允许查看但不改参数，只核对当前相关作业数据是否已正常调用。**  \n   重点是“看是否存在/已加载”，**不要现场自行改写控制值**。  \n   因为从当前历史证据看，参数未写入并不是最像的方向；在没证据前直接改值，风险比收益高。\n\n### 何时升级给维修工程师\n出现下面任一情况，建议停止继续猜测，直接升级给维修工程师：\n\n- **静态目视已看到明显干涉、卡碰、支架不平、风琴罩异常**。  \n- **每次都在固定位置或固定动作点触发 ÜSA 跳**，说明很像路径干涉或轴运动问题。  \n- **伴随 Y/Z 轴异响、卡顿、抖动、跳驱动**。  \n- **查看后未发现外观问题，但问题持续复现**，因为这时就需要维修进一步区分：机械干涉、轴状态、地脚/大理石定位，还是控制/安全链问题。  \n- **涉及拆风琴罩、调整支架、检查地脚/大理石、改控制值或安全相关设置**，这些都应由维修处理，不建议操作员自行进行。  \n- **如果你们已经重试过一次以上仍然一做就跳**，也应升级，不要再靠反复试跑判断。\n\n如果你愿意，我下一步可以基于这个方向，给你整理一个 **“现场 2 分钟排查顺序（先看哪里、看到什么就判哪条更像）”**。",
+          "second_turn_text": null,
+          "final_turn_text": "### 历史案例事实\n- 检索到的 **Contura 6206 / Lasering** 历史案例里，和“**一做激光就跳**”最接近的，主要是 **机械干涉或轴运动异常**，不是已检索到明确的“safety 参数没写”案例。  \n- 最像的几条案例包括：  \n  1. **Bellows（风琴罩）**：历史记录写明“**做激光1号位跳驱动**”，原因是**风琴罩装配支架不平，高过 Y 导轨，移动时卡住**；处理是**返工风琴罩后继续激光**。  \n  2. **Y-Drive**：历史记录写明“**做激光时 Y 轴跳驱动**”，原因描述为**怀疑风琴罩和前后支架影响**；处理是**临时拆掉风琴罩**。  \n  3. **Granite plate（大理石/地脚相关）**：历史记录写明“**激光跳驱动，Check 不过**”，原因是**气动地脚圆锥块未处于大理石底部圆孔中心，存在干涉**；处理是**排查原因、重挑大理石、重复测试**。  \n  4. **Z-Shaft**：历史记录写明“**激光异常，线段抖动**”，原因是**Z 轴 smooth running 一端卡顿**；处理是**返工后重复做激光验证**。  \n- 另外也有不少 **环境温度/温差** 导致激光超差、线性不过、点散的案例，但这些更偏向**测量结果异常**，不是最像你说的“**一做就 ÜSA 跳**”这种触发式中断。  \n- 本次检索结果里，**没有直接检到**“Contura 6206 / Lasering / ÜSA 跳 = 控制值没写进去”这一条强匹配历史证据。\n\n### 当前怀疑方向\n- **更像的怀疑方向**：先怀疑 **Lasering 动作过程中存在机械干涉/轴运动异常**，尤其是 **Y 轴路径上的风琴罩、支架、导轨附近干涉**。这是因为历史上同机型同工位里，“一做激光就跳驱动”的相似案例，多数都落在这类原因上。  \n- **次一级怀疑方向**：大理石/地脚定位干涉，或者 Z 轴运动不顺，也可能在激光动作时触发异常。  \n- **关于你现场说的两个说法**：  \n  - “**safety**”这条，从现有检索结果看，**没有足够强的同类历史案例直接支持**。  \n  - “**控制值没写进去**”这条，这一轮检索里也**没有直接找到比机械干涉更像的历史证据**。  \n- 所以按历史相似度排序，**目前更应把机械干涉/运动卡滞当成优先怀疑方向**，但还不能当成已确认。\n\n### 建议先做的检查或操作\n只建议你先做 **低风险、操作员可执行** 的确认：\n\n1. **先不要反复强行重跑 Lasering。**  \n   如果是一做就跳，连续重试容易把“偶发干涉”变成“稳定卡滞”。\n\n2. **做一次静态目视检查，重点看 Y 轴路径相关部位。**  \n   看：\n   - 风琴罩是否鼓包、偏高、擦碰痕迹明显  \n   - 风琴罩支架、前后支架是否有歪斜、翘起  \n   - 导轨附近是否有异物、线缆、附件干涉痕迹\n\n3. **观察 ÜSA 跳之前，轴是在哪个动作点出问题。**  \n   不要求你拆机，只记录：\n   - 是一启动激光流程就跳  \n   - 还是运动到某个固定位置才跳  \n   - 是否伴随某一轴声音异常、顿挫、卡一下再跳  \n   这个信息对区分“参数类”还是“机械路径类”很关键。\n\n4. **确认现场环境是否明显异常。**  \n   只做基础确认：\n   - 现场温度是否明显偏高  \n   - 机台是否刚经历较大温差变化  \n   这一步不是首怀疑项，但可以排除历史里常见的环境因素。\n\n5. **如果现场允许查看但不改参数，只核对当前相关作业数据是否已正常调用。**  \n   重点是“看是否存在/已加载”，**不要现场自行改写控制值**。  \n   因为从当前历史证据看，参数未写入并不是最像的方向；在没证据前直接改值，风险比收益高。\n\n### 何时升级给维修工程师\n出现下面任一情况，建议停止继续猜测，直接升级给维修工程师：\n\n- **静态目视已看到明显干涉、卡碰、支架不平、风琴罩异常**。  \n- **每次都在固定位置或固定动作点触发 ÜSA 跳**，说明很像路径干涉或轴运动问题。  \n- **伴随 Y/Z 轴异响、卡顿、抖动、跳驱动**。  \n- **查看后未发现外观问题，但问题持续复现**，因为这时就需要维修进一步区分：机械干涉、轴状态、地脚/大理石定位，还是控制/安全链问题。  \n- **涉及拆风琴罩、调整支架、检查地脚/大理石、改控制值或安全相关设置**，这些都应由维修处理，不建议操作员自行进行。  \n- **如果你们已经重试过一次以上仍然一做就跳**，也应升级，不要再靠反复试跑判断。\n\n如果你愿意，我下一步可以基于这个方向，给你整理一个 **“现场 2 分钟排查顺序（先看哪里、看到什么就判哪条更像）”**。",
+          "first_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "检索到的 **Contura 6206 / Lasering** 历史案例里，和“**一做激光就跳**”最接近的，主要是 **机械干涉或轴运动异常**，不是已检索到明确的“safety 参数没写”案例。  \n- 最像的几条案例包括：  \n  1. **Bellows（风琴罩）**：历史记录写明“**做激光1号位跳驱动**”，原因是**风琴罩装配支架不平，高过 Y 导轨，移动时卡住**；处理是**返工风琴罩后继续激光**。  \n  2. **Y-Drive**：历史记录写明“**做激光时 Y 轴跳驱动**”，原因描述为**怀疑风琴罩和前后支架影响**；处理是**临时拆掉风琴罩**。  \n  3. **Granite plate（大理石/地脚相关）**：历史记录写明“**激光跳驱动，Check 不过**”，原因是**气动地脚圆锥块未处于大理石底部圆孔中心，存在干涉**；处理是**排查原因、重挑大理石、重复测试**。  \n  4. **Z-Shaft**：历史记录写明“**激光异常，线段抖动**”，原因是**Z 轴 smooth running 一端卡顿**；处理是**返工后重复做激光验证**。  \n- 另外也有不少 **环境温度/温差** 导致激光超差、线性不过、点散的案例，但这些更偏向**测量结果异常**，不是最像你说的“**一做就 ÜSA 跳**”这种触发式中断。  \n- 本次检索结果里，**没有直接检到**“Contura 6206 / Lasering / ÜSA 跳 = 控制值没写进去”这一条强匹配历史证据。\n\n###",
+              "当前怀疑方向": "**更像的怀疑方向**：先怀疑 **Lasering 动作过程中存在机械干涉/轴运动异常**，尤其是 **Y 轴路径上的风琴罩、支架、导轨附近干涉**。这是因为历史上同机型同工位里，“一做激光就跳驱动”的相似案例，多数都落在这类原因上。  \n- **次一级怀疑方向**：大理石/地脚定位干涉，或者 Z 轴运动不顺，也可能在激光动作时触发异常。  \n- **关于你现场说的两个说法**：  \n  - “**safety**”这条，从现有检索结果看，**没有足够强的同类历史案例直接支持**。  \n  - “**控制值没写进去**”这条，这一轮检索里也**没有直接找到比机械干涉更像的历史证据**。  \n- 所以按历史相似度排序，**目前更应把机械干涉/运动卡滞当成优先怀疑方向**，但还不能当成已确认。\n\n###",
+              "建议先做的检查或操作": "只建议你先做 **低风险、操作员可执行** 的确认：\n\n1. **先不要反复强行重跑 Lasering。**  \n   如果是一做就跳，连续重试容易把“偶发干涉”变成“稳定卡滞”。\n\n2. **做一次静态目视检查，重点看 Y 轴路径相关部位。**  \n   看：\n   - 风琴罩是否鼓包、偏高、擦碰痕迹明显  \n   - 风琴罩支架、前后支架是否有歪斜、翘起  \n   - 导轨附近是否有异物、线缆、附件干涉痕迹\n\n3. **观察 ÜSA 跳之前，轴是在哪个动作点出问题。**  \n   不要求你拆机，只记录：\n   - 是一启动激光流程就跳  \n   - 还是运动到某个固定位置才跳  \n   - 是否伴随某一轴声音异常、顿挫、卡一下再跳  \n   这个信息对区分“参数类”还是“机械路径类”很关键。\n\n4. **确认现场环境是否明显异常。**  \n   只做基础确认：\n   - 现场温度是否明显偏高  \n   - 机台是否刚经历较大温差变化  \n   这一步不是首怀疑项，但可以排除历史里常见的环境因素。\n\n5. **如果现场允许查看但不改参数，只核对当前相关作业数据是否已正常调用。**  \n   重点是“看是否存在/已加载”，**不要现场自行改写控制值**。  \n   因为从当前历史证据看，参数未写入并不是最像的方向；在没证据前直接改值，风险比收益高。\n\n###",
+              "何时升级给维修工程师": "出现下面任一情况，建议停止继续猜测，直接升级给维修工程师：\n\n- **静态目视已看到明显干涉、卡碰、支架不平、风琴罩异常**。  \n- **每次都在固定位置或固定动作点触发 ÜSA 跳**，说明很像路径干涉或轴运动问题。  \n- **伴随 Y/Z 轴异响、卡顿、抖动、跳驱动**。  \n- **查看后未发现外观问题，但问题持续复现**，因为这时就需要维修进一步区分：机械干涉、轴状态、地脚/大理石定位，还是控制/安全链问题。  \n- **涉及拆风琴罩、调整支架、检查地脚/大理石、改控制值或安全相关设置**，这些都应由维修处理，不建议操作员自行进行。  \n- **如果你们已经重试过一次以上仍然一做就跳**，也应升级，不要再靠反复试跑判断。\n\n如果你愿意，我下一步可以基于这个方向，给你整理一个 **“现场 2 分钟排查顺序（先看哪里、看到什么就判哪条更像）”**。"
+            }
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "检索到的 **Contura 6206 / Lasering** 历史案例里，和“**一做激光就跳**”最接近的，主要是 **机械干涉或轴运动异常**，不是已检索到明确的“safety 参数没写”案例。  \n- 最像的几条案例包括：  \n  1. **Bellows（风琴罩）**：历史记录写明“**做激光1号位跳驱动**”，原因是**风琴罩装配支架不平，高过 Y 导轨，移动时卡住**；处理是**返工风琴罩后继续激光**。  \n  2. **Y-Drive**：历史记录写明“**做激光时 Y 轴跳驱动**”，原因描述为**怀疑风琴罩和前后支架影响**；处理是**临时拆掉风琴罩**。  \n  3. **Granite plate（大理石/地脚相关）**：历史记录写明“**激光跳驱动，Check 不过**”，原因是**气动地脚圆锥块未处于大理石底部圆孔中心，存在干涉**；处理是**排查原因、重挑大理石、重复测试**。  \n  4. **Z-Shaft**：历史记录写明“**激光异常，线段抖动**”，原因是**Z 轴 smooth running 一端卡顿**；处理是**返工后重复做激光验证**。  \n- 另外也有不少 **环境温度/温差** 导致激光超差、线性不过、点散的案例，但这些更偏向**测量结果异常**，不是最像你说的“**一做就 ÜSA 跳**”这种触发式中断。  \n- 本次检索结果里，**没有直接检到**“Contura 6206 / Lasering / ÜSA 跳 = 控制值没写进去”这一条强匹配历史证据。\n\n###",
+              "当前怀疑方向": "**更像的怀疑方向**：先怀疑 **Lasering 动作过程中存在机械干涉/轴运动异常**，尤其是 **Y 轴路径上的风琴罩、支架、导轨附近干涉**。这是因为历史上同机型同工位里，“一做激光就跳驱动”的相似案例，多数都落在这类原因上。  \n- **次一级怀疑方向**：大理石/地脚定位干涉，或者 Z 轴运动不顺，也可能在激光动作时触发异常。  \n- **关于你现场说的两个说法**：  \n  - “**safety**”这条，从现有检索结果看，**没有足够强的同类历史案例直接支持**。  \n  - “**控制值没写进去**”这条，这一轮检索里也**没有直接找到比机械干涉更像的历史证据**。  \n- 所以按历史相似度排序，**目前更应把机械干涉/运动卡滞当成优先怀疑方向**，但还不能当成已确认。\n\n###",
+              "建议先做的检查或操作": "只建议你先做 **低风险、操作员可执行** 的确认：\n\n1. **先不要反复强行重跑 Lasering。**  \n   如果是一做就跳，连续重试容易把“偶发干涉”变成“稳定卡滞”。\n\n2. **做一次静态目视检查，重点看 Y 轴路径相关部位。**  \n   看：\n   - 风琴罩是否鼓包、偏高、擦碰痕迹明显  \n   - 风琴罩支架、前后支架是否有歪斜、翘起  \n   - 导轨附近是否有异物、线缆、附件干涉痕迹\n\n3. **观察 ÜSA 跳之前，轴是在哪个动作点出问题。**  \n   不要求你拆机，只记录：\n   - 是一启动激光流程就跳  \n   - 还是运动到某个固定位置才跳  \n   - 是否伴随某一轴声音异常、顿挫、卡一下再跳  \n   这个信息对区分“参数类”还是“机械路径类”很关键。\n\n4. **确认现场环境是否明显异常。**  \n   只做基础确认：\n   - 现场温度是否明显偏高  \n   - 机台是否刚经历较大温差变化  \n   这一步不是首怀疑项，但可以排除历史里常见的环境因素。\n\n5. **如果现场允许查看但不改参数，只核对当前相关作业数据是否已正常调用。**  \n   重点是“看是否存在/已加载”，**不要现场自行改写控制值**。  \n   因为从当前历史证据看，参数未写入并不是最像的方向；在没证据前直接改值，风险比收益高。\n\n###",
+              "何时升级给维修工程师": "出现下面任一情况，建议停止继续猜测，直接升级给维修工程师：\n\n- **静态目视已看到明显干涉、卡碰、支架不平、风琴罩异常**。  \n- **每次都在固定位置或固定动作点触发 ÜSA 跳**，说明很像路径干涉或轴运动问题。  \n- **伴随 Y/Z 轴异响、卡顿、抖动、跳驱动**。  \n- **查看后未发现外观问题，但问题持续复现**，因为这时就需要维修进一步区分：机械干涉、轴状态、地脚/大理石定位，还是控制/安全链问题。  \n- **涉及拆风琴罩、调整支架、检查地脚/大理石、改控制值或安全相关设置**，这些都应由维修处理，不建议操作员自行进行。  \n- **如果你们已经重试过一次以上仍然一做就跳**，也应升级，不要再靠反复试跑判断。\n\n如果你愿意，我下一步可以基于这个方向，给你整理一个 **“现场 2 分钟排查顺序（先看哪里、看到什么就判哪条更像）”**。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": false,
+            "clarification_expected": false,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "legacy_final_answer_check": {
+            "passed": false,
+            "component": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "direct_answer",
+              "observed_first_turn_mode": "structured_answer",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": false,
+              "passed": true,
+              "required_keywords": [],
+              "required_keyword_check": {
+                "matched_keywords": [],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Lasering",
+                  "ÜSA"
+                ],
+                "missing_keywords": [
+                  "Oberkochen"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "更像",
+                  "可能",
+                  "控制值"
+                ],
+                "missing_keywords": [
+                  "UESA",
+                  "Steuerung",
+                  "Ax-Watch"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "参数"
+                ],
+                "missing_keywords": [
+                  "Ax-Watch",
+                  "重新传",
+                  "控制器"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "重复触发",
+                  "重新传后仍"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        }
+      ]
+    },
+    {
+      "dataset_id": "clarify_failed",
+      "dataset_name": "targeted-failed-clarify-then-answer",
+      "evaluation_target": "response_contract_v2",
+      "evaluation_version": 2,
+      "file": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\targeted-failed-cases\\golden_test_cases.clarify_then_answer.failed.json",
+      "split_type": "clarify_then_answer",
+      "role": "regression_split",
+      "total_cases": 2,
+      "selected_cases": 2,
+      "summary": {
+        "cases": 2,
+        "errors": 0,
+        "mode_passed": 2,
+        "first_turn_focus_passed": 2,
+        "contract_passed": 2,
+        "historical_facts_passed": 2,
+        "suspected_direction_passed": 1,
+        "recommended_action_passed": 2,
+        "escalation_passed": 2,
+        "forbidden_claim_passed": 2,
+        "fully_passed": 1,
+        "structured_final_answers": 2,
+        "legacy_final_answer_passed": 1
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_013",
+          "source_case_id": "case_000057",
+          "scenario_type": "mounting_hole_offset",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "请问是哪个工厂的 Contura 6206？例如苏州、其他厂区。",
+          "second_turn_text": "历史案例事实\n\n- 这次按工厂过滤到 **Oberkochen** 没有直接命中的历史案例，所以以下证据主要来自其他工厂的相似案例，可信度低于同厂案例。\n- 在 **CONTURA 6206 configurable | Install shrouds** 的历史中，和你描述最接近的有几类：\n  - **Z-Tower / missing cage nut on Z tower**：历史记录明确写到缺少 cage nut，处理是 **补装 cage nut**。\n  - **Riser / cables bunched up and in the way of inboard Y shroud**：历史记录显示 **线缆堆积、挡住 Y 内侧 shroud**，处理是 **把线缆重新理进 cable chain**。\n  - **X-Drive / X drive assembly protruding out. Can't install back cover shroud**：历史记录显示 **某总成外凸，导致后盖 shroud 装不上**，处理是 **重新就位 drive assembly**。\n- 另有一条跨机型但工位相同的案例：**Install shrouds** 时出现 **Y 外罩支架孔位对不上**，历史原因写的是 **折弯尺寸不良造成孔位偏**，最后由质量/维修处理后再使用。\n\n当前怀疑方向\n\n- **怀疑方向 1（最像）**：**cage nut 本体缺失、装反、装位不对，或实际锁点基准不在正确位置**。因为历史里已有 “missing cage nut” 的直接相似记录，而你现场描述里也明确提到“像 cage nut 的孔位偏后了”。\n- **怀疑方向 2**：**不是 cage nut 自己偏，而是 shroud / 后侧板件被别的东西顶住，导致到 end position 看起来到了，实际还没真正到位**。这和历史里的 **线缆挡住 Y shroud**、**总成外凸导致 cover 装不上** 比较接近。\n- **怀疑方向 3**：**板金或支架孔位制造偏差**。这条也有历史相似证据，但来自别的机型，所以目前只能作为次一级怀疑，不能直接定性。\n\n建议先做的检查或操作\n\n- 先做 **目视确认**：\n  - 看 cage nut 是否 **存在、方向是否正确、是否完整卡入安装边**。\n  - 看“Y 后面的那块板子”在 end position 时，**孔中心和 cage nut 中心是前后偏，还是上下/左右偏**。这能帮助区分是装配受阻还是孔位本身偏差。\n- 做 **无工具/低风险排查**：\n  - 轻轻回退 shroud 或板件一点点，再重新推到位，确认是否有 **卡滞感、弹性顶住、被线束/护套/小支架干涉**。\n  - 检查附近是否有 **线缆堆积、扎带头、护套、外凸的小总成或支架边缘** 挡在 Y shroud 路径上。\n- 做 **比对确认**：\n  - 如果同机型旁边有正常机台，可快速对比 **该位置 cage nut 朝向、安装深度、板件相对边界位置**。\n- 现场操作上建议：\n  - **不要强拧、不要硬拉孔位、不要扩大孔、不要硬压板金**，避免把原本的装配问题变成部件损伤。\n\n何时升级给维修工程师\n\n- 如果你已确认 **cage nut 缺失、松脱、变形、装反**，应升级给维修/装配支持处理，不建议现场强行闭合。\n- 如果确认有 **线缆、支架、驱动总成外凸** 等干涉，但需要拆别的部件、松总成、重新定位机构，应该升级给维修工程师。\n- 如果多次重试后仍然是 **孔位稳定地前后偏**，且周边没有明显干涉，这更像 **板金/支架尺寸或装配基准偏差**，应升级给维修或质量。\n- 由于这次 **Oberkochen 本厂没有直接命中的相同历史案例**，如果你现场看了 1 轮仍不能明确判断是 **cage nut 问题** 还是 **干涉/尺寸偏差**，就不建议继续猜测，应尽快升级。",
+          "final_turn_text": "历史案例事实\n\n- 这次按工厂过滤到 **Oberkochen** 没有直接命中的历史案例，所以以下证据主要来自其他工厂的相似案例，可信度低于同厂案例。\n- 在 **CONTURA 6206 configurable | Install shrouds** 的历史中，和你描述最接近的有几类：\n  - **Z-Tower / missing cage nut on Z tower**：历史记录明确写到缺少 cage nut，处理是 **补装 cage nut**。\n  - **Riser / cables bunched up and in the way of inboard Y shroud**：历史记录显示 **线缆堆积、挡住 Y 内侧 shroud**，处理是 **把线缆重新理进 cable chain**。\n  - **X-Drive / X drive assembly protruding out. Can't install back cover shroud**：历史记录显示 **某总成外凸，导致后盖 shroud 装不上**，处理是 **重新就位 drive assembly**。\n- 另有一条跨机型但工位相同的案例：**Install shrouds** 时出现 **Y 外罩支架孔位对不上**，历史原因写的是 **折弯尺寸不良造成孔位偏**，最后由质量/维修处理后再使用。\n\n当前怀疑方向\n\n- **怀疑方向 1（最像）**：**cage nut 本体缺失、装反、装位不对，或实际锁点基准不在正确位置**。因为历史里已有 “missing cage nut” 的直接相似记录，而你现场描述里也明确提到“像 cage nut 的孔位偏后了”。\n- **怀疑方向 2**：**不是 cage nut 自己偏，而是 shroud / 后侧板件被别的东西顶住，导致到 end position 看起来到了，实际还没真正到位**。这和历史里的 **线缆挡住 Y shroud**、**总成外凸导致 cover 装不上** 比较接近。\n- **怀疑方向 3**：**板金或支架孔位制造偏差**。这条也有历史相似证据，但来自别的机型，所以目前只能作为次一级怀疑，不能直接定性。\n\n建议先做的检查或操作\n\n- 先做 **目视确认**：\n  - 看 cage nut 是否 **存在、方向是否正确、是否完整卡入安装边**。\n  - 看“Y 后面的那块板子”在 end position 时，**孔中心和 cage nut 中心是前后偏，还是上下/左右偏**。这能帮助区分是装配受阻还是孔位本身偏差。\n- 做 **无工具/低风险排查**：\n  - 轻轻回退 shroud 或板件一点点，再重新推到位，确认是否有 **卡滞感、弹性顶住、被线束/护套/小支架干涉**。\n  - 检查附近是否有 **线缆堆积、扎带头、护套、外凸的小总成或支架边缘** 挡在 Y shroud 路径上。\n- 做 **比对确认**：\n  - 如果同机型旁边有正常机台，可快速对比 **该位置 cage nut 朝向、安装深度、板件相对边界位置**。\n- 现场操作上建议：\n  - **不要强拧、不要硬拉孔位、不要扩大孔、不要硬压板金**，避免把原本的装配问题变成部件损伤。\n\n何时升级给维修工程师\n\n- 如果你已确认 **cage nut 缺失、松脱、变形、装反**，应升级给维修/装配支持处理，不建议现场强行闭合。\n- 如果确认有 **线缆、支架、驱动总成外凸** 等干涉，但需要拆别的部件、松总成、重新定位机构，应该升级给维修工程师。\n- 如果多次重试后仍然是 **孔位稳定地前后偏**，且周边没有明显干涉，这更像 **板金/支架尺寸或装配基准偏差**，应升级给维修或质量。\n- 由于这次 **Oberkochen 本厂没有直接命中的相同历史案例**，如果你现场看了 1 轮仍不能明确判断是 **cage nut 问题** 还是 **干涉/尺寸偏差**，就不建议继续猜测，应尽快升级。",
+          "first_turn_contract": {
+            "observed_mode": "clarification",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "这次按工厂过滤到 **Oberkochen** 没有直接命中的历史案例，所以以下证据主要来自其他工厂的相似案例，可信度低于同厂案例。\n- 在 **CONTURA 6206 configurable | Install shrouds** 的历史中，和你描述最接近的有几类：\n  - **Z-Tower / missing cage nut on Z tower**：历史记录明确写到缺少 cage nut，处理是 **补装 cage nut**。\n  - **Riser / cables bunched up and in the way of inboard Y shroud**：历史记录显示 **线缆堆积、挡住 Y 内侧 shroud**，处理是 **把线缆重新理进 cable chain**。\n  - **X-Drive / X drive assembly protruding out. Can't install back cover shroud**：历史记录显示 **某总成外凸，导致后盖 shroud 装不上**，处理是 **重新就位 drive assembly**。\n- 另有一条跨机型但工位相同的案例：**Install shrouds** 时出现 **Y 外罩支架孔位对不上**，历史原因写的是 **折弯尺寸不良造成孔位偏**，最后由质量/维修处理后再使用。",
+              "当前怀疑方向": "**怀疑方向 1（最像）**：**cage nut 本体缺失、装反、装位不对，或实际锁点基准不在正确位置**。因为历史里已有 “missing cage nut” 的直接相似记录，而你现场描述里也明确提到“像 cage nut 的孔位偏后了”。\n- **怀疑方向 2**：**不是 cage nut 自己偏，而是 shroud / 后侧板件被别的东西顶住，导致到 end position 看起来到了，实际还没真正到位**。这和历史里的 **线缆挡住 Y shroud**、**总成外凸导致 cover 装不上** 比较接近。\n- **怀疑方向 3**：**板金或支架孔位制造偏差**。这条也有历史相似证据，但来自别的机型，所以目前只能作为次一级怀疑，不能直接定性。",
+              "建议先做的检查或操作": "先做 **目视确认**：\n  - 看 cage nut 是否 **存在、方向是否正确、是否完整卡入安装边**。\n  - 看“Y 后面的那块板子”在 end position 时，**孔中心和 cage nut 中心是前后偏，还是上下/左右偏**。这能帮助区分是装配受阻还是孔位本身偏差。\n- 做 **无工具/低风险排查**：\n  - 轻轻回退 shroud 或板件一点点，再重新推到位，确认是否有 **卡滞感、弹性顶住、被线束/护套/小支架干涉**。\n  - 检查附近是否有 **线缆堆积、扎带头、护套、外凸的小总成或支架边缘** 挡在 Y shroud 路径上。\n- 做 **比对确认**：\n  - 如果同机型旁边有正常机台，可快速对比 **该位置 cage nut 朝向、安装深度、板件相对边界位置**。\n- 现场操作上建议：\n  - **不要强拧、不要硬拉孔位、不要扩大孔、不要硬压板金**，避免把原本的装配问题变成部件损伤。",
+              "何时升级给维修工程师": "如果你已确认 **cage nut 缺失、松脱、变形、装反**，应升级给维修/装配支持处理，不建议现场强行闭合。\n- 如果确认有 **线缆、支架、驱动总成外凸** 等干涉，但需要拆别的部件、松总成、重新定位机构，应该升级给维修工程师。\n- 如果多次重试后仍然是 **孔位稳定地前后偏**，且周边没有明显干涉，这更像 **板金/支架尺寸或装配基准偏差**，应升级给维修或质量。\n- 由于这次 **Oberkochen 本厂没有直接命中的相同历史案例**，如果你现场看了 1 轮仍不能明确判断是 **cage nut 问题** 还是 **干涉/尺寸偏差**，就不建议继续猜测，应尽快升级。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "legacy_final_answer_check": {
+            "passed": false,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            }
+          },
+          "response_v2_check": {
+            "passed": false,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "clarification",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "工厂",
+                "factory"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "工厂"
+                ],
+                "missing_keywords": [
+                  "factory"
+                ],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Install shrouds"
+                ],
+                "missing_keywords": [
+                  "Y- Abdeckung",
+                  "Endlage"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "最像",
+                  "孔位"
+                ],
+                "missing_keywords": [
+                  "Shrouds",
+                  "Bohrung",
+                  "Käfigmutter"
+                ],
+                "passed": false
+              },
+              "passed": false
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "目视",
+                  "孔位"
+                ],
+                "missing_keywords": [
+                  "空配",
+                  "扩孔"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "孔位偏差",
+                  "换件"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": false
+        },
+        {
+          "golden_test_id": "golden_019",
+          "source_case_id": "case_000067",
+          "scenario_type": "contradictory_axis_hint_requires_clarification",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_to_resolve_which_axis_is_affected",
+          "first_turn_text": "请先确认：抖动/共振主要被认为发生在哪个轴？请只回答一个槽位：**affected_axis（如 X 轴、Z 轴，或“暂不确定”）**。",
+          "second_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014) / Integration / CONTURA 6206 configurable** 的历史记录里，和你给的原话 **“X-Antrieb schwingt”** 最接近的有多条，而且都集中在 **X-Drive / X-Axis**：\n  1. **2023-10-10**：异常写的是 **“X-Antrieb schwingt beim Fahren”**，记录的原因是 **Aktivdämpfung 参数 F216 有时过高**，处理是 **调整参数**。  \n  2. **2020-03-24**：异常直接写 **“X-Antrieb schwingt.”**，处理是 **Parameter geändert**。  \n  3. **2020-07-13**：异常写 **“Maschine fängt an zu schwingen.”**，记录原因是 **Aktivdämpfung 与 X-Antrieb 的相互作用**，处理也是 **修改参数**。  \n  4. **2023-10-25**：异常写 **“Antrieb vibriert”**，记录原因是 **Aktivdämpfung bei Baugröße 7/7/6**，处理是 **Parameter geändert**。  \n  5. **2020-04-01**：异常写 **“X-Antrieb schwingt nach dem Dauerlauf.”**，处理是 **升级控制器固件 F40.12 并优化驱动**。  \n- 同一工厂也有更偏硬件的 X 轴相关案例，但症状表述没你这条这么贴近：\n  - **2022-02-16 / Integration**：**“X-Antrieb Geräusche bei Dauerlauf”**，记录原因是 **轴承损坏（Lager defekt）**，处理是 **更换 X-Antrieb**。  \n  - **2022-01-17 / Integration**：**“Maschine schaltet bei Fahrt in X- die Antriebe ab”**，记录原因是 **X-Antrieb fehlerhaft**，处理是 **排查后更换 X 驱动**。  \n- 检索结果里，与你当前场景最相似的证据，明显比“Z 轴共振”更集中地落在 **Oberkochen + Integration + CONTURA 6206 + X-Drive 振动/摆动** 这一簇。\n\n## 当前怀疑方向\n- **当前更像是 X-Drive 侧的振动问题，而不是先从 Z 轴共振去判断。**\n- 更具体地说，**优先怀疑方向** 是：\n  1. **Aktivdämpfung/驱动相关参数不合适**，尤其是历史上多次出现的 **参数调整后恢复** 这一模式；  \n  2. 如果振动伴随明显异响、持续恶化、或在长时间运行后更明显，则**其次怀疑 X 驱动本体或相关机械件问题**，例如驱动异常、轴承问题等。  \n- 但这只是**基于历史案例的怀疑方向**，**不能直接当作已确认根因**。\n\n## 建议先做的检查或操作\n- 先做**低风险观察和记录**，不要现场自行改参数、拆件或做驱动优化：\n  1. **确认振动是否只在 X 方向运动时出现**，还是静止、回零、其他轴动作时也会出现。  \n  2. **记录触发条件**：是刚开始运动就抖，还是运行一段时间后（类似“Dauerlauf 后”）才明显。  \n  3. **观察是否伴随异响**：比如持续嗡鸣、摩擦声、周期性敲击声。  \n  4. **记录机台当前软件/固件版本、是否近期改过参数或做过相关调整**。  \n  5. 如果现场允许查看历史趋势或维修记录，**把“X-Antrieb schwingt beim Fahren / Maschine fängt an zu schwingen / Aktivdämpfung 参数”这些关键词带给维修人员**，便于他们快速对照既往案例。  \n- 操作员层面，最安全的下一步是：**复现一次并完整记录“何时抖、沿哪个轴抖、有没有异响、是否热机后更明显”**。\n\n## 何时升级给维修工程师\n- 出现以下任一情况，建议**不要继续猜测，直接升级给维修工程师**：\n  1. **振动明显、整机晃动厉害**，有安全风险；  \n  2. 振动**稳定复现于 X 轴运动**，尤其与你提供的 **“X-Antrieb schwingt”** 一致；  \n  3. 振动同时伴随**异响、发热、驱动关闭、停机、报警、运行品质恶化**；  \n  4. 之前已经做过简单复现确认，但**无法区分是参数问题还是硬件问题**；  \n  5. 需要进行**参数修改、固件处理、驱动优化、对中检查、联轴器/轴承/驱动更换**时。  \n- 这次从历史上看，**最像的是 Oberkochen Integration 下的 X-Drive 振动类案例，且多次最终落到参数/主动阻尼相关处理**；但因为也存在少量硬件故障先例，所以如果症状强烈或重复出现，**应尽快交维修工程师做进一步判断**。",
+          "final_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014) / Integration / CONTURA 6206 configurable** 的历史记录里，和你给的原话 **“X-Antrieb schwingt”** 最接近的有多条，而且都集中在 **X-Drive / X-Axis**：\n  1. **2023-10-10**：异常写的是 **“X-Antrieb schwingt beim Fahren”**，记录的原因是 **Aktivdämpfung 参数 F216 有时过高**，处理是 **调整参数**。  \n  2. **2020-03-24**：异常直接写 **“X-Antrieb schwingt.”**，处理是 **Parameter geändert**。  \n  3. **2020-07-13**：异常写 **“Maschine fängt an zu schwingen.”**，记录原因是 **Aktivdämpfung 与 X-Antrieb 的相互作用**，处理也是 **修改参数**。  \n  4. **2023-10-25**：异常写 **“Antrieb vibriert”**，记录原因是 **Aktivdämpfung bei Baugröße 7/7/6**，处理是 **Parameter geändert**。  \n  5. **2020-04-01**：异常写 **“X-Antrieb schwingt nach dem Dauerlauf.”**，处理是 **升级控制器固件 F40.12 并优化驱动**。  \n- 同一工厂也有更偏硬件的 X 轴相关案例，但症状表述没你这条这么贴近：\n  - **2022-02-16 / Integration**：**“X-Antrieb Geräusche bei Dauerlauf”**，记录原因是 **轴承损坏（Lager defekt）**，处理是 **更换 X-Antrieb**。  \n  - **2022-01-17 / Integration**：**“Maschine schaltet bei Fahrt in X- die Antriebe ab”**，记录原因是 **X-Antrieb fehlerhaft**，处理是 **排查后更换 X 驱动**。  \n- 检索结果里，与你当前场景最相似的证据，明显比“Z 轴共振”更集中地落在 **Oberkochen + Integration + CONTURA 6206 + X-Drive 振动/摆动** 这一簇。\n\n## 当前怀疑方向\n- **当前更像是 X-Drive 侧的振动问题，而不是先从 Z 轴共振去判断。**\n- 更具体地说，**优先怀疑方向** 是：\n  1. **Aktivdämpfung/驱动相关参数不合适**，尤其是历史上多次出现的 **参数调整后恢复** 这一模式；  \n  2. 如果振动伴随明显异响、持续恶化、或在长时间运行后更明显，则**其次怀疑 X 驱动本体或相关机械件问题**，例如驱动异常、轴承问题等。  \n- 但这只是**基于历史案例的怀疑方向**，**不能直接当作已确认根因**。\n\n## 建议先做的检查或操作\n- 先做**低风险观察和记录**，不要现场自行改参数、拆件或做驱动优化：\n  1. **确认振动是否只在 X 方向运动时出现**，还是静止、回零、其他轴动作时也会出现。  \n  2. **记录触发条件**：是刚开始运动就抖，还是运行一段时间后（类似“Dauerlauf 后”）才明显。  \n  3. **观察是否伴随异响**：比如持续嗡鸣、摩擦声、周期性敲击声。  \n  4. **记录机台当前软件/固件版本、是否近期改过参数或做过相关调整**。  \n  5. 如果现场允许查看历史趋势或维修记录，**把“X-Antrieb schwingt beim Fahren / Maschine fängt an zu schwingen / Aktivdämpfung 参数”这些关键词带给维修人员**，便于他们快速对照既往案例。  \n- 操作员层面，最安全的下一步是：**复现一次并完整记录“何时抖、沿哪个轴抖、有没有异响、是否热机后更明显”**。\n\n## 何时升级给维修工程师\n- 出现以下任一情况，建议**不要继续猜测，直接升级给维修工程师**：\n  1. **振动明显、整机晃动厉害**，有安全风险；  \n  2. 振动**稳定复现于 X 轴运动**，尤其与你提供的 **“X-Antrieb schwingt”** 一致；  \n  3. 振动同时伴随**异响、发热、驱动关闭、停机、报警、运行品质恶化**；  \n  4. 之前已经做过简单复现确认，但**无法区分是参数问题还是硬件问题**；  \n  5. 需要进行**参数修改、固件处理、驱动优化、对中检查、联轴器/轴承/驱动更换**时。  \n- 这次从历史上看，**最像的是 Oberkochen Integration 下的 X-Drive 振动类案例，且多次最终落到参数/主动阻尼相关处理**；但因为也存在少量硬件故障先例，所以如果症状强烈或重复出现，**应尽快交维修工程师做进一步判断**。",
+          "first_turn_contract": {
+            "observed_mode": "clarification",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014) / Integration / CONTURA 6206 configurable** 的历史记录里，和你给的原话 **“X-Antrieb schwingt”** 最接近的有多条，而且都集中在 **X-Drive / X-Axis**：\n  1. **2023-10-10**：异常写的是 **“X-Antrieb schwingt beim Fahren”**，记录的原因是 **Aktivdämpfung 参数 F216 有时过高**，处理是 **调整参数**。  \n  2. **2020-03-24**：异常直接写 **“X-Antrieb schwingt.”**，处理是 **Parameter geändert**。  \n  3. **2020-07-13**：异常写 **“Maschine fängt an zu schwingen.”**，记录原因是 **Aktivdämpfung 与 X-Antrieb 的相互作用**，处理也是 **修改参数**。  \n  4. **2023-10-25**：异常写 **“Antrieb vibriert”**，记录原因是 **Aktivdämpfung bei Baugröße 7/7/6**，处理是 **Parameter geändert**。  \n  5. **2020-04-01**：异常写 **“X-Antrieb schwingt nach dem Dauerlauf.”**，处理是 **升级控制器固件 F40.12 并优化驱动**。  \n- 同一工厂也有更偏硬件的 X 轴相关案例，但症状表述没你这条这么贴近：\n  - **2022-02-16 / Integration**：**“X-Antrieb Geräusche bei Dauerlauf”**，记录原因是 **轴承损坏（Lager defekt）**，处理是 **更换 X-Antrieb**。  \n  - **2022-01-17 / Integration**：**“Maschine schaltet bei Fahrt in X- die Antriebe ab”**，记录原因是 **X-Antrieb fehlerhaft**，处理是 **排查后更换 X 驱动**。  \n- 检索结果里，与你当前场景最相似的证据，明显比“Z 轴共振”更集中地落在 **Oberkochen + Integration + CONTURA 6206 + X-Drive 振动/摆动** 这一簇。\n\n##",
+              "当前怀疑方向": "**当前更像是 X-Drive 侧的振动问题，而不是先从 Z 轴共振去判断。**\n- 更具体地说，**优先怀疑方向** 是：\n  1. **Aktivdämpfung/驱动相关参数不合适**，尤其是历史上多次出现的 **参数调整后恢复** 这一模式；  \n  2. 如果振动伴随明显异响、持续恶化、或在长时间运行后更明显，则**其次怀疑 X 驱动本体或相关机械件问题**，例如驱动异常、轴承问题等。  \n- 但这只是**基于历史案例的怀疑方向**，**不能直接当作已确认根因**。\n\n##",
+              "建议先做的检查或操作": "先做**低风险观察和记录**，不要现场自行改参数、拆件或做驱动优化：\n  1. **确认振动是否只在 X 方向运动时出现**，还是静止、回零、其他轴动作时也会出现。  \n  2. **记录触发条件**：是刚开始运动就抖，还是运行一段时间后（类似“Dauerlauf 后”）才明显。  \n  3. **观察是否伴随异响**：比如持续嗡鸣、摩擦声、周期性敲击声。  \n  4. **记录机台当前软件/固件版本、是否近期改过参数或做过相关调整**。  \n  5. 如果现场允许查看历史趋势或维修记录，**把“X-Antrieb schwingt beim Fahren / Maschine fängt an zu schwingen / Aktivdämpfung 参数”这些关键词带给维修人员**，便于他们快速对照既往案例。  \n- 操作员层面，最安全的下一步是：**复现一次并完整记录“何时抖、沿哪个轴抖、有没有异响、是否热机后更明显”**。\n\n##",
+              "何时升级给维修工程师": "出现以下任一情况，建议**不要继续猜测，直接升级给维修工程师**：\n  1. **振动明显、整机晃动厉害**，有安全风险；  \n  2. 振动**稳定复现于 X 轴运动**，尤其与你提供的 **“X-Antrieb schwingt”** 一致；  \n  3. 振动同时伴随**异响、发热、驱动关闭、停机、报警、运行品质恶化**；  \n  4. 之前已经做过简单复现确认，但**无法区分是参数问题还是硬件问题**；  \n  5. 需要进行**参数修改、固件处理、驱动优化、对中检查、联轴器/轴承/驱动更换**时。  \n- 这次从历史上看，**最像的是 Oberkochen Integration 下的 X-Drive 振动类案例，且多次最终落到参数/主动阻尼相关处理**；但因为也存在少量硬件故障先例，所以如果症状强烈或重复出现，**应尽快交维修工程师做进一步判断**。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": true
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": false,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "clarification",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "X",
+                "Z",
+                "哪个轴",
+                "axis"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "X",
+                  "Z",
+                  "哪个轴",
+                  "axis"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Integration",
+                  "X-Antrieb",
+                  "schwingt"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "更像",
+                  "X-Drive",
+                  "参数",
+                  "振动"
+                ],
+                "missing_keywords": [
+                  "X轴"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "观察",
+                  "参数"
+                ],
+                "missing_keywords": [
+                  "空载",
+                  "复测"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "振动仍在",
+                  "机械干涉"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 2,
+    "cases": 3,
+    "mode_passed": 3,
+    "first_turn_focus_passed": 3,
+    "contract_passed": 3,
+    "historical_facts_passed": 3,
+    "suspected_direction_passed": 2,
+    "recommended_action_passed": 3,
+    "escalation_passed": 3,
+    "forbidden_claim_passed": 3,
+    "fully_passed": 2,
+    "structured_final_answers": 3,
+    "legacy_final_answer_passed": 1,
+    "errors": 0
+  }
+}

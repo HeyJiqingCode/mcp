@@ -1,0 +1,232 @@
+{
+  "generated_at": "2026-05-09T01:47:26.346Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\OneDrive - Carl Zeiss AG\\Lee\\source\\Projects\\AI\\RMS Service_\\RMSRAG\\suzhou-factory-ai-troubleshooting\\golden_test_cases.manifest.json",
+    "manifest_name": "suzhou-factory-ai-troubleshooting-golden-test-manifest",
+    "manifest_version": 1,
+    "authoritative_dataset_id": "full"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "clarify_then_answer"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "clarify_then_answer",
+      "dataset_name": "suzhou-factory-ai-troubleshooting-golden-tests-clarify-then-answer",
+      "file": "C:\\Users\\ZCLEELI1\\OneDrive - Carl Zeiss AG\\Lee\\source\\Projects\\AI\\RMS Service_\\RMSRAG\\suzhou-factory-ai-troubleshooting\\golden_test_cases.clarify_then_answer.json",
+      "split_type": "clarify_then_answer",
+      "role": "regression_split",
+      "total_cases": 5,
+      "selected_cases": 5,
+      "summary": {
+        "cases": 5,
+        "errors": 0,
+        "first_step_passed": 3,
+        "final_answer_passed": 5,
+        "fully_passed": 3
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_003",
+          "source_case_id": "case_000007",
+          "scenario_type": "missing_factory_requires_clarification",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "先确认一下，是哪个工厂？",
+          "second_turn_text": "按历史案例看，**最像的是 `Cable harness xy` 故障**，不是先指向控制器本体。\n\n**最匹配案例**\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Integration\n- **时间**：2020-03-16 06:30 UTC\n- **案例标题**：`CONTURA 6206 configurable | Integration | Cable harness xy`\n- **异常描述**：`PIN 2 in Stecker X170 nicht angeschlossen.`\n- **组件**：`Cable harness xy`\n- **处理**：`PIN 2 in Stecker X170 angeschlossen.`\n\n### 结论\n**最可能部件**\n- `Cable harness xy`\n\n**最可能故障原因**\n- 从档案原文看，就是 **X170 插头的 PIN 2 未接上 / 漏接**\n- 这和你说的“X170 那边 PIN 2 没接上，像是线束问题”是近乎完全一致的历史命中\n\n**建议处理步骤**\n- 优先按历史处理：**把 X170 插头的 PIN 2 正确接上**\n- 同时检查是否属于线束总成问题，因为同工厂同机型还有一条相关案例：\n  - **2023-06-14 / Integration / Cable harness xy**\n  - 原因：`Kabel X170 & Schutzleiter an Steuerung fehlen im Kabelbaum`\n  - 意思是：**线束里缺 X170 电缆和控制端保护地线**\n  - 处理：`Kabel X170 von Portalmontage genommen, Erdungskabel angepasst`\n\n### 补充判断\n还有一条相关但**不应作为首选**的案例：\n- **2020-06-09 / Integration / C99 controller**\n- 原因：`Steuerung defekt und Kabel am Stecker X170 PIN 2 war abgebrochen. Achtung doppelter Fehler.`\n- 这是**双重故障**：控制器坏 + X170 PIN 2 电缆断裂\n\n所以基于你现在提供的信息，**先验上最像的不是 C99 controller 双故障，而是更直接的 `Cable harness xy / X170 PIN2 漏接`**。\n\n### 你现在可以先这么落地\n1. 先确认 **X170 的 PIN 2 是否确实未插入/未压接到位**\n2. 检查 **X170 插头锁止、端子退针、虚接**\n3. 检查 **该线是否在线束总成中漏装/缺失**\n4. 如果你们已经接上后仍有驱动掉电或无法运动，再转去排查那条**C99 controller 双故障**分支\n\n如果你愿意，我可以下一步直接帮你把这个问题整理成一版 **“最可能故障 + 现场检查顺序”**，给产线同事直接照着查。",
+          "final_turn_text": "按历史案例看，**最像的是 `Cable harness xy` 故障**，不是先指向控制器本体。\n\n**最匹配案例**\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Integration\n- **时间**：2020-03-16 06:30 UTC\n- **案例标题**：`CONTURA 6206 configurable | Integration | Cable harness xy`\n- **异常描述**：`PIN 2 in Stecker X170 nicht angeschlossen.`\n- **组件**：`Cable harness xy`\n- **处理**：`PIN 2 in Stecker X170 angeschlossen.`\n\n### 结论\n**最可能部件**\n- `Cable harness xy`\n\n**最可能故障原因**\n- 从档案原文看，就是 **X170 插头的 PIN 2 未接上 / 漏接**\n- 这和你说的“X170 那边 PIN 2 没接上，像是线束问题”是近乎完全一致的历史命中\n\n**建议处理步骤**\n- 优先按历史处理：**把 X170 插头的 PIN 2 正确接上**\n- 同时检查是否属于线束总成问题，因为同工厂同机型还有一条相关案例：\n  - **2023-06-14 / Integration / Cable harness xy**\n  - 原因：`Kabel X170 & Schutzleiter an Steuerung fehlen im Kabelbaum`\n  - 意思是：**线束里缺 X170 电缆和控制端保护地线**\n  - 处理：`Kabel X170 von Portalmontage genommen, Erdungskabel angepasst`\n\n### 补充判断\n还有一条相关但**不应作为首选**的案例：\n- **2020-06-09 / Integration / C99 controller**\n- 原因：`Steuerung defekt und Kabel am Stecker X170 PIN 2 war abgebrochen. Achtung doppelter Fehler.`\n- 这是**双重故障**：控制器坏 + X170 PIN 2 电缆断裂\n\n所以基于你现在提供的信息，**先验上最像的不是 C99 controller 双故障，而是更直接的 `Cable harness xy / X170 PIN2 漏接`**。\n\n### 你现在可以先这么落地\n1. 先确认 **X170 的 PIN 2 是否确实未插入/未压接到位**\n2. 检查 **X170 插头锁止、端子退针、虚接**\n3. 检查 **该线是否在线束总成中漏装/缺失**\n4. 如果你们已经接上后仍有驱动掉电或无法运动，再转去排查那条**C99 controller 双故障**分支\n\n如果你愿意，我可以下一步直接帮你把这个问题整理成一版 **“最可能故障 + 现场检查顺序”**，给产线同事直接照着查。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": false,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_007",
+          "source_case_id": "case_000017",
+          "scenario_type": "colloquial_quality_judgment",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "先给你一个**基于历史库的最像案例**结论：\n\n### 历史上最常落到哪块\n- **组件/项目**：`MPE-RONt_YZ out of specification`\n- 也就是你说的 **Acceptance 里 YZ Ring 做成“鸡蛋形/不圆/椭圆”** 这一类，历史归档里主要都落在 **YZ ring 精度异常** 这个项目上。\n\n### 最像你描述的历史原因\n你这个“**像个鸡蛋，一点都不圆**”和库里最贴近的一条是：\n\n1. **2023-04-10 | CONTURA 6206 configurable | Acceptance**\n   - **异常描述**：`Failing with oval shaped ring.`\n   - **失败原因**：`Z axis drive traction force out of spec - Set screw / jamnut loose.`\n   - **处理**：`Adjusted to tolerance and tightened jamnut.`\n\n另外还有几条同类高相似历史，说明这类现象不只一种根因，但都集中在 **Y/Z 传动或相关装配状态**：\n\n2. **2023-10-31**\n   - **异常描述**：`YZ ring oblong shape...`\n   - **失败原因**：`z roller askew`\n   - **处理**：`set z roller`\n\n3. **2023-03-12**\n   - **异常描述**：`YZ ring out of tolerance.`\n   - **失败原因**：`Y drive out of alignment. Needs to be cleaned.`\n   - **处理**：`Aligned Y drive. Cleaned ring.`\n\n4. **2023-10-09**\n   - **异常描述**：`YZ ring out of tolerance.`\n   - **失败原因**：`Cables inside cable harness were to tight.`\n   - **处理**：`Loosened cables, re-qualified, and re-ran test.`\n\n---\n\n## 结合历史，最可能的“最后查到哪块”\n如果只按你这句“**Ring YZ 像个鸡蛋**”去对历史库做匹配，**最优先怀疑的是 Z 轴传动侧**，尤其是：\n\n- **Z axis drive traction force**\n- **set screw / jamnut 松动**\n- 或者 **Z roller 歪斜**\n\n也就是说，历史上这类“明显椭圆”的归档，**更像是 Z 侧机械/传动状态问题**，而不是单纯软件参数问题。\n\n---\n\n## 可直接参考的历史处理顺序\n按历史案例，通常先这么处理：\n\n1. **查 Z 轴 drive traction force 是否超差**\n2. **查 set screw / jamnut 是否松**\n3. **查 z roller 是否歪斜**\n4. **再看 Y drive 是否跑偏**\n5. **检查 cable harness 是否过紧拉扯**\n6. **清洁 ring / fixture，re-qualify stylus 后复测**\n\n---\n\n## 一句话结论\n**历史上这类“YZ Ring 像鸡蛋”的 Contura 6206 Acceptance 案例，最像最后查到的是 Z 轴传动相关，尤其是 set screw / jamnut 松导致的 traction force 超差；其次是 z roller 歪或 Y drive 偏。**\n\n如果你要，我可以继续帮你把这些历史案例整理成一个 **“YZ Ring 椭圆时优先排查哪几块”的现场排查顺序**。",
+          "second_turn_text": "那按 **Oberkochen (1014)** 的历史看，**最像你这句原话“Ring YZ 像个鸡蛋”** 的不是前面那批 Minneapolis 记录了，而是这条**同厂同机型同工位近乎原词匹配**的案例：\n\n### 最匹配历史案例\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Acceptance\n- **时间**：2020-03-16\n- **异常描述**：`Ring YZ ist ein Ei`  \n  （德语直译就是 **“YZ 环是个鸡蛋”**）\n- **组件/项目**：`MPE-RONt_YZ out of specification`\n- **失败原因**：`Riemen in Z`\n- **处理步骤**：`tauschen des Z-Riemens`  \n  （更换 **Z 轴皮带**）\n\n## 结论\n如果按 **Oberkochen 1014** 的历史档案来回答你这句症状，**最后查到的最可能就是 Z 轴皮带（Z-Riemen）**。\n\n---\n\n### 另外几条同厂相关历史，也支持“优先看 Y/Z 机械侧”\n1. **2022-03-21 | Acceptance**\n   - **component_name**：`Y-Drive`\n   - **anomaly**：`Ring YZ.a.T.`\n   - **handling**：`Antrieb Y-überarbeitet`\n   - 说明：也有落到 **Y-Drive** 的\n\n2. **2020-10-06 | Acceptance**\n   - **component_name**：`Z-Drive`\n   - **anomaly**：`Ring XZ / YZ Rundheit 90% Toleranzausnutzung`\n   - **failure_reason**：`Z-Antrieb Laufgeräusche und Vibrationen`\n   - **handling**：`Motor getauscht, Antrieb neu ausgerichtet, neu optimiert`\n   - 说明：**Z-Drive 振动/异响** 也会把 YZ 圆度打坏\n\n3. **2022-10-18 | Acceptance**\n   - **component_name**：`MPE-RONt_YZ out of specification`\n   - **failure_reason**：`Kleberest auf Granit / Y Führung / Luftlager streift`\n   - **handling**：`Kleberest entfernt`\n   - 说明：也有 **Y 导轨/气浮擦碰、异物残胶** 造成 YZ Ring 异常\n\n---\n\n## 给你一句现场化结论\n**在 Oberkochen 1014，Contura 6206 Acceptance 出现“Ring YZ 像鸡蛋”这类描述，历史上最直接对应的是：Z 轴皮带问题，最后处理是更换 Z-Riemen。**\n\n如果你愿意，我可以下一条直接帮你整理成 **Oberkochen 这类 YZ Ring “鸡蛋形” 的优先排查顺序：先 Z belt、再 Z drive、再 Y drive / Y 导轨异物**。",
+          "final_turn_text": "那按 **Oberkochen (1014)** 的历史看，**最像你这句原话“Ring YZ 像个鸡蛋”** 的不是前面那批 Minneapolis 记录了，而是这条**同厂同机型同工位近乎原词匹配**的案例：\n\n### 最匹配历史案例\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Acceptance\n- **时间**：2020-03-16\n- **异常描述**：`Ring YZ ist ein Ei`  \n  （德语直译就是 **“YZ 环是个鸡蛋”**）\n- **组件/项目**：`MPE-RONt_YZ out of specification`\n- **失败原因**：`Riemen in Z`\n- **处理步骤**：`tauschen des Z-Riemens`  \n  （更换 **Z 轴皮带**）\n\n## 结论\n如果按 **Oberkochen 1014** 的历史档案来回答你这句症状，**最后查到的最可能就是 Z 轴皮带（Z-Riemen）**。\n\n---\n\n### 另外几条同厂相关历史，也支持“优先看 Y/Z 机械侧”\n1. **2022-03-21 | Acceptance**\n   - **component_name**：`Y-Drive`\n   - **anomaly**：`Ring YZ.a.T.`\n   - **handling**：`Antrieb Y-überarbeitet`\n   - 说明：也有落到 **Y-Drive** 的\n\n2. **2020-10-06 | Acceptance**\n   - **component_name**：`Z-Drive`\n   - **anomaly**：`Ring XZ / YZ Rundheit 90% Toleranzausnutzung`\n   - **failure_reason**：`Z-Antrieb Laufgeräusche und Vibrationen`\n   - **handling**：`Motor getauscht, Antrieb neu ausgerichtet, neu optimiert`\n   - 说明：**Z-Drive 振动/异响** 也会把 YZ 圆度打坏\n\n3. **2022-10-18 | Acceptance**\n   - **component_name**：`MPE-RONt_YZ out of specification`\n   - **failure_reason**：`Kleberest auf Granit / Y Führung / Luftlager streift`\n   - **handling**：`Kleberest entfernt`\n   - 说明：也有 **Y 导轨/气浮擦碰、异物残胶** 造成 YZ Ring 异常\n\n---\n\n## 给你一句现场化结论\n**在 Oberkochen 1014，Contura 6206 Acceptance 出现“Ring YZ 像鸡蛋”这类描述，历史上最直接对应的是：Z 轴皮带问题，最后处理是更换 Z-Riemen。**\n\n如果你愿意，我可以下一条直接帮你整理成 **Oberkochen 这类 YZ Ring “鸡蛋形” 的优先排查顺序：先 Z belt、再 Z drive、再 Y drive / Y 导轨异物**。",
+          "first_step_check": {
+            "passed": false,
+            "clarification_expected": true,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": false
+        },
+        {
+          "golden_test_id": "golden_011",
+          "source_case_id": "case_000050",
+          "scenario_type": "long_noisy_option_specific",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "按历史最像的，不太像“纯装配手法”问题，**最可能判到的部件是：Shrouds**。\n\n### 最接近的历史案例\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工序**：Install shrouds\n- **时间**：2020-03-20\n- **异常描述**：  \n  **“Bei der Option Faltenbalg lässt sich die weiße Abdeckung vorne und hinten schlecht montieren. (Verkantet sich)”**  \n  也就是：**带 Faltenbalg 选件时，前后白色 Abdeckung 很难装，且会卡斜。**\n\n### 该案例归档判定\n- **component_name**：**Shrouds**\n- **failure_reason**：  \n  **“Bohrbild (Option Faltenbalg) passt nicht und die Gewinde an der weißen Abdeckung sind schlecht.”**  \n  即：**Faltenbalg 选件对应的孔位图不匹配，同时白色 Abdeckung 上的螺纹质量不好。**\n\n### 归档处理步骤\n- **handling_steps**：  \n  **“Die Bohrungen aufbohren und die Gewinde nachschneiden.”**  \n  即：**把孔扩开/修孔，并对螺纹重新攻牙/修牙。**\n\n---\n\n### 为什么我更倾向这个历史判定\n你的描述和历史案例几乎是同一句话级别的匹配：\n- 机型同为 **CONTURA 6206**\n- 工序同为 **Install shrouds**\n- 都有 **Faltenbalg 选件**\n- 症状同为 **前后白色 Abdeckung 难装、会卡斜**\n\n这比其他返回结果更贴近。  \n虽然也有相近案例被归到 **Bellows**，例如：\n- **“Abdeckung Kasten Faltenbalg vorne und hinten nicht passend”**\n- 原因：**Grundkörper passt nicht zur Verkleidung**\n- 处理：**Bohrungen aufgebohrt**\n\n但你这条更像第一条归档，因为它明确点名了：\n- **weiße Abdeckung vorne und hinten**\n- **Verkantet sich**\n- **Option Faltenbalg**\n这三点和首条案例高度一致，所以优先按 **Shrouds** 判。\n\n---\n\n### 现场可直接参考的历史结论\n**最可能组件**：Shrouds  \n**最可能失效原因**：Faltenbalg 选件对应孔位不匹配，且白色 Abdeckung 螺纹不良  \n**历史处理动作**：扩孔 + 修牙\n\n如果你们现场想按历史口径开单/分类，建议优先写成：\n- **部件**：Shrouds\n- **原因**：Faltenbalg option 孔位不对 / white cover thread poor\n- **措施**：开孔修正、螺纹重整\n\n如果你告诉我**工厂**，我可以再按你们厂做一次**精确工厂过滤**，看有没有比 Oberkochen 这条更近的本地历史案例。",
+          "second_turn_text": "按 **Oberkochen (1014)** 精确过滤后，结论更明确了：\n\n## 最可能历史判定\n- **component_name**：**Shrouds**\n- **failure_reason**：**Bohrbild (Option Faltenbalg) passt nicht und die Gewinde an der weißen Abdeckung sind schlecht.**\n- **handling_steps**：**Die Bohrungen aufbohren und die Gewinde nachschneiden.**\n\n## 对应最强匹配案例\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工序**：Install shrouds\n- **时间**：**2020-03-20T02:06:00Z**\n- **异常描述**：  \n  **“Bei der Option Faltenbalg lässt sich die weiße Abdeckung vorne und hinten schlecht montieren. (Verkantet sich)”**\n\n这条和你描述基本是**近乎同案**：\n- 同工厂\n- 同机型家族\n- 同工序\n- 同 Faltenbalg 选件\n- 同“前后白色 Abdeckung 难装、卡斜”\n\n---\n\n## 历史上这种“怎么判”\n如果按档案口径，**优先判 Shrouds，不先判装配手法**。  \n归因不是“人装歪了”，而是：\n\n1. **Faltenbalg 选件对应孔位/孔图不匹配**\n2. **白色 Abdeckung 螺纹质量差**\n3. 导致前后白色盖板装配时**Verkantet sich（卡斜）**\n\n---\n\n## Oberkochen 同厂的辅助证据\n同厂还返回了几条同类支撑案例，方向都很一致：\n\n### 1) Bellows\n- **时间**：2021-09-30\n- **原因**：**Lochbild Halteblech passt nicht richtig zu Verkleidungsteil vorn/ hinten**\n- **处理**：**Löcher in Halteblech aufgebohrt**\n\n### 2) Bellows\n- **时间**：2021-03-31\n- **原因**：**Grundkörper passt nicht zur Verkleidung**\n- **处理**：**Bohrungen aufgebohrt Y4 #201147631 und #201147629**\n\n### 3) Bellows\n- **时间**：2021-06-08\n- **异常**：**Bohrungen bei der Abdeckung für den Faltenbalg stimmen nicht überein**\n- **原因**：**Falsch hergestellt**\n- **处理**：**Nachbohren**\n\n### 4) Shrouds\n- **时间**：2021-10-14\n- **原因**：**Lochbild von Halteblech für Blende Faltenbalg vorn & hinten passt nicht**\n- **处理**：**Löcher mit Feile nachgearbeitet. Wurde am 14.4. per Serienfehler reklamiert, Y4 #201148844**\n\n### 5) Shrouds\n- **时间**：2021-08-19\n- **异常**：**Lochbild bei äußerer Abdeckung passt nicht**\n- **处理**：**Aufbohren, anpassen. Kasten per Serienfehler reklamiert Y4 # 201148844**\n\n---\n\n## 综合判断\n### 最可能部件\n**Shrouds**\n\n### 最可能失效原因\n**Faltenbalg 相关外罩/白色 Abdeckung 的孔位不匹配，且白色 Abdeckung 螺纹不良。**\n\n### 历史处理步骤\n- **扩孔 / 修孔**\n- **螺纹重整（nachschneiden）**\n- 必要时**对孔或轮廓做局部修整**\n- 并且从 Oberkochen 历史看，**这类问题多次被按 Serienfehler/Y4 方向记录**\n\n---\n\n## 你们现场如果要快速落单，建议写法\n**部件**：Shrouds  \n**原因**：Faltenbalg option 孔位不匹配，白色 Abdeckung 螺纹不良  \n**措施**：Bohrungen aufbohren + Gewinde nachschneiden；必要时按 Serienfehler/Y4 记录\n\n如果你愿意，我下一条可以直接帮你整理成一版适合 Oberkochen 现场填写的 **简短德英/中英异常单描述**。",
+          "final_turn_text": "按 **Oberkochen (1014)** 精确过滤后，结论更明确了：\n\n## 最可能历史判定\n- **component_name**：**Shrouds**\n- **failure_reason**：**Bohrbild (Option Faltenbalg) passt nicht und die Gewinde an der weißen Abdeckung sind schlecht.**\n- **handling_steps**：**Die Bohrungen aufbohren und die Gewinde nachschneiden.**\n\n## 对应最强匹配案例\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工序**：Install shrouds\n- **时间**：**2020-03-20T02:06:00Z**\n- **异常描述**：  \n  **“Bei der Option Faltenbalg lässt sich die weiße Abdeckung vorne und hinten schlecht montieren. (Verkantet sich)”**\n\n这条和你描述基本是**近乎同案**：\n- 同工厂\n- 同机型家族\n- 同工序\n- 同 Faltenbalg 选件\n- 同“前后白色 Abdeckung 难装、卡斜”\n\n---\n\n## 历史上这种“怎么判”\n如果按档案口径，**优先判 Shrouds，不先判装配手法**。  \n归因不是“人装歪了”，而是：\n\n1. **Faltenbalg 选件对应孔位/孔图不匹配**\n2. **白色 Abdeckung 螺纹质量差**\n3. 导致前后白色盖板装配时**Verkantet sich（卡斜）**\n\n---\n\n## Oberkochen 同厂的辅助证据\n同厂还返回了几条同类支撑案例，方向都很一致：\n\n### 1) Bellows\n- **时间**：2021-09-30\n- **原因**：**Lochbild Halteblech passt nicht richtig zu Verkleidungsteil vorn/ hinten**\n- **处理**：**Löcher in Halteblech aufgebohrt**\n\n### 2) Bellows\n- **时间**：2021-03-31\n- **原因**：**Grundkörper passt nicht zur Verkleidung**\n- **处理**：**Bohrungen aufgebohrt Y4 #201147631 und #201147629**\n\n### 3) Bellows\n- **时间**：2021-06-08\n- **异常**：**Bohrungen bei der Abdeckung für den Faltenbalg stimmen nicht überein**\n- **原因**：**Falsch hergestellt**\n- **处理**：**Nachbohren**\n\n### 4) Shrouds\n- **时间**：2021-10-14\n- **原因**：**Lochbild von Halteblech für Blende Faltenbalg vorn & hinten passt nicht**\n- **处理**：**Löcher mit Feile nachgearbeitet. Wurde am 14.4. per Serienfehler reklamiert, Y4 #201148844**\n\n### 5) Shrouds\n- **时间**：2021-08-19\n- **异常**：**Lochbild bei äußerer Abdeckung passt nicht**\n- **处理**：**Aufbohren, anpassen. Kasten per Serienfehler reklamiert Y4 # 201148844**\n\n---\n\n## 综合判断\n### 最可能部件\n**Shrouds**\n\n### 最可能失效原因\n**Faltenbalg 相关外罩/白色 Abdeckung 的孔位不匹配，且白色 Abdeckung 螺纹不良。**\n\n### 历史处理步骤\n- **扩孔 / 修孔**\n- **螺纹重整（nachschneiden）**\n- 必要时**对孔或轮廓做局部修整**\n- 并且从 Oberkochen 历史看，**这类问题多次被按 Serienfehler/Y4 方向记录**\n\n---\n\n## 你们现场如果要快速落单，建议写法\n**部件**：Shrouds  \n**原因**：Faltenbalg option 孔位不匹配，白色 Abdeckung 螺纹不良  \n**措施**：Bohrungen aufbohren + Gewinde nachschneiden；必要时按 Serienfehler/Y4 记录\n\n如果你愿意，我下一条可以直接帮你整理成一版适合 Oberkochen 现场填写的 **简短德英/中英异常单描述**。",
+          "first_step_check": {
+            "passed": false,
+            "clarification_expected": true,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": false
+        },
+        {
+          "golden_test_id": "golden_013",
+          "source_case_id": "case_000057",
+          "scenario_type": "mounting_hole_offset",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "先补一个关键信息：**是哪个工厂？**\n\n有了工厂我就能先按该厂历史案例去对比，像你这个描述已经足够做第一轮检索了。当前从症状上我**初步怀疑最像装配定位/板件孔位偏差类历史**，可能会落在这几类归档方向里：\n\n- **后侧板件/支架本体孔位偏差**\n- **shroud 安装位置基准偏移**\n- **cage nut 安装位置或方向异常**\n- **Y 后侧相关钣金件到位后仍无法锁附的配合公差问题**\n\n但按规则我这里不能在**缺少 factory** 时给你最终历史结论。  \n你直接回我一句工厂名就行，比如 **Suzhou / 昆山 / 其他厂**。",
+          "second_turn_text": "按 **Oberkochen (1014) + CONTURA 6206 configurable + Install shrouds** 的历史，**你这个描述最像的是 Y 后侧 shroud/cover 的 cage nut 孔位偏后，导致到 end position 后无法锁附** 这一支。\n\n**最像的历史案例**\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工序**：Install shrouds\n- **时间**：**2020-03-23**\n- **组件**：**Shrouds**\n- **异常描述**：**Blech von der Y-Abdeckung (Hinten) lässt sich nicht an der Endlage anschrauben**\n- **失效原因**：**Bohrung vom Blech bzw. Aussparung für die Käfigmutter sitzt zu weit hinten**\n  - 中文就是：**钣金孔/给 cage nut 的开口位置偏后**\n- **处理步骤**：**Aussparung aufbohren**\n  - 中文就是：**把开口/孔位扩孔**\n\n这条和你说的：\n- **Y 后面的那块板子**\n- **到了 end position 锁不上**\n- **像 cage nut 的孔位偏后了**\n\n基本是近乎同义匹配。\n\n另外几条同厂同机型同工序的相邻历史也都在支持这个判断：\n\n1. **2022-07-20**\n   - 原因：**Lochbild für Käfigmutter an Verkleidungsteil Y hinten passt nicht**\n   - 处理：**Loch nachgefeilt**\n   - 含义：**Y 后侧 cover 上给 cage nut 的孔图不匹配，修孔**\n\n2. **2022-11-08**\n   - 原因：**Aufnahme für Käfigmutter an Verkleidung Y-Balken hinten passt nicht**\n   - 处理：**Verkleidungsteil nachgearbeitet / Loch aufgefeilt**\n   - 含义：**Y 后梁位置的 cage nut 安装位不匹配，返修板件并锉孔**\n\n3. **2022-08-31**\n   - 原因：**Lochbild Verkleidung Y hinten passt nicht (Aufnahme für Käfigmutter)**\n   - 补充说明：**Längentoleranz der Tischplatte bei Konstruktion nicht berücksichtigt**\n   - 处理：**Loch nachgefeilt; Änderungsantrag auf Langloch**\n   - 含义：不仅是单件孔位问题，历史上还出现过**设计/公差链导致 Y 后侧 cage nut 位对不上**，后来甚至提了**改长圆孔**申请。\n\n### 结论\n**最可能组件**：**Shrouds**  \n**最可能失效原因**：**Y 后侧 shroud/cover 的 cage nut 孔位/开口偏后，导致 end position 无法锁附**  \n**历史处理方式**：\n- **Aussparung aufbohren**（扩开口）\n- **Loch nachgefeilt / Loch aufgefeilt**（修孔/锉孔）\n- 必要时 **Verkleidungsteil nachgearbeitet**（板件返修）\n- 历史上还有 **改成长孔** 的长期措施记录\n\n### 我建议你现场先按历史理解成这类\n不是优先怀疑 drive 或机构动作问题，**先按 shroud 板件/cage nut 配合孔位偏差** 去看，尤其是：\n- Y hinten 的板件孔\n- cage nut 的开口位置\n- 安装位是否整体偏后\n- 是否属于需要修孔/扩孔才能锁上的那类\n\n如果你愿意，我下一步可以直接帮你把这几条历史整理成一版**给现场/质量单可直接引用的中英德简短结论**。",
+          "final_turn_text": "按 **Oberkochen (1014) + CONTURA 6206 configurable + Install shrouds** 的历史，**你这个描述最像的是 Y 后侧 shroud/cover 的 cage nut 孔位偏后，导致到 end position 后无法锁附** 这一支。\n\n**最像的历史案例**\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工序**：Install shrouds\n- **时间**：**2020-03-23**\n- **组件**：**Shrouds**\n- **异常描述**：**Blech von der Y-Abdeckung (Hinten) lässt sich nicht an der Endlage anschrauben**\n- **失效原因**：**Bohrung vom Blech bzw. Aussparung für die Käfigmutter sitzt zu weit hinten**\n  - 中文就是：**钣金孔/给 cage nut 的开口位置偏后**\n- **处理步骤**：**Aussparung aufbohren**\n  - 中文就是：**把开口/孔位扩孔**\n\n这条和你说的：\n- **Y 后面的那块板子**\n- **到了 end position 锁不上**\n- **像 cage nut 的孔位偏后了**\n\n基本是近乎同义匹配。\n\n另外几条同厂同机型同工序的相邻历史也都在支持这个判断：\n\n1. **2022-07-20**\n   - 原因：**Lochbild für Käfigmutter an Verkleidungsteil Y hinten passt nicht**\n   - 处理：**Loch nachgefeilt**\n   - 含义：**Y 后侧 cover 上给 cage nut 的孔图不匹配，修孔**\n\n2. **2022-11-08**\n   - 原因：**Aufnahme für Käfigmutter an Verkleidung Y-Balken hinten passt nicht**\n   - 处理：**Verkleidungsteil nachgearbeitet / Loch aufgefeilt**\n   - 含义：**Y 后梁位置的 cage nut 安装位不匹配，返修板件并锉孔**\n\n3. **2022-08-31**\n   - 原因：**Lochbild Verkleidung Y hinten passt nicht (Aufnahme für Käfigmutter)**\n   - 补充说明：**Längentoleranz der Tischplatte bei Konstruktion nicht berücksichtigt**\n   - 处理：**Loch nachgefeilt; Änderungsantrag auf Langloch**\n   - 含义：不仅是单件孔位问题，历史上还出现过**设计/公差链导致 Y 后侧 cage nut 位对不上**，后来甚至提了**改长圆孔**申请。\n\n### 结论\n**最可能组件**：**Shrouds**  \n**最可能失效原因**：**Y 后侧 shroud/cover 的 cage nut 孔位/开口偏后，导致 end position 无法锁附**  \n**历史处理方式**：\n- **Aussparung aufbohren**（扩开口）\n- **Loch nachgefeilt / Loch aufgefeilt**（修孔/锉孔）\n- 必要时 **Verkleidungsteil nachgearbeitet**（板件返修）\n- 历史上还有 **改成长孔** 的长期措施记录\n\n### 我建议你现场先按历史理解成这类\n不是优先怀疑 drive 或机构动作问题，**先按 shroud 板件/cage nut 配合孔位偏差** 去看，尤其是：\n- Y hinten 的板件孔\n- cage nut 的开口位置\n- 安装位是否整体偏后\n- 是否属于需要修孔/扩孔才能锁上的那类\n\n如果你愿意，我下一步可以直接帮你把这几条历史整理成一版**给现场/质量单可直接引用的中英德简短结论**。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_019",
+          "source_case_id": "case_000067",
+          "scenario_type": "contradictory_axis_hint_requires_clarification",
+          "expected_first_step": "ask_to_resolve_which_axis_is_affected",
+          "first_turn_text": "先确认工厂是哪里？",
+          "second_turn_text": "历史上**最像的是 X-Drive 这条，不像 Z 轴分支**。\n\n**最贴近案例**\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Integration\n- **时间**：2020-03-24\n- **案例标题**：CONTURA 6206 configurable | Integration | X-Drive\n- **异常描述**：**X-Antrieb schwingt.**\n- **组件**：**X-Drive**\n- **原因**：档案里写 **--**（未明确记录）\n- **处理**：**Parameter geändert.**\n\n**为什么我说它最像**\n- 你给的原话就是 **“X-Antrieb schwingt”**，库里有一条**同厂、同机型、同工位、同句子**的历史案。\n- 所以按档案锚定，优先落在 **X-Drive**，不该先被“像 Z 轴共振”这个转述带偏。\n\n**同一分支的相邻历史案也在支持 X-Drive**\n1. **2023-10-25 | Integration | X-Drive**  \n   - 异常：**Antrieb vibriert**\n   - 原因：**Aktivdämpfung bei Baugröße 7/7/6**\n   - 处理：**Parameter geändert**\n2. **2020-07-13 | Integration | X-Drive**  \n   - 异常：**Maschine fängt an zu schwingen**\n   - 原因：**Zusammenspiel von Aktivdämpfung und X-Antrieb.**\n   - 处理：**Parameter wurden geändert.**\n3. **2023-10-10 | Integration | X-Drive**  \n   - 异常：**X-Antrieb schwingt beim Fahren**\n   - 原因：**Bei Aktivdämpfung ist der Parameter F216 manchmal zu hoch**\n   - 处理：**Anpassen des Parameters**\n4. **2020-04-01 | Integration | X-Drive**  \n   - 异常：**X-Antrieb schwingt nach dem Dauerlauf.**\n   - 处理：**Neue Firmware (F40.12) auf die Steuerung hochladen. Antriebe optimieren.**\n\n**基于历史档案的结论**\n- **最可能部件**：**X-Drive**\n- **最可能失效原因**：优先看成**参数/主动阻尼（Aktivdämpfung）与 X-Antrieb 的匹配问题**，其中档案里出现过：\n  - **Aktivdämpfung bei Baugröße 7/7/6**\n  - **Zusammenspiel von Aktivdämpfung und X-Antrieb**\n  - **Parameter F216 manchmal zu hoch**\n- **历史处理步骤**：优先是\n  - **Parameter geändert / Anpassen des Parameters**\n  - 若久跑后出现：**升级控制器 Firmware F40.12 + Antriebe optimieren**\n  - 更少数才走硬件：**Austausch Motor X / Austausch Zwischenstufe X-Antrieb**\n\n**一句话判断**\n- 这单从历史相似度看，**先按 X-Drive 振动分支处理最有根据**；第一优先不是 Z 轴机械共振，而是**X 轴驱动相关的参数/主动阻尼匹配问题**。\n\n如果你要，我下一条可以直接给你整理成一个**“按历史命中顺序的现场处理优先级”**。",
+          "final_turn_text": "历史上**最像的是 X-Drive 这条，不像 Z 轴分支**。\n\n**最贴近案例**\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Integration\n- **时间**：2020-03-24\n- **案例标题**：CONTURA 6206 configurable | Integration | X-Drive\n- **异常描述**：**X-Antrieb schwingt.**\n- **组件**：**X-Drive**\n- **原因**：档案里写 **--**（未明确记录）\n- **处理**：**Parameter geändert.**\n\n**为什么我说它最像**\n- 你给的原话就是 **“X-Antrieb schwingt”**，库里有一条**同厂、同机型、同工位、同句子**的历史案。\n- 所以按档案锚定，优先落在 **X-Drive**，不该先被“像 Z 轴共振”这个转述带偏。\n\n**同一分支的相邻历史案也在支持 X-Drive**\n1. **2023-10-25 | Integration | X-Drive**  \n   - 异常：**Antrieb vibriert**\n   - 原因：**Aktivdämpfung bei Baugröße 7/7/6**\n   - 处理：**Parameter geändert**\n2. **2020-07-13 | Integration | X-Drive**  \n   - 异常：**Maschine fängt an zu schwingen**\n   - 原因：**Zusammenspiel von Aktivdämpfung und X-Antrieb.**\n   - 处理：**Parameter wurden geändert.**\n3. **2023-10-10 | Integration | X-Drive**  \n   - 异常：**X-Antrieb schwingt beim Fahren**\n   - 原因：**Bei Aktivdämpfung ist der Parameter F216 manchmal zu hoch**\n   - 处理：**Anpassen des Parameters**\n4. **2020-04-01 | Integration | X-Drive**  \n   - 异常：**X-Antrieb schwingt nach dem Dauerlauf.**\n   - 处理：**Neue Firmware (F40.12) auf die Steuerung hochladen. Antriebe optimieren.**\n\n**基于历史档案的结论**\n- **最可能部件**：**X-Drive**\n- **最可能失效原因**：优先看成**参数/主动阻尼（Aktivdämpfung）与 X-Antrieb 的匹配问题**，其中档案里出现过：\n  - **Aktivdämpfung bei Baugröße 7/7/6**\n  - **Zusammenspiel von Aktivdämpfung und X-Antrieb**\n  - **Parameter F216 manchmal zu hoch**\n- **历史处理步骤**：优先是\n  - **Parameter geändert / Anpassen des Parameters**\n  - 若久跑后出现：**升级控制器 Firmware F40.12 + Antriebe optimieren**\n  - 更少数才走硬件：**Austausch Motor X / Austausch Zwischenstufe X-Antrieb**\n\n**一句话判断**\n- 这单从历史相似度看，**先按 X-Drive 振动分支处理最有根据**；第一优先不是 Z 轴机械共振，而是**X 轴驱动相关的参数/主动阻尼匹配问题**。\n\n如果你要，我下一条可以直接给你整理成一个**“按历史命中顺序的现场处理优先级”**。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": false,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 5,
+    "fully_passed": 3,
+    "first_step_passed": 3,
+    "final_answer_passed": 5,
+    "errors": 0
+  }
+}

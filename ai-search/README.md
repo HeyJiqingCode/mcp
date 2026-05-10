@@ -3,6 +3,7 @@
 A Model Context Protocol (MCP) server that exposes Azure AI Search capabilities across multiple retrieval modes (keyword, semantic, vector, hybrid, plus the new agentic retrieval preview APIs).
 
 ## Features
+
 - Execute keyword searches using simple syntax.
 - Run semantic queries with optional captions and answers.
 - Perform pure vector similarity search.
@@ -17,11 +18,13 @@ A Model Context Protocol (MCP) server that exposes Azure AI Search capabilities 
 ### Local Development
 
 **1/ Clone Repo**
+
 ```bash
 git clone https://github.com/HeyJiqingCode/mcp.git
 ```
 
 **2/ Install dependencies**:
+
 ```bash
 cd mcp/ai-search/
 python -m venv .venv
@@ -30,6 +33,7 @@ pip install -r requirements.txt
 ```
 
 **3/ Create a `.env` file**
+
 ```bash
 # Azure AI Search Endpoint
 AZURE_SEARCH_ENDPOINT=https://your-search-service.search.windows.net
@@ -43,6 +47,7 @@ AZURE_SEARCH_ADMIN_KEY=your-admin-key   # required for agentic_retrieval
 ```
 
 **4/ Run the server**:
+
 ```bash
 # For stdio transport (default)
 python src/mcp/server.py
@@ -50,11 +55,12 @@ python src/mcp/server.py
 # For SSE transport
 python src/mcp/server.py --transport sse
 
-# For streamable-http transport  
+# For streamable-http transport
 python src/mcp/server.py --transport streamable-http
 ```
 
 **5/ Add MCP Server to your client**
+
 ```json
 {
   "mcpServers": {
@@ -62,8 +68,8 @@ python src/mcp/server.py --transport streamable-http
       "type": "streamableHttp",
       "url": "http://127.0.0.1:8000/mcp",
       "headers": {
-         "Content-Type": "application/json",
-         "Authorization": "Bearer your_token"
+        "Content-Type": "application/json",
+        "Authorization": "Bearer your_token"
       }
     }
   }
@@ -73,17 +79,20 @@ python src/mcp/server.py --transport streamable-http
 ### Docker
 
 **1/ Clone Repo**
+
 ```bash
 git clone https://github.com/HeyJiqingCode/mcp.git
 ```
 
 **2/ Build Docker Image**
+
 ```bash
 cd mcp/ai-search/
 docker build -t azure-ai-search-mcp:1.1.0 -f Dockerfile .
 ```
 
 **3/ Run the container**:
+
 ```bash
 docker run -itd -p 8000:8000 --name AzureAISearch \
   -e AZURE_SEARCH_ENDPOINT=https://your-search-service.search.windows.net \
@@ -93,6 +102,7 @@ docker run -itd -p 8000:8000 --name AzureAISearch \
 ```
 
 **4/ Add MCP Server for HTTP transport**
+
 ```json
 {
   "mcpServers": {
@@ -100,8 +110,8 @@ docker run -itd -p 8000:8000 --name AzureAISearch \
       "type": "streamableHttp",
       "url": "http://127.0.0.1:8000/mcp",
       "headers": {
-         "Content-Type": "application/json",
-         "Authorization": "Bearer your_token"
+        "Content-Type": "application/json",
+        "Authorization": "Bearer your_token"
       }
     }
   }
@@ -111,6 +121,7 @@ docker run -itd -p 8000:8000 --name AzureAISearch \
 ## Available Tools
 
 Each tool accepts an optional `api_key` and `endpoint` so you can override defaults at invocation time. All responses include:
+
 - `documents`: list of normalized documents (with `@search.score`, etc.).
 - `count`: total number of documents matched (if available).
 - `answers`, `captions`, `facets`: when returned by the service.
@@ -125,6 +136,7 @@ Keyword (BM25) search over an index using simple query syntax, with optional fil
 index_name, query, top=5, skip=0, search_fields=None, select=None, filter=None, search_mode="any", api_key=None, endpoint=None
 
 **Example Usage:**
+
 ```json
 {
   "tool": "simple_search",
@@ -241,7 +253,7 @@ Run the Azure AI Search agentic retrieval pipeline (knowledge base multi-query o
 **Parameters (frequently used):**
 
 - `knowledge_base_name` (str, required)
-- `query` (str, required)
+- `query` (str, required unless `intent_query` is used)
 - `intent_query` (Optional[str])
 - `reasoning_effort` (Optional[str]) – `minimal`, `low`, or `medium`
 - `output_mode` (str) – `answerSynthesis` or `extractiveData`
@@ -252,26 +264,31 @@ Run the Azure AI Search agentic retrieval pipeline (knowledge base multi-query o
 
 **Knowledge Source Configuration:**
 
+`query` and `intent_query` are mutually exclusive because Azure AI Search rejects requests that send both message input and intent input together.
+
+When you need `reasoning_effort="minimal"`, prefer `intent_query` without `query` so the request is sent through the intents-only path accepted by the service.
+
 Use `knowledge_source_configs` to specify one or more knowledge sources with per-source settings. Parameters can be in **any order** - the parser is order-independent.
 
 **Supported Parameters by Source Type:**
 
-| Parameter | Type | searchIndex | web | remoteSharePoint | Description |
-|-----------|------|-------------|-----|------------------|-------------|
-| `knowledgeSourceName` | string | ✅ Required | ✅ Required | ✅ Required | Knowledge source name |
-| `kind` | string | ✅ Required | ✅ Required | ✅ Required | Source type |
-| `includeReferences` | bool | ✅ | ✅ | ✅ | Include document references |
-| `alwaysQuerySource` | bool | ✅ | ✅ | ✅ | Force querying even if not needed |
-| `rerankerThreshold` | float | ✅ | ✅ | ✅ | Minimum reranker score threshold |
-| `includeReferenceSourceData` | bool | ✅ | ✅ | ✅ | Include source data in references |
-| `filterAddOn` | string | ✅ | ❌ | ❌ | OData filter expression |
-| `count` | int | ❌ | ✅ | ❌ | Number of results |
-| `freshness` | string | ❌ | ✅ | ❌ | Result freshness (day/week/month) |
-| `language` | string | ❌ | ✅ | ❌ | Result language (e.g., zh-CN) |
-| `market` | string | ❌ | ✅ | ❌ | Result market (e.g., zh-CN) |
-| `filterExpressionAddOn` | string | ❌ | ❌ | ✅ | KQL filter expression |
+| Parameter                    | Type   | searchIndex | web         | remoteSharePoint | Description                       |
+| ---------------------------- | ------ | ----------- | ----------- | ---------------- | --------------------------------- |
+| `knowledgeSourceName`        | string | ✅ Required | ✅ Required | ✅ Required      | Knowledge source name             |
+| `kind`                       | string | ✅ Required | ✅ Required | ✅ Required      | Source type                       |
+| `includeReferences`          | bool   | ✅          | ✅          | ✅               | Include document references       |
+| `alwaysQuerySource`          | bool   | ✅          | ✅          | ✅               | Force querying even if not needed |
+| `rerankerThreshold`          | float  | ✅          | ✅          | ✅               | Minimum reranker score threshold  |
+| `includeReferenceSourceData` | bool   | ✅          | ✅          | ✅               | Include source data in references |
+| `filterAddOn`                | string | ✅          | ❌          | ❌               | OData filter expression           |
+| `count`                      | int    | ❌          | ✅          | ❌               | Number of results                 |
+| `freshness`                  | string | ❌          | ✅          | ❌               | Result freshness (day/week/month) |
+| `language`                   | string | ❌          | ✅          | ❌               | Result language (e.g., zh-CN)     |
+| `market`                     | string | ❌          | ✅          | ❌               | Result market (e.g., zh-CN)       |
+| `filterExpressionAddOn`      | string | ❌          | ❌          | ✅               | KQL filter expression             |
 
 **Format Rules:**
+
 - Parameters can be specified in **any order**
 - Use `,` to separate key-value pairs within a source
 - Use `;` to separate multiple sources

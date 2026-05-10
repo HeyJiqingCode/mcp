@@ -1,0 +1,96 @@
+{
+  "dataset_name": "golden-013-only",
+  "source_dataset": "golden_test_cases.json",
+  "source_cases_file": "cases.json",
+  "split_type": "clarify_then_answer",
+  "test_case_count": 1,
+  "scope": "CONTURA-family troubleshooting prompts that should trigger one high-value clarification before answering",
+  "notes": [
+    "These cases are copied from golden_test_cases.json.",
+    "Every case in this split expects the agent to clarify missing or contradictory information before producing the final grounded answer.",
+    "Regression scoring now prioritizes expected_mode, the four-section response contract, historical-fact grounding, and escalation guidance.",
+    "Legacy component/failure/action anchors remain in correct_answer only as backward-reference fields."
+  ],
+  "test_cases": [
+    {
+      "golden_test_id": "golden_013",
+      "source_case_id": "case_000057",
+      "scenario_type": "mounting_hole_offset",
+      "initial_user_input": "Contura 6206 装 shroud 的时候，Y 后面的那块板子到了 end position 就是锁不上，像 cage nut 的孔位偏后了。按历史最像哪种？",
+      "follow_up_user_reply": "Oberkochen (1014)，Install shrouds。",
+      "expected_first_step": "ask_for_factory_before_answering",
+      "expected_clarifying_focus": "factory",
+      "correct_answer": {
+        "component_name": "Shrouds",
+        "failure_reason": "Bohrung vom Blech bzw. Aussparung für die Käfigmutter sitzt zu weit hinten.",
+        "handling_steps": "Aussparung aufbohren.",
+        "answer_notes": null
+      },
+      "reference_context": {
+        "factory": "Oberkochen (1014)",
+        "machine_model": "CONTURA 6206 configurable",
+        "process_or_station": "Install shrouds",
+        "event_start_at": "2020-03-23T10:27:00+08:00",
+        "anomaly_description": "Blech von der Y- Abdeckung(Hinten) lässt sich nicht an der Endlage anschrauben."
+      },
+      "expected_mode": "clarify_then_answer",
+      "required_first_turn_keywords": [
+        "工厂",
+        "factory"
+      ],
+      "required_first_turn_keyword_matches": 1,
+      "forbidden_first_turn_keywords": [
+        "历史案例事实",
+        "当前怀疑方向"
+      ],
+      "required_historical_fact_keywords": [
+        "Oberkochen",
+        "Install shrouds",
+        "Y- Abdeckung",
+        "Endlage"
+      ],
+      "required_historical_fact_keyword_matches": 2,
+      "acceptable_suspected_direction_keywords": [
+        "Shrouds",
+        "Bohrung",
+        "Käfigmutter",
+        "孔位"
+      ],
+      "acceptable_suspected_direction_keyword_matches": 2,
+      "required_recommended_action_keywords": [
+        "目视",
+        "空配",
+        "孔位",
+        "扩孔"
+      ],
+      "required_recommended_action_keyword_matches": 1,
+      "required_escalation_keywords": [
+        "升级",
+        "维修工程师",
+        "孔位偏差",
+        "换件"
+      ],
+      "required_escalation_keyword_matches": 1
+    }
+  ],
+  "evaluation_version": 2,
+  "evaluation_target": "response_contract_v2",
+  "response_contract_defaults": {
+    "required_sections": [
+      "历史案例事实",
+      "当前怀疑方向",
+      "建议先做的检查或操作",
+      "何时升级给维修工程师"
+    ],
+    "require_historical_fact_grounding": true,
+    "require_suspected_direction_hedging": true,
+    "require_recommended_action_section": true,
+    "require_escalation_section": true,
+    "required_escalation_keywords": [
+      "升级",
+      "维修工程师",
+      "停止继续",
+      "超出操作员"
+    ]
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "generated_at": "2026-05-10T05:54:15.197Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-013-only\\golden_test_cases.golden_013.manifest.json",
+    "manifest_name": "golden-013-only-live-batch",
+    "manifest_version": 2,
+    "authoritative_dataset_id": "golden_013"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "golden_013"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "golden_013",
+      "dataset_name": "golden-013-only",
+      "evaluation_target": "response_contract_v2",
+      "evaluation_version": 2,
+      "file": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-013-only\\golden_test_cases.clarify_then_answer.golden_013.json",
+      "split_type": "clarify_then_answer",
+      "role": "regression_split",
+      "total_cases": 1,
+      "selected_cases": 1,
+      "summary": {
+        "cases": 1,
+        "errors": 0,
+        "mode_passed": 1,
+        "first_turn_focus_passed": 1,
+        "contract_passed": 1,
+        "historical_facts_passed": 1,
+        "suspected_direction_passed": 0,
+        "recommended_action_passed": 1,
+        "escalation_passed": 1,
+        "forbidden_claim_passed": 1,
+        "fully_passed": 0,
+        "structured_final_answers": 1,
+        "legacy_final_answer_passed": 0
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_013",
+          "source_case_id": "case_000057",
+          "scenario_type": "mounting_hole_offset",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "请先告诉我是哪个工厂（factory）？",
+          "second_turn_text": "历史案例事实\n\n- 先按 **Oberkochen + Install shrouds** 做了首轮检索，但**没有检到直接命中的 Oberkochen 历史案例**。\n- 放宽到跨工厂后，检到 1 条与 **Contura 6206 + Install shrouds + cage nut** 最接近的案例：  \n  - **Minneapolis (7003)**  \n  - **机型**：CONTURA 6206 configurable  \n  - **工位**：Install shrouds  \n  - **部件**：Z-Tower  \n  - **异常**：missing cage nut on Z tower  \n  - **处理**：had to have cage nut installed\n- 还检到 1 条与“**孔位对不上/偏位**”现象相近的案例：  \n  - **Shanghai (5942)**  \n  - **机型**：CMM Micura configurable  \n  - **工位**：Install shrouds  \n  - **部件**：Clearance Shrouds  \n  - **异常**：Y外罩支架孔位对不上  \n  - **原因**：折弯尺寸不良造成孔位偏  \n  - **处理**：质量维修后使用\n- 另外还有 1 条 **CONTURA 6206** 相关但发生在 **Acceptance** 工位的案例：  \n  - **异常**：Z shroud weld nut missing  \n  - **处理**：Replaced Z shroud\n\n当前怀疑方向\n\n- **按现有历史最像的，是紧固件/螺母类安装点异常**，尤其是 **cage nut / weld nut 缺失、未装好、装位不对**，导致到 end position 后仍然**无法锁上**。\n- 第二怀疑方向是 **钣金件或支架本体孔位偏差**，类似历史里“**孔位对不上、折弯尺寸导致偏位**”这类问题。\n- 也就是说，**目前更像“锁点问题”或“孔位几何偏差问题”**，但还**不能确认**到底是 cage nut 本身、板件变形，还是前序装配基准带偏。\n\n建议先做的检查或操作\n\n- **先停止强行锁紧**，不要硬压到位，避免把 cage nut、孔边或板件拉坏。\n- 做 3 个低风险目检：\n  1. **看 cage nut / 螺母座是否真的在位**，有没有缺失、反装、半脱出、歪斜。\n  2. **看锁点周边孔位关系**：到 end position 后，是“完全够不到孔”，还是“只差一点点、边缘干涉”。  \n  3. **看板件是否有明显变形或翘曲**，尤其你说的 **Y 后面那块板子** 和对应 shroud 支架位置。\n- 如果现场允许，只做**轻微回退再重新贴合定位**，确认是否是卡在前级定位点，没有完全落入基准。\n- 同时核对一下：\n  - 对应 shroud / 板件 **料号是否正确**\n  - 左右件有没有装反\n  - 前序已装零件是否顶住这块板子，造成假性“孔位偏后”\n\n何时升级给维修工程师\n\n- **目检发现 cage nut / weld nut 缺失、脱落、歪斜、损坏**时，应直接升级。\n- **孔位明显偏差**，不是轻微重装能消除的，应升级给维修/质量，不建议操作员自行修孔或校形。\n- **同一位置重复 2 次以上仍锁不上**，或每次都到 end position 但锁点始终差一截，应停止继续尝试并升级。\n- 如果需要 **拆前序件、调整基准、校正钣金、补装 cage nut/weld nut**，这已经超出低风险操作范围，应交给维修工程师。\n- 由于这次**Oberkochen 本厂未检到直接命中案例**，证据强度一般；如果你愿意，我下一步可以按你说的“**Y 后面那块板子**”再帮你缩小到更具体的部件名称方向。",
+          "final_turn_text": "历史案例事实\n\n- 先按 **Oberkochen + Install shrouds** 做了首轮检索，但**没有检到直接命中的 Oberkochen 历史案例**。\n- 放宽到跨工厂后，检到 1 条与 **Contura 6206 + Install shrouds + cage nut** 最接近的案例：  \n  - **Minneapolis (7003)**  \n  - **机型**：CONTURA 6206 configurable  \n  - **工位**：Install shrouds  \n  - **部件**：Z-Tower  \n  - **异常**：missing cage nut on Z tower  \n  - **处理**：had to have cage nut installed\n- 还检到 1 条与“**孔位对不上/偏位**”现象相近的案例：  \n  - **Shanghai (5942)**  \n  - **机型**：CMM Micura configurable  \n  - **工位**：Install shrouds  \n  - **部件**：Clearance Shrouds  \n  - **异常**：Y外罩支架孔位对不上  \n  - **原因**：折弯尺寸不良造成孔位偏  \n  - **处理**：质量维修后使用\n- 另外还有 1 条 **CONTURA 6206** 相关但发生在 **Acceptance** 工位的案例：  \n  - **异常**：Z shroud weld nut missing  \n  - **处理**：Replaced Z shroud\n\n当前怀疑方向\n\n- **按现有历史最像的，是紧固件/螺母类安装点异常**，尤其是 **cage nut / weld nut 缺失、未装好、装位不对**，导致到 end position 后仍然**无法锁上**。\n- 第二怀疑方向是 **钣金件或支架本体孔位偏差**，类似历史里“**孔位对不上、折弯尺寸导致偏位**”这类问题。\n- 也就是说，**目前更像“锁点问题”或“孔位几何偏差问题”**，但还**不能确认**到底是 cage nut 本身、板件变形，还是前序装配基准带偏。\n\n建议先做的检查或操作\n\n- **先停止强行锁紧**，不要硬压到位，避免把 cage nut、孔边或板件拉坏。\n- 做 3 个低风险目检：\n  1. **看 cage nut / 螺母座是否真的在位**，有没有缺失、反装、半脱出、歪斜。\n  2. **看锁点周边孔位关系**：到 end position 后，是“完全够不到孔”，还是“只差一点点、边缘干涉”。  \n  3. **看板件是否有明显变形或翘曲**，尤其你说的 **Y 后面那块板子** 和对应 shroud 支架位置。\n- 如果现场允许，只做**轻微回退再重新贴合定位**，确认是否是卡在前级定位点，没有完全落入基准。\n- 同时核对一下：\n  - 对应 shroud / 板件 **料号是否正确**\n  - 左右件有没有装反\n  - 前序已装零件是否顶住这块板子，造成假性“孔位偏后”\n\n何时升级给维修工程师\n\n- **目检发现 cage nut / weld nut 缺失、脱落、歪斜、损坏**时，应直接升级。\n- **孔位明显偏差**，不是轻微重装能消除的，应升级给维修/质量，不建议操作员自行修孔或校形。\n- **同一位置重复 2 次以上仍锁不上**，或每次都到 end position 但锁点始终差一截，应停止继续尝试并升级。\n- 如果需要 **拆前序件、调整基准、校正钣金、补装 cage nut/weld nut**，这已经超出低风险操作范围，应交给维修工程师。\n- 由于这次**Oberkochen 本厂未检到直接命中案例**，证据强度一般；如果你愿意，我下一步可以按你说的“**Y 后面那块板子**”再帮你缩小到更具体的部件名称方向。",
+          "first_turn_contract": {
+            "observed_mode": "clarification",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "先按 **Oberkochen + Install shrouds** 做了首轮检索，但**没有检到直接命中的 Oberkochen 历史案例**。\n- 放宽到跨工厂后，检到 1 条与 **Contura 6206 + Install shrouds + cage nut** 最接近的案例：  \n  - **Minneapolis (7003)**  \n  - **机型**：CONTURA 6206 configurable  \n  - **工位**：Install shrouds  \n  - **部件**：Z-Tower  \n  - **异常**：missing cage nut on Z tower  \n  - **处理**：had to have cage nut installed\n- 还检到 1 条与“**孔位对不上/偏位**”现象相近的案例：  \n  - **Shanghai (5942)**  \n  - **机型**：CMM Micura configurable  \n  - **工位**：Install shrouds  \n  - **部件**：Clearance Shrouds  \n  - **异常**：Y外罩支架孔位对不上  \n  - **原因**：折弯尺寸不良造成孔位偏  \n  - **处理**：质量维修后使用\n- 另外还有 1 条 **CONTURA 6206** 相关但发生在 **Acceptance** 工位的案例：  \n  - **异常**：Z shroud weld nut missing  \n  - **处理**：Replaced Z shroud",
+              "当前怀疑方向": "**按现有历史最像的，是紧固件/螺母类安装点异常**，尤其是 **cage nut / weld nut 缺失、未装好、装位不对**，导致到 end position 后仍然**无法锁上**。\n- 第二怀疑方向是 **钣金件或支架本体孔位偏差**，类似历史里“**孔位对不上、折弯尺寸导致偏位**”这类问题。\n- 也就是说，**目前更像“锁点问题”或“孔位几何偏差问题”**，但还**不能确认**到底是 cage nut 本身、板件变形，还是前序装配基准带偏。",
+              "建议先做的检查或操作": "**先停止强行锁紧**，不要硬压到位，避免把 cage nut、孔边或板件拉坏。\n- 做 3 个低风险目检：\n  1. **看 cage nut / 螺母座是否真的在位**，有没有缺失、反装、半脱出、歪斜。\n  2. **看锁点周边孔位关系**：到 end position 后，是“完全够不到孔”，还是“只差一点点、边缘干涉”。  \n  3. **看板件是否有明显变形或翘曲**，尤其你说的 **Y 后面那块板子** 和对应 shroud 支架位置。\n- 如果现场允许，只做**轻微回退再重新贴合定位**，确认是否是卡在前级定位点，没有完全落入基准。\n- 同时核对一下：\n  - 对应 shroud / 板件 **料号是否正确**\n  - 左右件有没有装反\n  - 前序已装零件是否顶住这块板子，造成假性“孔位偏后”",
+              "何时升级给维修工程师": "**目检发现 cage nut / weld nut 缺失、脱落、歪斜、损坏**时，应直接升级。\n- **孔位明显偏差**，不是轻微重装能消除的，应升级给维修/质量，不建议操作员自行修孔或校形。\n- **同一位置重复 2 次以上仍锁不上**，或每次都到 end position 但锁点始终差一截，应停止继续尝试并升级。\n- 如果需要 **拆前序件、调整基准、校正钣金、补装 cage nut/weld nut**，这已经超出低风险操作范围，应交给维修工程师。\n- 由于这次**Oberkochen 本厂未检到直接命中案例**，证据强度一般；如果你愿意，我下一步可以按你说的“**Y 后面那块板子**”再帮你缩小到更具体的部件名称方向。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "legacy_final_answer_check": {
+            "passed": false,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            }
+          },
+          "response_v2_check": {
+            "passed": false,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "clarification",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "工厂",
+                "factory"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "工厂",
+                  "factory"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Install shrouds"
+                ],
+                "missing_keywords": [
+                  "Y- Abdeckung",
+                  "Endlage"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "最像",
+                  "更像",
+                  "孔位"
+                ],
+                "missing_keywords": [
+                  "Shrouds",
+                  "Bohrung",
+                  "Käfigmutter"
+                ],
+                "passed": false
+              },
+              "passed": false
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "孔位"
+                ],
+                "missing_keywords": [
+                  "目视",
+                  "空配",
+                  "扩孔"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "孔位偏差",
+                  "换件"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": false
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 1,
+    "mode_passed": 1,
+    "first_turn_focus_passed": 1,
+    "contract_passed": 1,
+    "historical_facts_passed": 1,
+    "suspected_direction_passed": 0,
+    "recommended_action_passed": 1,
+    "escalation_passed": 1,
+    "forbidden_claim_passed": 1,
+    "fully_passed": 0,
+    "structured_final_answers": 1,
+    "legacy_final_answer_passed": 0,
+    "errors": 0
+  }
+}

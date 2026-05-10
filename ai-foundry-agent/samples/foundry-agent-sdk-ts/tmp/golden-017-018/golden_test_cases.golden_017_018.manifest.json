@@ -1,0 +1,20 @@
+{
+  "manifest_name": "golden-017-018-live-batch",
+  "manifest_version": 2,
+  "base_path": ".",
+  "authoritative_dataset_id": "golden_017_018",
+  "datasets": [
+    {
+      "dataset_id": "golden_017_018",
+      "role": "regression_split",
+      "split_type": "direct_answer",
+      "file": "golden_test_cases.direct_answer.golden_017_018.json",
+      "dataset_name": "golden-017-018",
+      "test_case_count": 2,
+      "source_cases_file": "cases.json",
+      "derived_from": "golden_test_cases.direct_answer.json",
+      "evaluation_version": 2,
+      "evaluation_target": "response_contract_v2"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "dataset_name": "golden-007-only",
+  "source_dataset": "golden_test_cases.json",
+  "source_cases_file": "cases.json",
+  "split_type": "clarify_then_answer",
+  "test_case_count": 1,
+  "scope": "CONTURA-family troubleshooting prompts that should trigger one high-value clarification before answering",
+  "notes": [
+    "These cases are copied from golden_test_cases.json.",
+    "Every case in this split expects the agent to clarify missing or contradictory information before producing the final grounded answer.",
+    "Regression scoring now prioritizes expected_mode, the four-section response contract, historical-fact grounding, and escalation guidance.",
+    "Legacy component/failure/action anchors remain in correct_answer only as backward-reference fields."
+  ],
+  "test_cases": [
+    {
+      "golden_test_id": "golden_007",
+      "source_case_id": "case_000017",
+      "scenario_type": "colloquial_quality_judgment",
+      "initial_user_input": "Contura 6206 在 Acceptance 做出来 Ring YZ 像个鸡蛋，一点都不圆。这个历史上最后查到哪块？",
+      "follow_up_user_reply": "是 Oberkochen (1014) 的机台。",
+      "expected_first_step": "ask_for_factory_before_answering",
+      "expected_clarifying_focus": "factory",
+      "correct_answer": {
+        "component_name": "MPE-RONt_YZ out of specification",
+        "failure_reason": "Riemen in Z",
+        "handling_steps": "tauschen des Z-Riemens",
+        "answer_notes": null
+      },
+      "reference_context": {
+        "factory": "Oberkochen (1014)",
+        "machine_model": "CONTURA 6206 configurable",
+        "process_or_station": "Acceptance",
+        "event_start_at": "2020-03-17T07:00:00+08:00",
+        "anomaly_description": "Ring YZ ist ein Ei"
+      },
+      "expected_mode": "clarify_then_answer",
+      "required_first_turn_keywords": [
+        "工厂",
+        "factory"
+      ],
+      "required_first_turn_keyword_matches": 1,
+      "forbidden_first_turn_keywords": [
+        "历史案例事实",
+        "当前怀疑方向"
+      ],
+      "required_historical_fact_keywords": [
+        "Oberkochen",
+        "Acceptance",
+        "Ring YZ"
+      ],
+      "required_historical_fact_keyword_matches": 2,
+      "acceptable_suspected_direction_keywords": [
+        "Z-Drive",
+        "Z 轴皮带",
+        "Z-Riemen",
+        "CAA"
+      ],
+      "acceptable_suspected_direction_keyword_matches": 1,
+      "required_recommended_action_keywords": [
+        "复测",
+        "清洁",
+        "校准",
+        "Z轴"
+      ],
+      "required_recommended_action_keyword_matches": 1,
+      "required_escalation_keywords": [
+        "升级",
+        "维修工程师",
+        "异响",
+        "复测后仍"
+      ],
+      "required_escalation_keyword_matches": 1
+    }
+  ],
+  "evaluation_version": 2,
+  "evaluation_target": "response_contract_v2",
+  "response_contract_defaults": {
+    "required_sections": [
+      "历史案例事实",
+      "当前怀疑方向",
+      "建议先做的检查或操作",
+      "何时升级给维修工程师"
+    ],
+    "require_historical_fact_grounding": true,
+    "require_suspected_direction_hedging": true,
+    "require_recommended_action_section": true,
+    "require_escalation_section": true,
+    "required_escalation_keywords": [
+      "升级",
+      "维修工程师",
+      "停止继续",
+      "超出操作员"
+    ]
+  }
+}

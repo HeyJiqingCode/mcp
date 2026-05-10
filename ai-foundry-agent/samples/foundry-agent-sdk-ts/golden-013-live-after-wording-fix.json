@@ -1,0 +1,234 @@
+{
+  "generated_at": "2026-05-10T05:56:20.602Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-013-only\\golden_test_cases.golden_013.manifest.json",
+    "manifest_name": "golden-013-only-live-batch",
+    "manifest_version": 2,
+    "authoritative_dataset_id": "golden_013"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "golden_013"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "golden_013",
+      "dataset_name": "golden-013-only",
+      "evaluation_target": "response_contract_v2",
+      "evaluation_version": 2,
+      "file": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-013-only\\golden_test_cases.clarify_then_answer.golden_013.json",
+      "split_type": "clarify_then_answer",
+      "role": "regression_split",
+      "total_cases": 1,
+      "selected_cases": 1,
+      "summary": {
+        "cases": 1,
+        "errors": 0,
+        "mode_passed": 1,
+        "first_turn_focus_passed": 1,
+        "contract_passed": 1,
+        "historical_facts_passed": 1,
+        "suspected_direction_passed": 1,
+        "recommended_action_passed": 1,
+        "escalation_passed": 1,
+        "forbidden_claim_passed": 1,
+        "fully_passed": 1,
+        "structured_final_answers": 1,
+        "legacy_final_answer_passed": 1
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_013",
+          "source_case_id": "case_000057",
+          "scenario_type": "mounting_hole_offset",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "请先告诉我是哪一个工厂（factory）？",
+          "second_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Install shrouds** 下，检索到一条高度相似案例：  \n  - 异常描述：**“Blech von der Y-Abdeckung (Hinten) lässt sich nicht an der Endlage anschrauben.”**  \n    可对应你说的“**Y 后面的那块板子到了 end position 锁不上**”。\n  - 失效原因：**“Bohrung vom Blech bzw. Aussparung für die Käfigmutter sitzt zu weit hinten.”**  \n    即：板件孔位/给 **Käfigmutter** 的开口位置 **偏后**。\n  - 处理记录：**Aussparung aufbohren.**\n\n- 同工厂、同机型、同工位还检索到另一条非常接近的案例：  \n  - 异常描述：**“Nacharbeit bei Verkleidung Führungsbalken Y hinten nötig”**  \n    即：**Y 后方导轨梁护罩/板件需要返工**。\n  - 失效原因：**“Position von Aussparung für Käfigmutter um halbe Lochbreite versetzt”**  \n    即：**Käfigmutter 开口位置错了半个孔宽**。\n  - 处理记录：**Aussparung aufgefeilt**。\n\n- 还有一条同机型同工位案例提到：  \n  - **Bohrbild 不匹配、安装发卡/装配困难**，处理为 **扩孔并修螺纹**。  \n  - 但它更偏向前后白色罩板与选配项影响，和你现在“Y 后面板子到 end position 锁不上、像 cage nut 孔位偏后”相比，相关性弱于前两条。\n\n## 当前怀疑方向\n- **按历史最像的怀疑方向**，是 **Shrouds / Install shrouds** 工位上，**Y 后部板件或其对应的 Käfigmutter 开口/Bohrung 位置偏后**，导致板件到了 **end position** 后仍然 **无法对正并锁紧**。\n- 其中最强锚点和你描述最接近的是这条：  \n  **“Blech von der Y-Abdeckung (Hinten) lässt sich nicht an der Endlage anschrauben” + “Aussparung für die Käfigmutter sitzt zu weit hinten”**。\n- 次强怀疑是：  \n  **Käfigmutter 的 Aussparung 位置并非单纯“略偏”，而是像历史里那样“um halbe Lochbreite versetzt”（偏了半个孔宽）**，所以看起来会像“孔位总在后面、怎么都锁不上”。\n\n## 建议先做的检查或操作\n- 先做 **不破坏、低风险** 的确认：\n  1. **不要强行上螺丝或硬锁**，避免把螺纹、Käfigmutter 或板件边缘带坏。\n  2. 在 **end position** 保持当前装配姿态，目视确认：\n     - 是 **板件孔** 对不上；\n     - 还是 **Käfigmutter 的开口/Aussparung** 明显在后侧；\n     - 还是板件本身有轻微 **顶住/别住/歪斜**。\n  3. 轻微回退板件，再重新贴合一次，确认是否只是 **装配姿态偏斜** 导致假性错孔。\n  4. 对比左右侧/相邻正常面板的孔位关系，看看 **Y 后板** 是否存在明显的 **半孔位错位**。\n  5. 检查 **Käfigmutter** 是否已经歪斜、脱位、翻边不到位；如果 cage nut 本体就没坐正，也会造成“像孔位偏后”的观感。\n  6. 如现场允许，拍一张 **板孔—Käfigmutter—end position** 三者相对位置的照片，方便后续维修快速判断是不是历史中的 **Bohrung/Aussparung sitzt zu weit hinten**。\n\n## 何时升级给维修工程师\n- 出现以下任一情况，建议 **停止继续猜测并升级给维修工程师**：\n  1. 你已经确认在正确 **end position** 下，**板孔与 Käfigmutter 开口仍明显前后错位**。\n  2. 看起来不是装配姿态问题，而是 **孔位/开口加工位置本身偏后**，尤其像历史案例那样接近 **半个孔宽偏差**。\n  3. **Käfigmutter 已变形、脱位、卡斜**，或螺丝一试就有 **斜牙/卡死** 风险。\n  4. 需要进行 **扩孔、锉孔、修螺纹、换 Käfigmutter** 这类维修性处理时。\n  5. 同类问题在这台机上 **重复出现**，或同一批 shroud/板件有多个孔位都不对。\n\n如果你愿意，我下一步可以基于这两条最像的 Oberkochen 历史记录，帮你整理一个 **“现场 1 分钟对照判断表”**，快速区分到底更像 **孔位偏后**、**Käfigmutter 歪了**，还是 **板件装配姿态问题**。",
+          "final_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Install shrouds** 下，检索到一条高度相似案例：  \n  - 异常描述：**“Blech von der Y-Abdeckung (Hinten) lässt sich nicht an der Endlage anschrauben.”**  \n    可对应你说的“**Y 后面的那块板子到了 end position 锁不上**”。\n  - 失效原因：**“Bohrung vom Blech bzw. Aussparung für die Käfigmutter sitzt zu weit hinten.”**  \n    即：板件孔位/给 **Käfigmutter** 的开口位置 **偏后**。\n  - 处理记录：**Aussparung aufbohren.**\n\n- 同工厂、同机型、同工位还检索到另一条非常接近的案例：  \n  - 异常描述：**“Nacharbeit bei Verkleidung Führungsbalken Y hinten nötig”**  \n    即：**Y 后方导轨梁护罩/板件需要返工**。\n  - 失效原因：**“Position von Aussparung für Käfigmutter um halbe Lochbreite versetzt”**  \n    即：**Käfigmutter 开口位置错了半个孔宽**。\n  - 处理记录：**Aussparung aufgefeilt**。\n\n- 还有一条同机型同工位案例提到：  \n  - **Bohrbild 不匹配、安装发卡/装配困难**，处理为 **扩孔并修螺纹**。  \n  - 但它更偏向前后白色罩板与选配项影响，和你现在“Y 后面板子到 end position 锁不上、像 cage nut 孔位偏后”相比，相关性弱于前两条。\n\n## 当前怀疑方向\n- **按历史最像的怀疑方向**，是 **Shrouds / Install shrouds** 工位上，**Y 后部板件或其对应的 Käfigmutter 开口/Bohrung 位置偏后**，导致板件到了 **end position** 后仍然 **无法对正并锁紧**。\n- 其中最强锚点和你描述最接近的是这条：  \n  **“Blech von der Y-Abdeckung (Hinten) lässt sich nicht an der Endlage anschrauben” + “Aussparung für die Käfigmutter sitzt zu weit hinten”**。\n- 次强怀疑是：  \n  **Käfigmutter 的 Aussparung 位置并非单纯“略偏”，而是像历史里那样“um halbe Lochbreite versetzt”（偏了半个孔宽）**，所以看起来会像“孔位总在后面、怎么都锁不上”。\n\n## 建议先做的检查或操作\n- 先做 **不破坏、低风险** 的确认：\n  1. **不要强行上螺丝或硬锁**，避免把螺纹、Käfigmutter 或板件边缘带坏。\n  2. 在 **end position** 保持当前装配姿态，目视确认：\n     - 是 **板件孔** 对不上；\n     - 还是 **Käfigmutter 的开口/Aussparung** 明显在后侧；\n     - 还是板件本身有轻微 **顶住/别住/歪斜**。\n  3. 轻微回退板件，再重新贴合一次，确认是否只是 **装配姿态偏斜** 导致假性错孔。\n  4. 对比左右侧/相邻正常面板的孔位关系，看看 **Y 后板** 是否存在明显的 **半孔位错位**。\n  5. 检查 **Käfigmutter** 是否已经歪斜、脱位、翻边不到位；如果 cage nut 本体就没坐正，也会造成“像孔位偏后”的观感。\n  6. 如现场允许，拍一张 **板孔—Käfigmutter—end position** 三者相对位置的照片，方便后续维修快速判断是不是历史中的 **Bohrung/Aussparung sitzt zu weit hinten**。\n\n## 何时升级给维修工程师\n- 出现以下任一情况，建议 **停止继续猜测并升级给维修工程师**：\n  1. 你已经确认在正确 **end position** 下，**板孔与 Käfigmutter 开口仍明显前后错位**。\n  2. 看起来不是装配姿态问题，而是 **孔位/开口加工位置本身偏后**，尤其像历史案例那样接近 **半个孔宽偏差**。\n  3. **Käfigmutter 已变形、脱位、卡斜**，或螺丝一试就有 **斜牙/卡死** 风险。\n  4. 需要进行 **扩孔、锉孔、修螺纹、换 Käfigmutter** 这类维修性处理时。\n  5. 同类问题在这台机上 **重复出现**，或同一批 shroud/板件有多个孔位都不对。\n\n如果你愿意，我下一步可以基于这两条最像的 Oberkochen 历史记录，帮你整理一个 **“现场 1 分钟对照判断表”**，快速区分到底更像 **孔位偏后**、**Käfigmutter 歪了**，还是 **板件装配姿态问题**。",
+          "first_turn_contract": {
+            "observed_mode": "clarification",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Install shrouds** 下，检索到一条高度相似案例：  \n  - 异常描述：**“Blech von der Y-Abdeckung (Hinten) lässt sich nicht an der Endlage anschrauben.”**  \n    可对应你说的“**Y 后面的那块板子到了 end position 锁不上**”。\n  - 失效原因：**“Bohrung vom Blech bzw. Aussparung für die Käfigmutter sitzt zu weit hinten.”**  \n    即：板件孔位/给 **Käfigmutter** 的开口位置 **偏后**。\n  - 处理记录：**Aussparung aufbohren.**\n\n- 同工厂、同机型、同工位还检索到另一条非常接近的案例：  \n  - 异常描述：**“Nacharbeit bei Verkleidung Führungsbalken Y hinten nötig”**  \n    即：**Y 后方导轨梁护罩/板件需要返工**。\n  - 失效原因：**“Position von Aussparung für Käfigmutter um halbe Lochbreite versetzt”**  \n    即：**Käfigmutter 开口位置错了半个孔宽**。\n  - 处理记录：**Aussparung aufgefeilt**。\n\n- 还有一条同机型同工位案例提到：  \n  - **Bohrbild 不匹配、安装发卡/装配困难**，处理为 **扩孔并修螺纹**。  \n  - 但它更偏向前后白色罩板与选配项影响，和你现在“Y 后面板子到 end position 锁不上、像 cage nut 孔位偏后”相比，相关性弱于前两条。\n\n##",
+              "当前怀疑方向": "**按历史最像的怀疑方向**，是 **Shrouds / Install shrouds** 工位上，**Y 后部板件或其对应的 Käfigmutter 开口/Bohrung 位置偏后**，导致板件到了 **end position** 后仍然 **无法对正并锁紧**。\n- 其中最强锚点和你描述最接近的是这条：  \n  **“Blech von der Y-Abdeckung (Hinten) lässt sich nicht an der Endlage anschrauben” + “Aussparung für die Käfigmutter sitzt zu weit hinten”**。\n- 次强怀疑是：  \n  **Käfigmutter 的 Aussparung 位置并非单纯“略偏”，而是像历史里那样“um halbe Lochbreite versetzt”（偏了半个孔宽）**，所以看起来会像“孔位总在后面、怎么都锁不上”。\n\n##",
+              "建议先做的检查或操作": "先做 **不破坏、低风险** 的确认：\n  1. **不要强行上螺丝或硬锁**，避免把螺纹、Käfigmutter 或板件边缘带坏。\n  2. 在 **end position** 保持当前装配姿态，目视确认：\n     - 是 **板件孔** 对不上；\n     - 还是 **Käfigmutter 的开口/Aussparung** 明显在后侧；\n     - 还是板件本身有轻微 **顶住/别住/歪斜**。\n  3. 轻微回退板件，再重新贴合一次，确认是否只是 **装配姿态偏斜** 导致假性错孔。\n  4. 对比左右侧/相邻正常面板的孔位关系，看看 **Y 后板** 是否存在明显的 **半孔位错位**。\n  5. 检查 **Käfigmutter** 是否已经歪斜、脱位、翻边不到位；如果 cage nut 本体就没坐正，也会造成“像孔位偏后”的观感。\n  6. 如现场允许，拍一张 **板孔—Käfigmutter—end position** 三者相对位置的照片，方便后续维修快速判断是不是历史中的 **Bohrung/Aussparung sitzt zu weit hinten**。\n\n##",
+              "何时升级给维修工程师": "出现以下任一情况，建议 **停止继续猜测并升级给维修工程师**：\n  1. 你已经确认在正确 **end position** 下，**板孔与 Käfigmutter 开口仍明显前后错位**。\n  2. 看起来不是装配姿态问题，而是 **孔位/开口加工位置本身偏后**，尤其像历史案例那样接近 **半个孔宽偏差**。\n  3. **Käfigmutter 已变形、脱位、卡斜**，或螺丝一试就有 **斜牙/卡死** 风险。\n  4. 需要进行 **扩孔、锉孔、修螺纹、换 Käfigmutter** 这类维修性处理时。\n  5. 同类问题在这台机上 **重复出现**，或同一批 shroud/板件有多个孔位都不对。\n\n如果你愿意，我下一步可以基于这两条最像的 Oberkochen 历史记录，帮你整理一个 **“现场 1 分钟对照判断表”**，快速区分到底更像 **孔位偏后**、**Käfigmutter 歪了**，还是 **板件装配姿态问题**。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "clarification",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "工厂",
+                "factory"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "工厂",
+                  "factory"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Install shrouds",
+                  "Endlage"
+                ],
+                "missing_keywords": [
+                  "Y- Abdeckung"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "最像",
+                  "Shrouds",
+                  "Bohrung",
+                  "Käfigmutter",
+                  "孔位"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "目视",
+                  "孔位"
+                ],
+                "missing_keywords": [
+                  "空配",
+                  "扩孔"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "孔位偏差",
+                  "换件"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 1,
+    "mode_passed": 1,
+    "first_turn_focus_passed": 1,
+    "contract_passed": 1,
+    "historical_facts_passed": 1,
+    "suspected_direction_passed": 1,
+    "recommended_action_passed": 1,
+    "escalation_passed": 1,
+    "forbidden_claim_passed": 1,
+    "fully_passed": 1,
+    "structured_final_answers": 1,
+    "legacy_final_answer_passed": 1,
+    "errors": 0
+  }
+}

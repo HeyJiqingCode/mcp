@@ -1,0 +1,24 @@
+{
+  "name": "foundry-agent-sdk-ts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TypeScript sample that creates a Microsoft Foundry agent connected to a remote MCP server.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "regression": "node --import tsx ./src/runManifestRegression.ts",
+    "regression:dry-run": "node --import tsx ./src/runManifestRegression.ts --dry-run",
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@azure/ai-projects": "^2.1.1",
+    "@azure/identity": "^4.13.0",
+    "dotenv": "^16.6.1",
+    "openai": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

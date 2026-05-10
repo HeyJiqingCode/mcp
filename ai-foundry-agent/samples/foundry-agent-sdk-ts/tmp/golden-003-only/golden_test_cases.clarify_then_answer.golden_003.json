@@ -1,0 +1,97 @@
+{
+  "dataset_name": "golden-003-only",
+  "source_dataset": "golden_test_cases.json",
+  "source_cases_file": "cases.json",
+  "split_type": "clarify_then_answer",
+  "test_case_count": 1,
+  "scope": "CONTURA-family troubleshooting prompts that should trigger one high-value clarification before answering",
+  "notes": [
+    "These cases are copied from golden_test_cases.json.",
+    "Every case in this split expects the agent to clarify missing or contradictory information before producing the final grounded answer.",
+    "Regression scoring now prioritizes expected_mode, the four-section response contract, historical-fact grounding, and escalation guidance.",
+    "Legacy component/failure/action anchors remain in correct_answer only as backward-reference fields."
+  ],
+  "test_cases": [
+    {
+      "golden_test_id": "golden_003",
+      "source_case_id": "case_000007",
+      "scenario_type": "missing_factory_requires_clarification",
+      "initial_user_input": "Contura 6206 做集成的时候，X170 那边 PIN 2 没接上，像是线束问题。你先帮我判断最像哪种故障。",
+      "follow_up_user_reply": "工厂是 Oberkochen (1014)，就是 Integration 站点发现的。",
+      "expected_first_step": "ask_for_factory_before_answering",
+      "expected_clarifying_focus": "factory",
+      "correct_answer": {
+        "component_name": "Cable harness xy",
+        "failure_reason": "--",
+        "handling_steps": "PIN 2 in Stecker X170 angeschlossen.",
+        "answer_notes": "Historical case does not record a specific root cause beyond the disconnected pin symptom."
+      },
+      "reference_context": {
+        "factory": "Oberkochen (1014)",
+        "machine_model": "CONTURA 6206 configurable",
+        "process_or_station": "Integration",
+        "event_start_at": "2020-03-16T14:30:00+08:00",
+        "anomaly_description": "PIN 2 in Stecker X170 nicht angeschlossen."
+      },
+      "expected_mode": "clarify_then_answer",
+      "required_first_turn_keywords": [
+        "工厂",
+        "factory"
+      ],
+      "required_first_turn_keyword_matches": 1,
+      "forbidden_first_turn_keywords": [
+        "历史案例事实",
+        "当前怀疑方向"
+      ],
+      "required_historical_fact_keywords": [
+        "Oberkochen",
+        "Integration",
+        "X170",
+        "PIN 2"
+      ],
+      "required_historical_fact_keyword_matches": 2,
+      "acceptable_suspected_direction_keywords": [
+        "X170",
+        "PIN 2",
+        "线束",
+        "接头",
+        "端子"
+      ],
+      "acceptable_suspected_direction_keyword_matches": 2,
+      "required_recommended_action_keywords": [
+        "目视",
+        "锁扣",
+        "方向",
+        "轻拉"
+      ],
+      "required_recommended_action_keyword_matches": 1,
+      "required_escalation_keywords": [
+        "升级",
+        "维修工程师",
+        "端子损伤",
+        "线束内部"
+      ],
+      "required_escalation_keyword_matches": 1
+    }
+  ],
+  "evaluation_version": 2,
+  "evaluation_target": "response_contract_v2",
+  "response_contract_defaults": {
+    "required_sections": [
+      "历史案例事实",
+      "当前怀疑方向",
+      "建议先做的检查或操作",
+      "何时升级给维修工程师"
+    ],
+    "require_historical_fact_grounding": true,
+    "require_suspected_direction_hedging": true,
+    "require_recommended_action_section": true,
+    "require_escalation_section": true,
+    "required_escalation_keywords": [
+      "升级",
+      "维修工程师",
+      "停止继续",
+      "超出操作员"
+    ]
+  }
+}

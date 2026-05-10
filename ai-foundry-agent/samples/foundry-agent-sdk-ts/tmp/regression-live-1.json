@@ -1,0 +1,84 @@
+{
+  "generated_at": "2026-05-08T13:53:58.333Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\OneDrive - Carl Zeiss AG\\Lee\\source\\Projects\\AI\\RMS Service_\\RMSRAG\\suzhou-factory-ai-troubleshooting\\golden_test_cases.manifest.json",
+    "manifest_name": "suzhou-factory-ai-troubleshooting-golden-test-manifest",
+    "manifest_version": 1,
+    "authoritative_dataset_id": "full"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "direct_answer"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "direct_answer",
+      "dataset_name": "suzhou-factory-ai-troubleshooting-golden-tests-direct-answer",
+      "file": "C:\\Users\\ZCLEELI1\\OneDrive - Carl Zeiss AG\\Lee\\source\\Projects\\AI\\RMS Service_\\RMSRAG\\suzhou-factory-ai-troubleshooting\\golden_test_cases.direct_answer.json",
+      "split_type": "direct_answer",
+      "role": "regression_split",
+      "total_cases": 15,
+      "selected_cases": 1,
+      "summary": {
+        "cases": 1,
+        "errors": 0,
+        "first_step_passed": 0,
+        "final_answer_passed": 0,
+        "fully_passed": 0
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_001",
+          "source_case_id": "case_000002",
+          "scenario_type": "direct_precise",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "我先按你给的信息查了两轮历史案例：\n\n- 工厂：**Oberkochen**\n- 机型：先按 **CONTURA 6206** 精确查\n- 再放宽到 **CONTURA 家族**\n- 工位：**Lasering**\n- 现象：**LT-Repro zu hoch / X轴像在抖**\n\n这两轮在历史库里都**没检到可直接对上的 Oberkochen 案例**，所以我现在不能把“最可能部件”和“历史处理”说得很死，只能先给你一个**工程上最像的排查方向**。\n\n### 目前最像先看的部件\n如果是 **Lasering 阶段 LT-Repro 过高**，同时你现场感觉 **X轴在抖**，一般我会**先看 X 轴传动/反馈链**，优先级大致是：\n\n1. **X轴驱动相关部件**\n   - 伺服电机\n   - 驱动器/放大器\n   - 编码器/位置反馈\n2. **X轴机械传动部件**\n   - 皮带/联轴器/丝杠或直线传动机构\n   - 导轨滑块状态\n3. **Lasering 测量头/支架固定**\n   - 如果测头或支架松动，也会表现成 Repro 差，现场看起来像“轴在抖”\n4. **参数/控制侧**\n   - X轴增益、补偿、滤波参数漂移\n   - 维修后参数未恢复\n\n### 目前最可能的失效原因\n结合你描述，优先怀疑这几类：\n\n- **X轴反馈不稳定**  \n  编码器信号异常、线缆接触不良、驱动器输出波动，会直接造成抖动感和重复性变差。\n\n- **X轴机械松动或磨损**  \n  联轴器松、皮带张力异常、导轨阻滞/间隙，常见表现就是某一轴运动时发颤，Lasering 重复性上不去。\n\n- **测头/激光头安装刚性不足**  \n  实际不是轴本体抖，而是头部或支架振动，最后也会体现在 LT-Repro zu hoch。\n\n### 这类问题通常怎么处理\n在没有命中历史案例的前提下，现场一般会这么收敛：\n\n1. **先做空跑观察 X轴**\n   - 低速/中速/高速分别走 X\n   - 看抖动是否只在某速度段明显\n   - 听有没有周期性异响\n\n2. **看驱动与报警历史**\n   - 查 X轴 following error、encoder error、drive warning\n   - 看是否伴随位置波动或电流异常\n\n3. **检查 X轴机械连接**\n   - 联轴器、固定螺丝、皮带张力\n   - 导轨润滑和滑动阻力\n   - 有无局部卡滞\n\n4. **检查反馈链和线缆**\n   - 编码器插头、拖链线、接地\n   - 重点看运动到某位置时是否更明显，像线缆受拉扯\n\n5. **复核激光头/测量头固定状态**\n   - 支架、安装座、夹持位置\n   - 排除“轴正常、头在抖”\n\n6. **必要时做替换验证**\n   - 先换最可疑的 **X轴编码器/反馈线**\n   - 再看 **驱动器**\n   - 机械件有松动就先紧固和校正\n\n### 我对你的当前判断\n在你这个描述下，**最先看 X轴反馈与传动件**，其中我更偏向：\n- **编码器/反馈线缆**\n- **联轴器/皮带/机械固定**\n- 其次才是激光头本体\n\n### 为什么我还不能直接给“历史上就是换了哪个件”\n因为当前检索结果里，**没有找到 Oberkochen 下直接对应的历史案例证据**。按要求我不能编造“历史处理”。\n\n### 我建议你补我一个最关键细节\n你先告诉我：\n\n**X轴抖动是只在 Lasering 动作时出现，还是手动 Jog X轴/空跑时也能看出来？**\n\n这个信息能帮我快速区分：\n- **轴本体传动/驱动问题**\n还是\n- **Lasering 头/工艺动作引起的振动问题**\n\n你回我这个现象，我再继续按这个方向帮你收敛。",
+          "second_turn_text": null,
+          "final_turn_text": "我先按你给的信息查了两轮历史案例：\n\n- 工厂：**Oberkochen**\n- 机型：先按 **CONTURA 6206** 精确查\n- 再放宽到 **CONTURA 家族**\n- 工位：**Lasering**\n- 现象：**LT-Repro zu hoch / X轴像在抖**\n\n这两轮在历史库里都**没检到可直接对上的 Oberkochen 案例**，所以我现在不能把“最可能部件”和“历史处理”说得很死，只能先给你一个**工程上最像的排查方向**。\n\n### 目前最像先看的部件\n如果是 **Lasering 阶段 LT-Repro 过高**，同时你现场感觉 **X轴在抖**，一般我会**先看 X 轴传动/反馈链**，优先级大致是：\n\n1. **X轴驱动相关部件**\n   - 伺服电机\n   - 驱动器/放大器\n   - 编码器/位置反馈\n2. **X轴机械传动部件**\n   - 皮带/联轴器/丝杠或直线传动机构\n   - 导轨滑块状态\n3. **Lasering 测量头/支架固定**\n   - 如果测头或支架松动，也会表现成 Repro 差，现场看起来像“轴在抖”\n4. **参数/控制侧**\n   - X轴增益、补偿、滤波参数漂移\n   - 维修后参数未恢复\n\n### 目前最可能的失效原因\n结合你描述，优先怀疑这几类：\n\n- **X轴反馈不稳定**  \n  编码器信号异常、线缆接触不良、驱动器输出波动，会直接造成抖动感和重复性变差。\n\n- **X轴机械松动或磨损**  \n  联轴器松、皮带张力异常、导轨阻滞/间隙，常见表现就是某一轴运动时发颤，Lasering 重复性上不去。\n\n- **测头/激光头安装刚性不足**  \n  实际不是轴本体抖，而是头部或支架振动，最后也会体现在 LT-Repro zu hoch。\n\n### 这类问题通常怎么处理\n在没有命中历史案例的前提下，现场一般会这么收敛：\n\n1. **先做空跑观察 X轴**\n   - 低速/中速/高速分别走 X\n   - 看抖动是否只在某速度段明显\n   - 听有没有周期性异响\n\n2. **看驱动与报警历史**\n   - 查 X轴 following error、encoder error、drive warning\n   - 看是否伴随位置波动或电流异常\n\n3. **检查 X轴机械连接**\n   - 联轴器、固定螺丝、皮带张力\n   - 导轨润滑和滑动阻力\n   - 有无局部卡滞\n\n4. **检查反馈链和线缆**\n   - 编码器插头、拖链线、接地\n   - 重点看运动到某位置时是否更明显，像线缆受拉扯\n\n5. **复核激光头/测量头固定状态**\n   - 支架、安装座、夹持位置\n   - 排除“轴正常、头在抖”\n\n6. **必要时做替换验证**\n   - 先换最可疑的 **X轴编码器/反馈线**\n   - 再看 **驱动器**\n   - 机械件有松动就先紧固和校正\n\n### 我对你的当前判断\n在你这个描述下，**最先看 X轴反馈与传动件**，其中我更偏向：\n- **编码器/反馈线缆**\n- **联轴器/皮带/机械固定**\n- 其次才是激光头本体\n\n### 为什么我还不能直接给“历史上就是换了哪个件”\n因为当前检索结果里，**没有找到 Oberkochen 下直接对应的历史案例证据**。按要求我不能编造“历史处理”。\n\n### 我建议你补我一个最关键细节\n你先告诉我：\n\n**X轴抖动是只在 Lasering 动作时出现，还是手动 Jog X轴/空跑时也能看出来？**\n\n这个信息能帮我快速区分：\n- **轴本体传动/驱动问题**\n还是\n- **Lasering 头/工艺动作引起的振动问题**\n\n你回我这个现象，我再继续按这个方向帮你收敛。",
+          "first_step_check": {
+            "passed": false,
+            "clarification_expected": false,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "final_answer_check": {
+            "passed": false,
+            "component": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            }
+          },
+          "passed": false
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 1,
+    "fully_passed": 0,
+    "first_step_passed": 0,
+    "final_answer_passed": 0,
+    "errors": 0
+  }
+}

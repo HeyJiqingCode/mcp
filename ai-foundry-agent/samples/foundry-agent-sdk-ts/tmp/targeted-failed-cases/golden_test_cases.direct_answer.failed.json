@@ -1,0 +1,85 @@
+{
+  "dataset_name": "targeted-failed-direct-answer",
+  "source_dataset": "golden_test_cases.json",
+  "source_cases_file": "cases.json",
+  "split_type": "direct_answer",
+  "test_case_count": 1,
+  "scope": "CONTURA-family troubleshooting prompts that should be answered directly without clarification",
+  "notes": [
+    "These cases are copied from golden_test_cases.json.",
+    "Every case in this split expects the agent to answer directly from the initial user message.",
+    "Regression scoring now prioritizes expected_mode, the four-section response contract, historical-fact grounding, and escalation guidance.",
+    "Legacy component/failure/action anchors remain in correct_answer only as backward-reference fields."
+  ],
+  "test_cases": [
+    {
+      "golden_test_id": "golden_005",
+      "source_case_id": "case_000014",
+      "scenario_type": "conflicting_explanations",
+      "initial_user_input": "同样是 Contura 6206，Lasering 一做就 ÜSA 跳。现场有人说是 safety，有人说是控制值没写进去。你别泛泛而谈，按历史最像的给我原因和动作。",
+      "follow_up_user_reply": null,
+      "expected_first_step": "direct_answer",
+      "correct_answer": {
+        "component_name": "UESA",
+        "failure_reason": "Steuerung hat die Werte nicht übernommen.",
+        "handling_steps": "Werte über Ax-Watch auf die Steuerung neu übertragen.",
+        "answer_notes": "The agent should prefer the concrete recorded cause over repeating the conflicting现场猜测."
+      },
+      "reference_context": {
+        "factory": "Oberkochen (1014)",
+        "machine_model": "CONTURA 6206 configurable",
+        "process_or_station": "Lasering",
+        "event_start_at": "2020-03-17T07:00:00+08:00",
+        "anomaly_description": "ÜSA löst beim Lasern aus."
+      },
+      "expected_mode": "direct_answer",
+      "required_historical_fact_keywords": [
+        "Oberkochen",
+        "Lasering",
+        "ÜSA"
+      ],
+      "required_historical_fact_keyword_matches": 2,
+      "acceptable_suspected_direction_keywords": [
+        "UESA",
+        "Steuerung",
+        "控制值",
+        "Ax-Watch"
+      ],
+      "acceptable_suspected_direction_keyword_matches": 1,
+      "required_recommended_action_keywords": [
+        "Ax-Watch",
+        "重新传",
+        "控制器",
+        "参数"
+      ],
+      "required_recommended_action_keyword_matches": 1,
+      "required_escalation_keywords": [
+        "升级",
+        "维修工程师",
+        "重复触发",
+        "重新传后仍"
+      ],
+      "required_escalation_keyword_matches": 1
+    }
+  ],
+  "evaluation_version": 2,
+  "evaluation_target": "response_contract_v2",
+  "response_contract_defaults": {
+    "required_sections": [
+      "历史案例事实",
+      "当前怀疑方向",
+      "建议先做的检查或操作",
+      "何时升级给维修工程师"
+    ],
+    "require_historical_fact_grounding": true,
+    "require_suspected_direction_hedging": true,
+    "require_recommended_action_section": true,
+    "require_escalation_section": true,
+    "required_escalation_keywords": [
+      "升级",
+      "维修工程师",
+      "停止继续",
+      "超出操作员"
+    ]
+  }
+}

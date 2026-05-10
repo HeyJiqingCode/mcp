@@ -1,0 +1,23 @@
+{
+  "manifest_name": "clarify-followup-targeted-live-batch",
+  "manifest_version": 2,
+  "base_path": ".",
+  "authoritative_dataset_id": "clarify_followup_targeted",
+  "notes": [
+    "Temporary manifest for rerunning the clarify-follow-up stability set after narrow follow-up handoff changes."
+  ],
+  "datasets": [
+    {
+      "dataset_id": "clarify_followup_targeted",
+      "role": "regression_split",
+      "split_type": "clarify_then_answer",
+      "file": "golden_test_cases.clarify_then_answer.targeted.json",
+      "dataset_name": "clarify-followup-targeted",
+      "test_case_count": 4,
+      "source_cases_file": "cases.json",
+      "derived_from": "golden_test_cases.clarify_then_answer.json",
+      "evaluation_version": 2,
+      "evaluation_target": "response_contract_v2"
+    }
+  ]
+}

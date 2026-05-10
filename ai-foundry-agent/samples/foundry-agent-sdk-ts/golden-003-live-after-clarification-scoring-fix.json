@@ -1,0 +1,236 @@
+{
+  "generated_at": "2026-05-10T06:31:29.504Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-003-only\\golden_test_cases.golden_003.manifest.json",
+    "manifest_name": "golden-003-only-live-batch",
+    "manifest_version": 2,
+    "authoritative_dataset_id": "golden_003"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "golden_003"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "golden_003",
+      "dataset_name": "golden-003-only",
+      "evaluation_target": "response_contract_v2",
+      "evaluation_version": 2,
+      "file": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-003-only\\golden_test_cases.clarify_then_answer.golden_003.json",
+      "split_type": "clarify_then_answer",
+      "role": "regression_split",
+      "total_cases": 1,
+      "selected_cases": 1,
+      "summary": {
+        "cases": 1,
+        "errors": 0,
+        "mode_passed": 1,
+        "first_turn_focus_passed": 1,
+        "contract_passed": 1,
+        "historical_facts_passed": 1,
+        "suspected_direction_passed": 1,
+        "recommended_action_passed": 1,
+        "escalation_passed": 1,
+        "forbidden_claim_passed": 1,
+        "fully_passed": 1,
+        "structured_final_answers": 1,
+        "legacy_final_answer_passed": 1
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_003",
+          "source_case_id": "case_000007",
+          "scenario_type": "missing_factory_requires_clarification",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "请先告诉我是哪一个工厂？",
+          "second_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 的历史案例中，存在与您描述几乎同句的记录：  \n  - 部件：**Cable harness xy**  \n  - 异常：**“PIN 2 in Stecker X170 nicht angeschlossen”**（X170 插头的 PIN 2 未接上）  \n  - 处理：**“PIN 2 in Stecker X170 angeschlossen”**（将 X170 插头的 PIN 2 接上）\n- 同样在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 还有另一条相关案例：  \n  - 部件：**C99 controller**  \n  - 异常：**“Kabel X170 falsch rum in den Kabelstrang”**（X170 电缆在线束中方向装反）  \n  - 处理：**“Kabel X170 umgedreht”**（将 X170 电缆调转方向）\n- 另外检索到一条同机型、同 Integration 但不同工厂的案例：  \n  - 部件：**Cable harness xy**  \n  - 异常：**C99 X170 对应线缆接不上**  \n  - 原因：**接口和插口都是母头**  \n  - 处理：**对换线缆插头**\n- 还检索到一条同工厂同站点但不同连接器编号的案例：  \n  - 部件：**Sensor system**  \n  - 异常：某插头 PIN 弯曲  \n  - 原因：可能插接时压弯  \n  - 处理：排查后把 PIN 校正\n\n## 当前怀疑方向\n- **最像的怀疑方向**是：**Cable harness xy 的 X170 插头处，PIN 2 实际未插到位/未接入**。  \n  这是因为检索结果里有一条与您现象几乎完全一致、且工厂、机型、站点都一致的历史锚点：**“PIN 2 in Stecker X170 nicht angeschlossen”**。\n- **第二怀疑方向**是：**X170 相关线束或插头装反/方向错误**，历史锚点是 **“Kabel X170 falsch rum in den Kabelstrang”**。  \n  如果现场看起来“像线束问题”，但并不是单纯少一根 PIN，也要考虑这条分支。\n- 较次一级的补充分支是：**X170 接插件配型或端子状态问题**，比如历史上出现过“接不上”以及其他连接器的 **PIN 弯曲** 情况。  \n  但从当前已检索到的证据强度看，这些都**弱于**前面两条与 **X170 / PIN 2 / Cable harness xy / Integration** 直接匹配的历史记录。\n\n## 建议先做的检查或操作\n- 先做**目视确认**：核对 **X170** 插头位置，确认 **PIN 2** 是否确实已经压接并插入到位，而不是退针、浮针或未锁止。\n- 检查 **X170** 插头与线束分支的**方向/键位**是否正确，确认没有出现类似历史案例中的 **Kabel X170 falsch rum** 情况。\n- 查看插头外观是否有**明显的端子歪斜、变形、插不到底、锁扣未扣紧**。\n- 如果现场允许且有标准作业指导，核对 **X170 对应线束标签、针位定义、插头型号** 是否与当前工位要求一致。\n- 在不拆解、不强插、不带电冒险处理的前提下，优先做**低风险复核**，不要强行掰 PIN 或反复硬插。\n\n## 何时升级给维修工程师\n- 如果您确认 **PIN 2 已在位**，但问题仍然存在，应升级给维修工程师进一步排查。\n- 如果发现 **X170 插头无法正常到底、疑似装反但不确定、键位不匹配、插头型号疑似不对**，应停止继续尝试并升级。\n- 如果看到 **端子弯曲、退针、壳体损伤、锁扣损坏**，不要继续硬插，应升级。\n- 如果同一问题**重复发生**，即使本次重新插接后恢复，也建议升级，让维修工程师检查线束制造/装配一致性。\n- 如果现场无法明确判断是 **Cable harness xy** 还是 **C99 controller 侧 X170** 问题，也应升级，避免误操作扩大故障。",
+          "final_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 的历史案例中，存在与您描述几乎同句的记录：  \n  - 部件：**Cable harness xy**  \n  - 异常：**“PIN 2 in Stecker X170 nicht angeschlossen”**（X170 插头的 PIN 2 未接上）  \n  - 处理：**“PIN 2 in Stecker X170 angeschlossen”**（将 X170 插头的 PIN 2 接上）\n- 同样在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 还有另一条相关案例：  \n  - 部件：**C99 controller**  \n  - 异常：**“Kabel X170 falsch rum in den Kabelstrang”**（X170 电缆在线束中方向装反）  \n  - 处理：**“Kabel X170 umgedreht”**（将 X170 电缆调转方向）\n- 另外检索到一条同机型、同 Integration 但不同工厂的案例：  \n  - 部件：**Cable harness xy**  \n  - 异常：**C99 X170 对应线缆接不上**  \n  - 原因：**接口和插口都是母头**  \n  - 处理：**对换线缆插头**\n- 还检索到一条同工厂同站点但不同连接器编号的案例：  \n  - 部件：**Sensor system**  \n  - 异常：某插头 PIN 弯曲  \n  - 原因：可能插接时压弯  \n  - 处理：排查后把 PIN 校正\n\n## 当前怀疑方向\n- **最像的怀疑方向**是：**Cable harness xy 的 X170 插头处，PIN 2 实际未插到位/未接入**。  \n  这是因为检索结果里有一条与您现象几乎完全一致、且工厂、机型、站点都一致的历史锚点：**“PIN 2 in Stecker X170 nicht angeschlossen”**。\n- **第二怀疑方向**是：**X170 相关线束或插头装反/方向错误**，历史锚点是 **“Kabel X170 falsch rum in den Kabelstrang”**。  \n  如果现场看起来“像线束问题”，但并不是单纯少一根 PIN，也要考虑这条分支。\n- 较次一级的补充分支是：**X170 接插件配型或端子状态问题**，比如历史上出现过“接不上”以及其他连接器的 **PIN 弯曲** 情况。  \n  但从当前已检索到的证据强度看，这些都**弱于**前面两条与 **X170 / PIN 2 / Cable harness xy / Integration** 直接匹配的历史记录。\n\n## 建议先做的检查或操作\n- 先做**目视确认**：核对 **X170** 插头位置，确认 **PIN 2** 是否确实已经压接并插入到位，而不是退针、浮针或未锁止。\n- 检查 **X170** 插头与线束分支的**方向/键位**是否正确，确认没有出现类似历史案例中的 **Kabel X170 falsch rum** 情况。\n- 查看插头外观是否有**明显的端子歪斜、变形、插不到底、锁扣未扣紧**。\n- 如果现场允许且有标准作业指导，核对 **X170 对应线束标签、针位定义、插头型号** 是否与当前工位要求一致。\n- 在不拆解、不强插、不带电冒险处理的前提下，优先做**低风险复核**，不要强行掰 PIN 或反复硬插。\n\n## 何时升级给维修工程师\n- 如果您确认 **PIN 2 已在位**，但问题仍然存在，应升级给维修工程师进一步排查。\n- 如果发现 **X170 插头无法正常到底、疑似装反但不确定、键位不匹配、插头型号疑似不对**，应停止继续尝试并升级。\n- 如果看到 **端子弯曲、退针、壳体损伤、锁扣损坏**，不要继续硬插，应升级。\n- 如果同一问题**重复发生**，即使本次重新插接后恢复，也建议升级，让维修工程师检查线束制造/装配一致性。\n- 如果现场无法明确判断是 **Cable harness xy** 还是 **C99 controller 侧 X170** 问题，也应升级，避免误操作扩大故障。",
+          "first_turn_contract": {
+            "observed_mode": "clarification",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 的历史案例中，存在与您描述几乎同句的记录：  \n  - 部件：**Cable harness xy**  \n  - 异常：**“PIN 2 in Stecker X170 nicht angeschlossen”**（X170 插头的 PIN 2 未接上）  \n  - 处理：**“PIN 2 in Stecker X170 angeschlossen”**（将 X170 插头的 PIN 2 接上）\n- 同样在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 还有另一条相关案例：  \n  - 部件：**C99 controller**  \n  - 异常：**“Kabel X170 falsch rum in den Kabelstrang”**（X170 电缆在线束中方向装反）  \n  - 处理：**“Kabel X170 umgedreht”**（将 X170 电缆调转方向）\n- 另外检索到一条同机型、同 Integration 但不同工厂的案例：  \n  - 部件：**Cable harness xy**  \n  - 异常：**C99 X170 对应线缆接不上**  \n  - 原因：**接口和插口都是母头**  \n  - 处理：**对换线缆插头**\n- 还检索到一条同工厂同站点但不同连接器编号的案例：  \n  - 部件：**Sensor system**  \n  - 异常：某插头 PIN 弯曲  \n  - 原因：可能插接时压弯  \n  - 处理：排查后把 PIN 校正\n\n##",
+              "当前怀疑方向": "**最像的怀疑方向**是：**Cable harness xy 的 X170 插头处，PIN 2 实际未插到位/未接入**。  \n  这是因为检索结果里有一条与您现象几乎完全一致、且工厂、机型、站点都一致的历史锚点：**“PIN 2 in Stecker X170 nicht angeschlossen”**。\n- **第二怀疑方向**是：**X170 相关线束或插头装反/方向错误**，历史锚点是 **“Kabel X170 falsch rum in den Kabelstrang”**。  \n  如果现场看起来“像线束问题”，但并不是单纯少一根 PIN，也要考虑这条分支。\n- 较次一级的补充分支是：**X170 接插件配型或端子状态问题**，比如历史上出现过“接不上”以及其他连接器的 **PIN 弯曲** 情况。  \n  但从当前已检索到的证据强度看，这些都**弱于**前面两条与 **X170 / PIN 2 / Cable harness xy / Integration** 直接匹配的历史记录。\n\n##",
+              "建议先做的检查或操作": "先做**目视确认**：核对 **X170** 插头位置，确认 **PIN 2** 是否确实已经压接并插入到位，而不是退针、浮针或未锁止。\n- 检查 **X170** 插头与线束分支的**方向/键位**是否正确，确认没有出现类似历史案例中的 **Kabel X170 falsch rum** 情况。\n- 查看插头外观是否有**明显的端子歪斜、变形、插不到底、锁扣未扣紧**。\n- 如果现场允许且有标准作业指导，核对 **X170 对应线束标签、针位定义、插头型号** 是否与当前工位要求一致。\n- 在不拆解、不强插、不带电冒险处理的前提下，优先做**低风险复核**，不要强行掰 PIN 或反复硬插。\n\n##",
+              "何时升级给维修工程师": "如果您确认 **PIN 2 已在位**，但问题仍然存在，应升级给维修工程师进一步排查。\n- 如果发现 **X170 插头无法正常到底、疑似装反但不确定、键位不匹配、插头型号疑似不对**，应停止继续尝试并升级。\n- 如果看到 **端子弯曲、退针、壳体损伤、锁扣损坏**，不要继续硬插，应升级。\n- 如果同一问题**重复发生**，即使本次重新插接后恢复，也建议升级，让维修工程师检查线束制造/装配一致性。\n- 如果现场无法明确判断是 **Cable harness xy** 还是 **C99 controller 侧 X170** 问题，也应升级，避免误操作扩大故障。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": true
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": false,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "clarification",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "工厂",
+                "factory"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "工厂"
+                ],
+                "missing_keywords": [
+                  "factory"
+                ],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Integration",
+                  "X170",
+                  "PIN 2"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "最像",
+                  "X170",
+                  "PIN 2",
+                  "线束",
+                  "端子"
+                ],
+                "missing_keywords": [
+                  "接头"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "目视",
+                  "锁扣",
+                  "方向"
+                ],
+                "missing_keywords": [
+                  "轻拉"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "端子损伤",
+                  "线束内部"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 1,
+    "mode_passed": 1,
+    "first_turn_focus_passed": 1,
+    "contract_passed": 1,
+    "historical_facts_passed": 1,
+    "suspected_direction_passed": 1,
+    "recommended_action_passed": 1,
+    "escalation_passed": 1,
+    "forbidden_claim_passed": 1,
+    "fully_passed": 1,
+    "structured_final_answers": 1,
+    "legacy_final_answer_passed": 1,
+    "errors": 0
+  }
+}

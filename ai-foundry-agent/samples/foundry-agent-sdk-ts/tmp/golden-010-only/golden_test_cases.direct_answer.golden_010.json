@@ -1,0 +1,86 @@
+{
+  "dataset_name": "golden-010-only",
+  "source_dataset": "golden_test_cases.json",
+  "source_cases_file": "cases.json",
+  "split_type": "direct_answer",
+  "test_case_count": 1,
+  "scope": "CONTURA-family troubleshooting prompts that should be answered directly without clarification",
+  "notes": [
+    "These cases are copied from golden_test_cases.json.",
+    "Every case in this split expects the agent to answer directly from the initial user message.",
+    "Regression scoring now prioritizes expected_mode, the four-section response contract, historical-fact grounding, and escalation guidance.",
+    "Legacy component/failure/action anchors remain in correct_answer only as backward-reference fields."
+  ],
+  "test_cases": [
+    {
+      "golden_test_id": "golden_010",
+      "source_case_id": "case_000046",
+      "scenario_type": "symptom_only_drive_enable",
+      "initial_user_input": "Oberkochen 的 Contura 6206 集成时驱动怎么都进不去，大家第一反应都怀疑伺服，但我想先看历史上最像哪块。",
+      "follow_up_user_reply": null,
+      "expected_first_step": "direct_answer",
+      "correct_answer": {
+        "component_name": "Scale",
+        "failure_reason": "Maßstab an X verschoben",
+        "handling_steps": "Maßstab an X richtig hin geschoben",
+        "answer_notes": "Good case for resisting a superficial drive/servo assumption and returning the anchored historical component."
+      },
+      "reference_context": {
+        "factory": "Oberkochen (1014)",
+        "machine_model": "CONTURA 6206 configurable",
+        "process_or_station": "Integration",
+        "event_start_at": "2020-03-19T15:39:00+08:00",
+        "anomaly_description": "Antriebe gehen nicht ein"
+      },
+      "expected_mode": "direct_answer",
+      "required_historical_fact_keywords": [
+        "Oberkochen",
+        "Integration",
+        "Antriebe gehen nicht ein",
+        "Scale"
+      ],
+      "required_historical_fact_keyword_matches": 2,
+      "acceptable_suspected_direction_keywords": [
+        "Scale",
+        "Maßstab",
+        "X",
+        "编码尺"
+      ],
+      "acceptable_suspected_direction_keyword_matches": 1,
+      "required_recommended_action_keywords": [
+        "目视",
+        "X轴",
+        "Maßstab",
+        "推回"
+      ],
+      "required_recommended_action_keyword_matches": 1,
+      "required_escalation_keywords": [
+        "升级",
+        "维修工程师",
+        "再次进不去",
+        "刻度尺"
+      ],
+      "required_escalation_keyword_matches": 1
+    }
+  ],
+  "evaluation_version": 2,
+  "evaluation_target": "response_contract_v2",
+  "response_contract_defaults": {
+    "required_sections": [
+      "历史案例事实",
+      "当前怀疑方向",
+      "建议先做的检查或操作",
+      "何时升级给维修工程师"
+    ],
+    "require_historical_fact_grounding": true,
+    "require_suspected_direction_hedging": true,
+    "require_recommended_action_section": true,
+    "require_escalation_section": true,
+    "required_escalation_keywords": [
+      "升级",
+      "维修工程师",
+      "停止继续",
+      "超出操作员"
+    ]
+  }
+}

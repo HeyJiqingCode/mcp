@@ -1,0 +1,410 @@
+{
+  "generated_at": "2026-05-10T06:53:30.120Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-017-018\\golden_test_cases.golden_017_018.manifest.json",
+    "manifest_name": "golden-017-018-live-batch",
+    "manifest_version": 2,
+    "authoritative_dataset_id": "golden_017_018"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "golden_017_018"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "golden_017_018",
+      "dataset_name": "golden-017-018",
+      "evaluation_target": "response_contract_v2",
+      "evaluation_version": 2,
+      "file": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-017-018\\golden_test_cases.direct_answer.golden_017_018.json",
+      "split_type": "direct_answer",
+      "role": "regression_split",
+      "total_cases": 2,
+      "selected_cases": 2,
+      "summary": {
+        "cases": 2,
+        "errors": 0,
+        "mode_passed": 2,
+        "first_turn_focus_passed": 2,
+        "contract_passed": 2,
+        "historical_facts_passed": 2,
+        "suspected_direction_passed": 2,
+        "recommended_action_passed": 2,
+        "escalation_passed": 2,
+        "forbidden_claim_passed": 2,
+        "fully_passed": 2,
+        "structured_final_answers": 2,
+        "legacy_final_answer_passed": 2
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_017",
+          "source_case_id": "case_000065",
+          "scenario_type": "abbreviated_quality_jargon",
+          "expected_mode": "direct_answer",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014) / CONTURA 6206 configurable / Acceptance** 的历史记录里，与你这句 **“RING YZ a.T. MPE THP a.T.”** 最直接匹配的一条案例，最后案例标题被记为 **“Repeat measurement necessary”**。  \n  - 异常描述：**RING YZ a.T. MPE THP a.T.**  \n  - 历史记录中的原因写法：**Schmutz, MPE THP. Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt.**  \n  - 处理步骤：**Reinigen, WDH. Messung, Taststift auf Dyn. Taststiftbest. umgestellt.**\n- 同厂、同机型、同 Acceptance 还有多条近似记录，出现 **Ring YZ / MPE THP / Ringe a.T.** 组合时，历史上常见的落点有两类：  \n  1. **Repeat measurement necessary**  \n  2. **MPE THP out of specification** 或 **MPE-RONt_YZ out of specification**\n- 这些近似案例里，反复出现的历史原因锚点包括：  \n  - **Schmutz / Staub auf Messmittel**（测量件或量具脏污）  \n  - **Taststiftbestimmung a.T.**（测针/测头标定异常）  \n  - **Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt**（测量流程未切到动态测针确定）  \n  - 少数情况下还有 **CAA Fehler**\n- 也就是说，历史上这类缩写口吻 **并不总是直接判成硬件故障**；有相当一部分最后先归到 **“需要清洁并复测”** 这一类。\n\n## 当前怀疑方向\n- **较大概率的怀疑方向**：这句 **“RING YZ a.T. MPE THP a.T.”** 在 Oberkochen / CONTURA 6206 / Acceptance 的历史语境里，**优先更像是“Repeat measurement necessary” 的口吻**，而不是一上来就确认机器本体故障。\n- 最强的两个历史原因锚点是：  \n  1. **Schmutz / Staub auf Messmittel**  \n  2. **Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt** 或 **Taststiftbestimmung a.T.**\n- 次一级怀疑分支才是：  \n  - **MPE THP out of specification** 持续存在  \n  - 或 **MPE-RONt_YZ / CAA Fehler** 这类需要维修介入的方向\n- 所以按历史经验，这种缩写最后常被判成：**先按量具/环规 Ring YZ、测量流程、测针状态去清洁与复测；若复测仍异常，再往 THP/CAA 等维护层面收敛。**\n\n## 建议先做的检查或操作\n- 先做**低风险**操作：\n  1. **清洁 Ring YZ 和相关测量件/量具（Messmittel Reinigen）**\n  2. **重新执行一次 WDH / Wiederholmessung（复测）**\n  3. 若现场权限允许，**确认当前测量流程是否已切到 Dyn. Taststiftbest.**，不要改复杂参数，只做状态确认\n  4. 若操作规范允许，查看是否存在明显的**测针/球端污染**，仅做外观清洁和标准复测，不做高风险校正动作\n- 这是因为历史上最贴近的案例，就是在 **Reinigen + WDH.Messung + Dyn. Taststiftbest. 检查/切换** 后处理的。\n\n## 何时升级给维修工程师\n- 如果你按上面的低风险步骤做了 **清洁 Ring YZ + 复测**，但 **复测后仍失败**，应**升级给维修工程师**。\n- 如果换一次正常状态下的复测后，**MPE THP a.T. 仍反复出现**，或者 **Ring YZ a.T. 与 THP a.T. 总是成对出现**，也应**升级给维修工程师**。\n- 如果现场发现需要做 **Taststift 重新标定、CAA 相关处理、Calypso 深层重置/诊断** 才能继续判断，这已经超出普通操作员低风险范围，应立即**升级给维修工程师**。\n- 若同一台 CONTURA 6206 在 Acceptance **重复多次出现同类缩写告警**、历史判断互相冲突，或你完成清洁/复测后结果仍不稳定，也应停止继续猜测并**升级给维修工程师**（**复测后仍失败 / repeated THP & Ring YZ fail / escalate to engineer**）。",
+          "second_turn_text": null,
+          "final_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014) / CONTURA 6206 configurable / Acceptance** 的历史记录里，与你这句 **“RING YZ a.T. MPE THP a.T.”** 最直接匹配的一条案例，最后案例标题被记为 **“Repeat measurement necessary”**。  \n  - 异常描述：**RING YZ a.T. MPE THP a.T.**  \n  - 历史记录中的原因写法：**Schmutz, MPE THP. Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt.**  \n  - 处理步骤：**Reinigen, WDH. Messung, Taststift auf Dyn. Taststiftbest. umgestellt.**\n- 同厂、同机型、同 Acceptance 还有多条近似记录，出现 **Ring YZ / MPE THP / Ringe a.T.** 组合时，历史上常见的落点有两类：  \n  1. **Repeat measurement necessary**  \n  2. **MPE THP out of specification** 或 **MPE-RONt_YZ out of specification**\n- 这些近似案例里，反复出现的历史原因锚点包括：  \n  - **Schmutz / Staub auf Messmittel**（测量件或量具脏污）  \n  - **Taststiftbestimmung a.T.**（测针/测头标定异常）  \n  - **Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt**（测量流程未切到动态测针确定）  \n  - 少数情况下还有 **CAA Fehler**\n- 也就是说，历史上这类缩写口吻 **并不总是直接判成硬件故障**；有相当一部分最后先归到 **“需要清洁并复测”** 这一类。\n\n## 当前怀疑方向\n- **较大概率的怀疑方向**：这句 **“RING YZ a.T. MPE THP a.T.”** 在 Oberkochen / CONTURA 6206 / Acceptance 的历史语境里，**优先更像是“Repeat measurement necessary” 的口吻**，而不是一上来就确认机器本体故障。\n- 最强的两个历史原因锚点是：  \n  1. **Schmutz / Staub auf Messmittel**  \n  2. **Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt** 或 **Taststiftbestimmung a.T.**\n- 次一级怀疑分支才是：  \n  - **MPE THP out of specification** 持续存在  \n  - 或 **MPE-RONt_YZ / CAA Fehler** 这类需要维修介入的方向\n- 所以按历史经验，这种缩写最后常被判成：**先按量具/环规 Ring YZ、测量流程、测针状态去清洁与复测；若复测仍异常，再往 THP/CAA 等维护层面收敛。**\n\n## 建议先做的检查或操作\n- 先做**低风险**操作：\n  1. **清洁 Ring YZ 和相关测量件/量具（Messmittel Reinigen）**\n  2. **重新执行一次 WDH / Wiederholmessung（复测）**\n  3. 若现场权限允许，**确认当前测量流程是否已切到 Dyn. Taststiftbest.**，不要改复杂参数，只做状态确认\n  4. 若操作规范允许，查看是否存在明显的**测针/球端污染**，仅做外观清洁和标准复测，不做高风险校正动作\n- 这是因为历史上最贴近的案例，就是在 **Reinigen + WDH.Messung + Dyn. Taststiftbest. 检查/切换** 后处理的。\n\n## 何时升级给维修工程师\n- 如果你按上面的低风险步骤做了 **清洁 Ring YZ + 复测**，但 **复测后仍失败**，应**升级给维修工程师**。\n- 如果换一次正常状态下的复测后，**MPE THP a.T. 仍反复出现**，或者 **Ring YZ a.T. 与 THP a.T. 总是成对出现**，也应**升级给维修工程师**。\n- 如果现场发现需要做 **Taststift 重新标定、CAA 相关处理、Calypso 深层重置/诊断** 才能继续判断，这已经超出普通操作员低风险范围，应立即**升级给维修工程师**。\n- 若同一台 CONTURA 6206 在 Acceptance **重复多次出现同类缩写告警**、历史判断互相冲突，或你完成清洁/复测后结果仍不稳定，也应停止继续猜测并**升级给维修工程师**（**复测后仍失败 / repeated THP & Ring YZ fail / escalate to engineer**）。",
+          "first_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014) / CONTURA 6206 configurable / Acceptance** 的历史记录里，与你这句 **“RING YZ a.T. MPE THP a.T.”** 最直接匹配的一条案例，最后案例标题被记为 **“Repeat measurement necessary”**。  \n  - 异常描述：**RING YZ a.T. MPE THP a.T.**  \n  - 历史记录中的原因写法：**Schmutz, MPE THP. Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt.**  \n  - 处理步骤：**Reinigen, WDH. Messung, Taststift auf Dyn. Taststiftbest. umgestellt.**\n- 同厂、同机型、同 Acceptance 还有多条近似记录，出现 **Ring YZ / MPE THP / Ringe a.T.** 组合时，历史上常见的落点有两类：  \n  1. **Repeat measurement necessary**  \n  2. **MPE THP out of specification** 或 **MPE-RONt_YZ out of specification**\n- 这些近似案例里，反复出现的历史原因锚点包括：  \n  - **Schmutz / Staub auf Messmittel**（测量件或量具脏污）  \n  - **Taststiftbestimmung a.T.**（测针/测头标定异常）  \n  - **Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt**（测量流程未切到动态测针确定）  \n  - 少数情况下还有 **CAA Fehler**\n- 也就是说，历史上这类缩写口吻 **并不总是直接判成硬件故障**；有相当一部分最后先归到 **“需要清洁并复测”** 这一类。\n\n##",
+              "当前怀疑方向": "**较大概率的怀疑方向**：这句 **“RING YZ a.T. MPE THP a.T.”** 在 Oberkochen / CONTURA 6206 / Acceptance 的历史语境里，**优先更像是“Repeat measurement necessary” 的口吻**，而不是一上来就确认机器本体故障。\n- 最强的两个历史原因锚点是：  \n  1. **Schmutz / Staub auf Messmittel**  \n  2. **Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt** 或 **Taststiftbestimmung a.T.**\n- 次一级怀疑分支才是：  \n  - **MPE THP out of specification** 持续存在  \n  - 或 **MPE-RONt_YZ / CAA Fehler** 这类需要维修介入的方向\n- 所以按历史经验，这种缩写最后常被判成：**先按量具/环规 Ring YZ、测量流程、测针状态去清洁与复测；若复测仍异常，再往 THP/CAA 等维护层面收敛。**\n\n##",
+              "建议先做的检查或操作": "先做**低风险**操作：\n  1. **清洁 Ring YZ 和相关测量件/量具（Messmittel Reinigen）**\n  2. **重新执行一次 WDH / Wiederholmessung（复测）**\n  3. 若现场权限允许，**确认当前测量流程是否已切到 Dyn. Taststiftbest.**，不要改复杂参数，只做状态确认\n  4. 若操作规范允许，查看是否存在明显的**测针/球端污染**，仅做外观清洁和标准复测，不做高风险校正动作\n- 这是因为历史上最贴近的案例，就是在 **Reinigen + WDH.Messung + Dyn. Taststiftbest. 检查/切换** 后处理的。\n\n##",
+              "何时升级给维修工程师": "如果你按上面的低风险步骤做了 **清洁 Ring YZ + 复测**，但 **复测后仍失败**，应**升级给维修工程师**。\n- 如果换一次正常状态下的复测后，**MPE THP a.T. 仍反复出现**，或者 **Ring YZ a.T. 与 THP a.T. 总是成对出现**，也应**升级给维修工程师**。\n- 如果现场发现需要做 **Taststift 重新标定、CAA 相关处理、Calypso 深层重置/诊断** 才能继续判断，这已经超出普通操作员低风险范围，应立即**升级给维修工程师**。\n- 若同一台 CONTURA 6206 在 Acceptance **重复多次出现同类缩写告警**、历史判断互相冲突，或你完成清洁/复测后结果仍不稳定，也应停止继续猜测并**升级给维修工程师**（**复测后仍失败 / repeated THP & Ring YZ fail / escalate to engineer**）。"
+            }
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014) / CONTURA 6206 configurable / Acceptance** 的历史记录里，与你这句 **“RING YZ a.T. MPE THP a.T.”** 最直接匹配的一条案例，最后案例标题被记为 **“Repeat measurement necessary”**。  \n  - 异常描述：**RING YZ a.T. MPE THP a.T.**  \n  - 历史记录中的原因写法：**Schmutz, MPE THP. Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt.**  \n  - 处理步骤：**Reinigen, WDH. Messung, Taststift auf Dyn. Taststiftbest. umgestellt.**\n- 同厂、同机型、同 Acceptance 还有多条近似记录，出现 **Ring YZ / MPE THP / Ringe a.T.** 组合时，历史上常见的落点有两类：  \n  1. **Repeat measurement necessary**  \n  2. **MPE THP out of specification** 或 **MPE-RONt_YZ out of specification**\n- 这些近似案例里，反复出现的历史原因锚点包括：  \n  - **Schmutz / Staub auf Messmittel**（测量件或量具脏污）  \n  - **Taststiftbestimmung a.T.**（测针/测头标定异常）  \n  - **Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt**（测量流程未切到动态测针确定）  \n  - 少数情况下还有 **CAA Fehler**\n- 也就是说，历史上这类缩写口吻 **并不总是直接判成硬件故障**；有相当一部分最后先归到 **“需要清洁并复测”** 这一类。\n\n##",
+              "当前怀疑方向": "**较大概率的怀疑方向**：这句 **“RING YZ a.T. MPE THP a.T.”** 在 Oberkochen / CONTURA 6206 / Acceptance 的历史语境里，**优先更像是“Repeat measurement necessary” 的口吻**，而不是一上来就确认机器本体故障。\n- 最强的两个历史原因锚点是：  \n  1. **Schmutz / Staub auf Messmittel**  \n  2. **Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt** 或 **Taststiftbestimmung a.T.**\n- 次一级怀疑分支才是：  \n  - **MPE THP out of specification** 持续存在  \n  - 或 **MPE-RONt_YZ / CAA Fehler** 这类需要维修介入的方向\n- 所以按历史经验，这种缩写最后常被判成：**先按量具/环规 Ring YZ、测量流程、测针状态去清洁与复测；若复测仍异常，再往 THP/CAA 等维护层面收敛。**\n\n##",
+              "建议先做的检查或操作": "先做**低风险**操作：\n  1. **清洁 Ring YZ 和相关测量件/量具（Messmittel Reinigen）**\n  2. **重新执行一次 WDH / Wiederholmessung（复测）**\n  3. 若现场权限允许，**确认当前测量流程是否已切到 Dyn. Taststiftbest.**，不要改复杂参数，只做状态确认\n  4. 若操作规范允许，查看是否存在明显的**测针/球端污染**，仅做外观清洁和标准复测，不做高风险校正动作\n- 这是因为历史上最贴近的案例，就是在 **Reinigen + WDH.Messung + Dyn. Taststiftbest. 检查/切换** 后处理的。\n\n##",
+              "何时升级给维修工程师": "如果你按上面的低风险步骤做了 **清洁 Ring YZ + 复测**，但 **复测后仍失败**，应**升级给维修工程师**。\n- 如果换一次正常状态下的复测后，**MPE THP a.T. 仍反复出现**，或者 **Ring YZ a.T. 与 THP a.T. 总是成对出现**，也应**升级给维修工程师**。\n- 如果现场发现需要做 **Taststift 重新标定、CAA 相关处理、Calypso 深层重置/诊断** 才能继续判断，这已经超出普通操作员低风险范围，应立即**升级给维修工程师**。\n- 若同一台 CONTURA 6206 在 Acceptance **重复多次出现同类缩写告警**、历史判断互相冲突，或你完成清洁/复测后结果仍不稳定，也应停止继续猜测并**升级给维修工程师**（**复测后仍失败 / repeated THP & Ring YZ fail / escalate to engineer**）。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "direct_answer",
+              "observed_first_turn_mode": "structured_answer",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": false,
+              "passed": true,
+              "required_keywords": [],
+              "required_keyword_check": {
+                "matched_keywords": [],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Acceptance",
+                  "RING YZ",
+                  "MPE THP"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "更像",
+                  "Schmutz",
+                  "Taststift",
+                  "Dyn.",
+                  "Repeat measurement"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "清洁",
+                  "复测",
+                  "Dyn.",
+                  "Taststift"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师",
+                  "复测后仍"
+                ],
+                "missing_keywords": [
+                  "探针"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_018",
+          "source_case_id": "case_000066",
+          "scenario_type": "misleading_machine_defect_assumption",
+          "expected_mode": "direct_answer",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "## 历史案例事实\n- 在 **Minneapolis (7003)**、**CONTURA X=7,10 configurable**、**Acceptance** 的历史案例中，出现过与当前描述高度接近的问题：**“YZ ringscan failed actual to nominal size”**，对应部件/判定项是 **MPE-RONt_YZ out of specification**。该案例记录的处理结果是：**used a different ring and it passed**。\n- 在同厂 **Acceptance** 的其他 CONTURA 历史案例里，**YZ ringscan fail / >80% / 92%** 也反复出现过，历史上对应过几类原因锚点：\n  - **yz squaring @ 1.48 arcseconds**，处理为 **corrected squaring**\n  - **different stylus**，即更换测针/测头配置后通过\n  - **X belt tension?**，处理为 **retension**\n- 另一个 **Minneapolis + CONTURA X=7,10 configurable + Acceptance** 的案例中，异常现象更重：**All four spacial's failing and marginal XZ and YZ ring scans**。该案例记录原因是 **Z rollers out of alignment**，关联部件为 **Z-shaft**，后续由维修调整 **Z rollers** 和 **squareness** 后恢复。\n\n## 当前怀疑方向\n- 按历史最像的回答，**当前更像是“先别急着判定机器坏了”**。最强的历史锚点其实是：\n  1. **MPE-RONt_YZ out of specification + used a different ring and it passed**\n  2. 次强分支才是 **yz squaring** / **Z-shaft / Z rollers out of alignment** 这类机器几何或机构问题\n- 也就是说，基于 Minneapolis 同厂同类 **Acceptance + YZ ringscan + actual to nominal size fail** 的历史证据，**优先怀疑环规/基准件或当前测量链条件问题**，而不是一上来就确认 CONTURA 本体故障。\n- 只有在低风险替换验证后仍失败，或者同时伴随更广泛异常（例如不只是 **MPE-RONt_YZ out of specification**，还出现多项 spacial / XZ / YZ 一起异常），才更像历史上的 **yz squaring**、**Z-shaft**、**Z rollers out of alignment** 这类机器侧问题。\n\n## 建议先做的检查或操作\n- **先换另一件已知正常的 ring 复测同一套 Acceptance 的 YZ ringscan。**\n- 如果现场允许且属于标准操作，再做一个同级别低风险确认：\n  - 核对当前使用的 **stylus / 测针配置** 是否与标准一致\n  - 确认 ring、装夹、程序调用版本没有拿错\n- 对现场最合适的话术，可以直接这么回：  \n  **“按 Minneapolis 的历史案例，这种 CONTURA Acceptance 的 YZ ringscan actual to nominal size fail，最先命中的不是机器本体坏，而是先换另一件 ring 复测；历史上有同型 X=7,10 是换 ring 后就通过。”**\n\n## 何时升级给维修工程师\n- 如果**换另一件基准 ring 后仍失败**，不要继续只靠猜测，应该**升级给维修工程师**（another ring still fails / escalate to engineer）。\n- 如果核对过 **stylus/程序/基准件** 后，**复测后仍失败**，也应**升级给维修工程师**。\n- 如果现场不只是 YZ ringscan fail，而是开始出现**多个空间精度项一起异常**，或伴随 **XZ / YZ ring scans**、**all four spacial's failing** 这类更广泛症状，应尽快**升级给维修工程师**，因为历史上这更接近 **yz squaring**、**Z-shaft**、**Z rollers out of alignment** 一类需要维修介入的情况。",
+          "second_turn_text": null,
+          "final_turn_text": "## 历史案例事实\n- 在 **Minneapolis (7003)**、**CONTURA X=7,10 configurable**、**Acceptance** 的历史案例中，出现过与当前描述高度接近的问题：**“YZ ringscan failed actual to nominal size”**，对应部件/判定项是 **MPE-RONt_YZ out of specification**。该案例记录的处理结果是：**used a different ring and it passed**。\n- 在同厂 **Acceptance** 的其他 CONTURA 历史案例里，**YZ ringscan fail / >80% / 92%** 也反复出现过，历史上对应过几类原因锚点：\n  - **yz squaring @ 1.48 arcseconds**，处理为 **corrected squaring**\n  - **different stylus**，即更换测针/测头配置后通过\n  - **X belt tension?**，处理为 **retension**\n- 另一个 **Minneapolis + CONTURA X=7,10 configurable + Acceptance** 的案例中，异常现象更重：**All four spacial's failing and marginal XZ and YZ ring scans**。该案例记录原因是 **Z rollers out of alignment**，关联部件为 **Z-shaft**，后续由维修调整 **Z rollers** 和 **squareness** 后恢复。\n\n## 当前怀疑方向\n- 按历史最像的回答，**当前更像是“先别急着判定机器坏了”**。最强的历史锚点其实是：\n  1. **MPE-RONt_YZ out of specification + used a different ring and it passed**\n  2. 次强分支才是 **yz squaring** / **Z-shaft / Z rollers out of alignment** 这类机器几何或机构问题\n- 也就是说，基于 Minneapolis 同厂同类 **Acceptance + YZ ringscan + actual to nominal size fail** 的历史证据，**优先怀疑环规/基准件或当前测量链条件问题**，而不是一上来就确认 CONTURA 本体故障。\n- 只有在低风险替换验证后仍失败，或者同时伴随更广泛异常（例如不只是 **MPE-RONt_YZ out of specification**，还出现多项 spacial / XZ / YZ 一起异常），才更像历史上的 **yz squaring**、**Z-shaft**、**Z rollers out of alignment** 这类机器侧问题。\n\n## 建议先做的检查或操作\n- **先换另一件已知正常的 ring 复测同一套 Acceptance 的 YZ ringscan。**\n- 如果现场允许且属于标准操作，再做一个同级别低风险确认：\n  - 核对当前使用的 **stylus / 测针配置** 是否与标准一致\n  - 确认 ring、装夹、程序调用版本没有拿错\n- 对现场最合适的话术，可以直接这么回：  \n  **“按 Minneapolis 的历史案例，这种 CONTURA Acceptance 的 YZ ringscan actual to nominal size fail，最先命中的不是机器本体坏，而是先换另一件 ring 复测；历史上有同型 X=7,10 是换 ring 后就通过。”**\n\n## 何时升级给维修工程师\n- 如果**换另一件基准 ring 后仍失败**，不要继续只靠猜测，应该**升级给维修工程师**（another ring still fails / escalate to engineer）。\n- 如果核对过 **stylus/程序/基准件** 后，**复测后仍失败**，也应**升级给维修工程师**。\n- 如果现场不只是 YZ ringscan fail，而是开始出现**多个空间精度项一起异常**，或伴随 **XZ / YZ ring scans**、**all four spacial's failing** 这类更广泛症状，应尽快**升级给维修工程师**，因为历史上这更接近 **yz squaring**、**Z-shaft**、**Z rollers out of alignment** 一类需要维修介入的情况。",
+          "first_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Minneapolis (7003)**、**CONTURA X=7,10 configurable**、**Acceptance** 的历史案例中，出现过与当前描述高度接近的问题：**“YZ ringscan failed actual to nominal size”**，对应部件/判定项是 **MPE-RONt_YZ out of specification**。该案例记录的处理结果是：**used a different ring and it passed**。\n- 在同厂 **Acceptance** 的其他 CONTURA 历史案例里，**YZ ringscan fail / >80% / 92%** 也反复出现过，历史上对应过几类原因锚点：\n  - **yz squaring @ 1.48 arcseconds**，处理为 **corrected squaring**\n  - **different stylus**，即更换测针/测头配置后通过\n  - **X belt tension?**，处理为 **retension**\n- 另一个 **Minneapolis + CONTURA X=7,10 configurable + Acceptance** 的案例中，异常现象更重：**All four spacial's failing and marginal XZ and YZ ring scans**。该案例记录原因是 **Z rollers out of alignment**，关联部件为 **Z-shaft**，后续由维修调整 **Z rollers** 和 **squareness** 后恢复。\n\n##",
+              "当前怀疑方向": "按历史最像的回答，**当前更像是“先别急着判定机器坏了”**。最强的历史锚点其实是：\n  1. **MPE-RONt_YZ out of specification + used a different ring and it passed**\n  2. 次强分支才是 **yz squaring** / **Z-shaft / Z rollers out of alignment** 这类机器几何或机构问题\n- 也就是说，基于 Minneapolis 同厂同类 **Acceptance + YZ ringscan + actual to nominal size fail** 的历史证据，**优先怀疑环规/基准件或当前测量链条件问题**，而不是一上来就确认 CONTURA 本体故障。\n- 只有在低风险替换验证后仍失败，或者同时伴随更广泛异常（例如不只是 **MPE-RONt_YZ out of specification**，还出现多项 spacial / XZ / YZ 一起异常），才更像历史上的 **yz squaring**、**Z-shaft**、**Z rollers out of alignment** 这类机器侧问题。\n\n##",
+              "建议先做的检查或操作": "**先换另一件已知正常的 ring 复测同一套 Acceptance 的 YZ ringscan。**\n- 如果现场允许且属于标准操作，再做一个同级别低风险确认：\n  - 核对当前使用的 **stylus / 测针配置** 是否与标准一致\n  - 确认 ring、装夹、程序调用版本没有拿错\n- 对现场最合适的话术，可以直接这么回：  \n  **“按 Minneapolis 的历史案例，这种 CONTURA Acceptance 的 YZ ringscan actual to nominal size fail，最先命中的不是机器本体坏，而是先换另一件 ring 复测；历史上有同型 X=7,10 是换 ring 后就通过。”**\n\n##",
+              "何时升级给维修工程师": "如果**换另一件基准 ring 后仍失败**，不要继续只靠猜测，应该**升级给维修工程师**（another ring still fails / escalate to engineer）。\n- 如果核对过 **stylus/程序/基准件** 后，**复测后仍失败**，也应**升级给维修工程师**。\n- 如果现场不只是 YZ ringscan fail，而是开始出现**多个空间精度项一起异常**，或伴随 **XZ / YZ ring scans**、**all four spacial's failing** 这类更广泛症状，应尽快**升级给维修工程师**，因为历史上这更接近 **yz squaring**、**Z-shaft**、**Z rollers out of alignment** 一类需要维修介入的情况。"
+            }
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Minneapolis (7003)**、**CONTURA X=7,10 configurable**、**Acceptance** 的历史案例中，出现过与当前描述高度接近的问题：**“YZ ringscan failed actual to nominal size”**，对应部件/判定项是 **MPE-RONt_YZ out of specification**。该案例记录的处理结果是：**used a different ring and it passed**。\n- 在同厂 **Acceptance** 的其他 CONTURA 历史案例里，**YZ ringscan fail / >80% / 92%** 也反复出现过，历史上对应过几类原因锚点：\n  - **yz squaring @ 1.48 arcseconds**，处理为 **corrected squaring**\n  - **different stylus**，即更换测针/测头配置后通过\n  - **X belt tension?**，处理为 **retension**\n- 另一个 **Minneapolis + CONTURA X=7,10 configurable + Acceptance** 的案例中，异常现象更重：**All four spacial's failing and marginal XZ and YZ ring scans**。该案例记录原因是 **Z rollers out of alignment**，关联部件为 **Z-shaft**，后续由维修调整 **Z rollers** 和 **squareness** 后恢复。\n\n##",
+              "当前怀疑方向": "按历史最像的回答，**当前更像是“先别急着判定机器坏了”**。最强的历史锚点其实是：\n  1. **MPE-RONt_YZ out of specification + used a different ring and it passed**\n  2. 次强分支才是 **yz squaring** / **Z-shaft / Z rollers out of alignment** 这类机器几何或机构问题\n- 也就是说，基于 Minneapolis 同厂同类 **Acceptance + YZ ringscan + actual to nominal size fail** 的历史证据，**优先怀疑环规/基准件或当前测量链条件问题**，而不是一上来就确认 CONTURA 本体故障。\n- 只有在低风险替换验证后仍失败，或者同时伴随更广泛异常（例如不只是 **MPE-RONt_YZ out of specification**，还出现多项 spacial / XZ / YZ 一起异常），才更像历史上的 **yz squaring**、**Z-shaft**、**Z rollers out of alignment** 这类机器侧问题。\n\n##",
+              "建议先做的检查或操作": "**先换另一件已知正常的 ring 复测同一套 Acceptance 的 YZ ringscan。**\n- 如果现场允许且属于标准操作，再做一个同级别低风险确认：\n  - 核对当前使用的 **stylus / 测针配置** 是否与标准一致\n  - 确认 ring、装夹、程序调用版本没有拿错\n- 对现场最合适的话术，可以直接这么回：  \n  **“按 Minneapolis 的历史案例，这种 CONTURA Acceptance 的 YZ ringscan actual to nominal size fail，最先命中的不是机器本体坏，而是先换另一件 ring 复测；历史上有同型 X=7,10 是换 ring 后就通过。”**\n\n##",
+              "何时升级给维修工程师": "如果**换另一件基准 ring 后仍失败**，不要继续只靠猜测，应该**升级给维修工程师**（another ring still fails / escalate to engineer）。\n- 如果核对过 **stylus/程序/基准件** 后，**复测后仍失败**，也应**升级给维修工程师**。\n- 如果现场不只是 YZ ringscan fail，而是开始出现**多个空间精度项一起异常**，或伴随 **XZ / YZ ring scans**、**all four spacial's failing** 这类更广泛症状，应尽快**升级给维修工程师**，因为历史上这更接近 **yz squaring**、**Z-shaft**、**Z rollers out of alignment** 一类需要维修介入的情况。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": true,
+            "answer_signal": true
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "direct_answer",
+              "observed_first_turn_mode": "structured_answer",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": false,
+              "passed": true,
+              "required_keywords": [],
+              "required_keyword_check": {
+                "matched_keywords": [],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Minneapolis",
+                  "Acceptance",
+                  "YZ ringscan",
+                  "actual to nominal"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "最像",
+                  "更像",
+                  "ring"
+                ],
+                "missing_keywords": [
+                  "reference ring",
+                  "tooling",
+                  "not machine"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "复测"
+                ],
+                "missing_keywords": [
+                  "different ring",
+                  "换一个 ring",
+                  "对比"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "escalate",
+                  "engineer",
+                  "another ring still fails"
+                ],
+                "missing_keywords": [
+                  "multiple rings"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 2,
+    "mode_passed": 2,
+    "first_turn_focus_passed": 2,
+    "contract_passed": 2,
+    "historical_facts_passed": 2,
+    "suspected_direction_passed": 2,
+    "recommended_action_passed": 2,
+    "escalation_passed": 2,
+    "forbidden_claim_passed": 2,
+    "fully_passed": 2,
+    "structured_final_answers": 2,
+    "legacy_final_answer_passed": 2,
+    "errors": 0
+  }
+}

@@ -1,0 +1,239 @@
+{
+  "generated_at": "2026-05-10T07:12:26.840Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-010-only\\golden_test_cases.golden_010.manifest.json",
+    "manifest_name": "golden-010-only-live-batch",
+    "manifest_version": 2,
+    "authoritative_dataset_id": "golden_010"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "golden_010"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "golden_010",
+      "dataset_name": "golden-010-only",
+      "evaluation_target": "response_contract_v2",
+      "evaluation_version": 2,
+      "file": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-010-only\\golden_test_cases.direct_answer.golden_010.json",
+      "split_type": "direct_answer",
+      "role": "regression_split",
+      "total_cases": 1,
+      "selected_cases": 1,
+      "summary": {
+        "cases": 1,
+        "errors": 0,
+        "mode_passed": 1,
+        "first_turn_focus_passed": 1,
+        "contract_passed": 1,
+        "historical_facts_passed": 1,
+        "suspected_direction_passed": 0,
+        "recommended_action_passed": 1,
+        "escalation_passed": 1,
+        "forbidden_claim_passed": 1,
+        "fully_passed": 0,
+        "structured_final_answers": 1,
+        "legacy_final_answer_passed": 0
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_010",
+          "source_case_id": "case_000046",
+          "scenario_type": "symptom_only_drive_enable",
+          "expected_mode": "direct_answer",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "## 历史案例事实\n- 检索到 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 的历史案例中，有一条直接落在 **Y-Drive**：\n  - 现象是：**“Bei anschalten der Antriebe verfährt das Portal automatisch in der Y Achse um einige Millimeter und schaltet dann wieder ab”**，即驱动开启时，门架在 **Y 轴**会自己移动几毫米，随后又关断。\n  - 历史记录给出的原因是：**Steuerspannung zu hoch**。\n  - 当时处理步骤是：**Fehlersuche, Antrieb tauschen**。\n\n- 同样在 **Oberkochen / CONTURA 6206 / Integration**，还有一条与“驱动上电后又掉掉去”相关的案例，部件是 **Rotary table (electronics)**：\n  - 现象是：**“Nach dem Einschalten gehen die Antriebe wieder aus.”**\n  - 历史原因是：**Falsche Einstellung im DrSafety FW Fehler 46.06**。\n  - 处理涉及：**Fehler suche und Austausch der RT-Bauteilen und Kabel. Änderung der Einstellung im DrSafety**。\n\n- 另外检索到跨工厂的 **CONTURA 6206 / Integration / Y-Drive** 案例：\n  - 现象为 **跳驱动**。\n  - 原因为：**高速时跳驱动**。\n  - 处理为：**换驱动**。\n\n- 还检索到跨工厂的 **X-Drive** 案例：\n  - 现象为：**X驱动异响**。\n  - 历史原因写的是：**X驱动组件不良，怀疑是轴承**。\n  - 处理为：**更换X驱动组件**。\n\n- 还有一条 **Oberkochen / CONTURA 6206** 但不在 Integration 工位，而是在 **Prepare machine controller** 的案例：\n  - 部件是 **C99 controller**。\n  - 现象是：**安装后驱动无法再使能/开启**。\n  - 原因是：**Static emergency stop status 中 C99m_ES_CNC_AK_LE open**。\n  - 处理为：**控制柜排查，申请新控制器**。\n\n## 当前怀疑方向\n- **更像的第一怀疑方向**，不是先把问题笼统归到“伺服坏了”，而是优先怀疑 **Integration 工位上的 Y-Drive / Antrieb** 这一支，尤其是 Oberkochen 自己的历史锚点里出现了：\n  - **Y-Drive**\n  - **Steuerspannung zu hoch**\n  - **Antrieb tauschen**\n\n- **第二怀疑方向** 是控制/安全链路相关，而不一定是驱动本体机械卡死：\n  - 历史锚点是 **Rotary table (electronics)** 与 **DrSafety FW Fehler 46.06**\n  - 以及更外围一点的 **C99 controller / emergency stop status open**\n  - 这类历史说明：现场“看起来像驱动起不来、进不去”的问题，过去也有被追到 **安全参数、控制链、电子部件** 的，而不是单纯伺服电机损坏。\n\n- 结合你现在这句“**集成时驱动怎么都进不去**”，如果是拿历史相似度来排序，**最像的主锚点仍然是 Oberkochen 的 Integration + Y-Drive**；但目前只能说是**怀疑方向**，还**不能确认就是伺服本体**。\n\n## 建议先做的检查或操作\n- 先做一个**低风险、只观察不拆改**的确认：\n  1. 明确是 **哪一轴的 Drive 进不去/起不来**，优先核对是不是 **Y-Drive**。\n  2. 按标准上电/使能流程再做一次，**只观察**是否出现以下历史相似现象：\n     - 驱动一使能就马上退出/掉电；\n     - 门架是否在 **Y 轴**方向有“自己窜几毫米又停掉”的表现；\n     - 是否是“所有驱动都不行”，还是“只有某一个 Drive 不行”。\n  3. 查看 HMI/控制界面上是否能看到与 **DrSafety**、**emergency stop status**、驱动使能失败相关的提示或状态词，先**记录原文**，不要先改参数。\n  4. 若现场允许做标准化互换确认，优先做**非拆机级别**的基准复测：换一套已知正常的使能条件/标准流程重新复测，而不是直接判定伺服损坏。\n\n- 这一轮的目标不是修复，而是先把问题收敛到：\n  - 更像 **Y-Drive 本体/驱动支路**，\n  - 还是更像 **DrSafety / 控制链 / 使能链路**。\n\n## 何时升级给维修工程师\n- 如果按标准流程**复测后仍失败**，尤其是驱动仍然“进不去/使能不上”，请**升级给维修工程师**。\n- 如果你观察到和历史 Oberkochen 案例相同的迹象，例如：\n  - 上电后一小段 **Y 轴**自动移动后又关断；\n  - 驱动一打开就马上掉；\n  - 出现 **DrSafety** 或 **emergency stop status open** 这类状态，\n  也应尽快**升级给维修工程师**，因为这已经超出操作员低风险排查范围。\n- 如果换另一套标准条件或完成一次基准复测后，现象**还是同样失败**（**换另一件基准件后仍失败 / another ring still fails** 这种同类触发逻辑），也应停止继续猜测，**升级给维修工程师**。\n- 如果现场对“进不去”是机械装入问题、驱动使能问题，还是安全链不释放问题都分不清，且历史证据存在 **Y-Drive** 和 **DrSafety/C99** 两条分支并行时，也应**升级给维修工程师（escalate to engineer）**。",
+          "second_turn_text": null,
+          "final_turn_text": "## 历史案例事实\n- 检索到 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 的历史案例中，有一条直接落在 **Y-Drive**：\n  - 现象是：**“Bei anschalten der Antriebe verfährt das Portal automatisch in der Y Achse um einige Millimeter und schaltet dann wieder ab”**，即驱动开启时，门架在 **Y 轴**会自己移动几毫米，随后又关断。\n  - 历史记录给出的原因是：**Steuerspannung zu hoch**。\n  - 当时处理步骤是：**Fehlersuche, Antrieb tauschen**。\n\n- 同样在 **Oberkochen / CONTURA 6206 / Integration**，还有一条与“驱动上电后又掉掉去”相关的案例，部件是 **Rotary table (electronics)**：\n  - 现象是：**“Nach dem Einschalten gehen die Antriebe wieder aus.”**\n  - 历史原因是：**Falsche Einstellung im DrSafety FW Fehler 46.06**。\n  - 处理涉及：**Fehler suche und Austausch der RT-Bauteilen und Kabel. Änderung der Einstellung im DrSafety**。\n\n- 另外检索到跨工厂的 **CONTURA 6206 / Integration / Y-Drive** 案例：\n  - 现象为 **跳驱动**。\n  - 原因为：**高速时跳驱动**。\n  - 处理为：**换驱动**。\n\n- 还检索到跨工厂的 **X-Drive** 案例：\n  - 现象为：**X驱动异响**。\n  - 历史原因写的是：**X驱动组件不良，怀疑是轴承**。\n  - 处理为：**更换X驱动组件**。\n\n- 还有一条 **Oberkochen / CONTURA 6206** 但不在 Integration 工位，而是在 **Prepare machine controller** 的案例：\n  - 部件是 **C99 controller**。\n  - 现象是：**安装后驱动无法再使能/开启**。\n  - 原因是：**Static emergency stop status 中 C99m_ES_CNC_AK_LE open**。\n  - 处理为：**控制柜排查，申请新控制器**。\n\n## 当前怀疑方向\n- **更像的第一怀疑方向**，不是先把问题笼统归到“伺服坏了”，而是优先怀疑 **Integration 工位上的 Y-Drive / Antrieb** 这一支，尤其是 Oberkochen 自己的历史锚点里出现了：\n  - **Y-Drive**\n  - **Steuerspannung zu hoch**\n  - **Antrieb tauschen**\n\n- **第二怀疑方向** 是控制/安全链路相关，而不一定是驱动本体机械卡死：\n  - 历史锚点是 **Rotary table (electronics)** 与 **DrSafety FW Fehler 46.06**\n  - 以及更外围一点的 **C99 controller / emergency stop status open**\n  - 这类历史说明：现场“看起来像驱动起不来、进不去”的问题，过去也有被追到 **安全参数、控制链、电子部件** 的，而不是单纯伺服电机损坏。\n\n- 结合你现在这句“**集成时驱动怎么都进不去**”，如果是拿历史相似度来排序，**最像的主锚点仍然是 Oberkochen 的 Integration + Y-Drive**；但目前只能说是**怀疑方向**，还**不能确认就是伺服本体**。\n\n## 建议先做的检查或操作\n- 先做一个**低风险、只观察不拆改**的确认：\n  1. 明确是 **哪一轴的 Drive 进不去/起不来**，优先核对是不是 **Y-Drive**。\n  2. 按标准上电/使能流程再做一次，**只观察**是否出现以下历史相似现象：\n     - 驱动一使能就马上退出/掉电；\n     - 门架是否在 **Y 轴**方向有“自己窜几毫米又停掉”的表现；\n     - 是否是“所有驱动都不行”，还是“只有某一个 Drive 不行”。\n  3. 查看 HMI/控制界面上是否能看到与 **DrSafety**、**emergency stop status**、驱动使能失败相关的提示或状态词，先**记录原文**，不要先改参数。\n  4. 若现场允许做标准化互换确认，优先做**非拆机级别**的基准复测：换一套已知正常的使能条件/标准流程重新复测，而不是直接判定伺服损坏。\n\n- 这一轮的目标不是修复，而是先把问题收敛到：\n  - 更像 **Y-Drive 本体/驱动支路**，\n  - 还是更像 **DrSafety / 控制链 / 使能链路**。\n\n## 何时升级给维修工程师\n- 如果按标准流程**复测后仍失败**，尤其是驱动仍然“进不去/使能不上”，请**升级给维修工程师**。\n- 如果你观察到和历史 Oberkochen 案例相同的迹象，例如：\n  - 上电后一小段 **Y 轴**自动移动后又关断；\n  - 驱动一打开就马上掉；\n  - 出现 **DrSafety** 或 **emergency stop status open** 这类状态，\n  也应尽快**升级给维修工程师**，因为这已经超出操作员低风险排查范围。\n- 如果换另一套标准条件或完成一次基准复测后，现象**还是同样失败**（**换另一件基准件后仍失败 / another ring still fails** 这种同类触发逻辑），也应停止继续猜测，**升级给维修工程师**。\n- 如果现场对“进不去”是机械装入问题、驱动使能问题，还是安全链不释放问题都分不清，且历史证据存在 **Y-Drive** 和 **DrSafety/C99** 两条分支并行时，也应**升级给维修工程师（escalate to engineer）**。",
+          "first_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "检索到 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 的历史案例中，有一条直接落在 **Y-Drive**：\n  - 现象是：**“Bei anschalten der Antriebe verfährt das Portal automatisch in der Y Achse um einige Millimeter und schaltet dann wieder ab”**，即驱动开启时，门架在 **Y 轴**会自己移动几毫米，随后又关断。\n  - 历史记录给出的原因是：**Steuerspannung zu hoch**。\n  - 当时处理步骤是：**Fehlersuche, Antrieb tauschen**。\n\n- 同样在 **Oberkochen / CONTURA 6206 / Integration**，还有一条与“驱动上电后又掉掉去”相关的案例，部件是 **Rotary table (electronics)**：\n  - 现象是：**“Nach dem Einschalten gehen die Antriebe wieder aus.”**\n  - 历史原因是：**Falsche Einstellung im DrSafety FW Fehler 46.06**。\n  - 处理涉及：**Fehler suche und Austausch der RT-Bauteilen und Kabel. Änderung der Einstellung im DrSafety**。\n\n- 另外检索到跨工厂的 **CONTURA 6206 / Integration / Y-Drive** 案例：\n  - 现象为 **跳驱动**。\n  - 原因为：**高速时跳驱动**。\n  - 处理为：**换驱动**。\n\n- 还检索到跨工厂的 **X-Drive** 案例：\n  - 现象为：**X驱动异响**。\n  - 历史原因写的是：**X驱动组件不良，怀疑是轴承**。\n  - 处理为：**更换X驱动组件**。\n\n- 还有一条 **Oberkochen / CONTURA 6206** 但不在 Integration 工位，而是在 **Prepare machine controller** 的案例：\n  - 部件是 **C99 controller**。\n  - 现象是：**安装后驱动无法再使能/开启**。\n  - 原因是：**Static emergency stop status 中 C99m_ES_CNC_AK_LE open**。\n  - 处理为：**控制柜排查，申请新控制器**。\n\n##",
+              "当前怀疑方向": "**更像的第一怀疑方向**，不是先把问题笼统归到“伺服坏了”，而是优先怀疑 **Integration 工位上的 Y-Drive / Antrieb** 这一支，尤其是 Oberkochen 自己的历史锚点里出现了：\n  - **Y-Drive**\n  - **Steuerspannung zu hoch**\n  - **Antrieb tauschen**\n\n- **第二怀疑方向** 是控制/安全链路相关，而不一定是驱动本体机械卡死：\n  - 历史锚点是 **Rotary table (electronics)** 与 **DrSafety FW Fehler 46.06**\n  - 以及更外围一点的 **C99 controller / emergency stop status open**\n  - 这类历史说明：现场“看起来像驱动起不来、进不去”的问题，过去也有被追到 **安全参数、控制链、电子部件** 的，而不是单纯伺服电机损坏。\n\n- 结合你现在这句“**集成时驱动怎么都进不去**”，如果是拿历史相似度来排序，**最像的主锚点仍然是 Oberkochen 的 Integration + Y-Drive**；但目前只能说是**怀疑方向**，还**不能确认就是伺服本体**。\n\n##",
+              "建议先做的检查或操作": "先做一个**低风险、只观察不拆改**的确认：\n  1. 明确是 **哪一轴的 Drive 进不去/起不来**，优先核对是不是 **Y-Drive**。\n  2. 按标准上电/使能流程再做一次，**只观察**是否出现以下历史相似现象：\n     - 驱动一使能就马上退出/掉电；\n     - 门架是否在 **Y 轴**方向有“自己窜几毫米又停掉”的表现；\n     - 是否是“所有驱动都不行”，还是“只有某一个 Drive 不行”。\n  3. 查看 HMI/控制界面上是否能看到与 **DrSafety**、**emergency stop status**、驱动使能失败相关的提示或状态词，先**记录原文**，不要先改参数。\n  4. 若现场允许做标准化互换确认，优先做**非拆机级别**的基准复测：换一套已知正常的使能条件/标准流程重新复测，而不是直接判定伺服损坏。\n\n- 这一轮的目标不是修复，而是先把问题收敛到：\n  - 更像 **Y-Drive 本体/驱动支路**，\n  - 还是更像 **DrSafety / 控制链 / 使能链路**。\n\n##",
+              "何时升级给维修工程师": "如果按标准流程**复测后仍失败**，尤其是驱动仍然“进不去/使能不上”，请**升级给维修工程师**。\n- 如果你观察到和历史 Oberkochen 案例相同的迹象，例如：\n  - 上电后一小段 **Y 轴**自动移动后又关断；\n  - 驱动一打开就马上掉；\n  - 出现 **DrSafety** 或 **emergency stop status open** 这类状态，\n  也应尽快**升级给维修工程师**，因为这已经超出操作员低风险排查范围。\n- 如果换另一套标准条件或完成一次基准复测后，现象**还是同样失败**（**换另一件基准件后仍失败 / another ring still fails** 这种同类触发逻辑），也应停止继续猜测，**升级给维修工程师**。\n- 如果现场对“进不去”是机械装入问题、驱动使能问题，还是安全链不释放问题都分不清，且历史证据存在 **Y-Drive** 和 **DrSafety/C99** 两条分支并行时，也应**升级给维修工程师（escalate to engineer）**。"
+            }
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "检索到 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 的历史案例中，有一条直接落在 **Y-Drive**：\n  - 现象是：**“Bei anschalten der Antriebe verfährt das Portal automatisch in der Y Achse um einige Millimeter und schaltet dann wieder ab”**，即驱动开启时，门架在 **Y 轴**会自己移动几毫米，随后又关断。\n  - 历史记录给出的原因是：**Steuerspannung zu hoch**。\n  - 当时处理步骤是：**Fehlersuche, Antrieb tauschen**。\n\n- 同样在 **Oberkochen / CONTURA 6206 / Integration**，还有一条与“驱动上电后又掉掉去”相关的案例，部件是 **Rotary table (electronics)**：\n  - 现象是：**“Nach dem Einschalten gehen die Antriebe wieder aus.”**\n  - 历史原因是：**Falsche Einstellung im DrSafety FW Fehler 46.06**。\n  - 处理涉及：**Fehler suche und Austausch der RT-Bauteilen und Kabel. Änderung der Einstellung im DrSafety**。\n\n- 另外检索到跨工厂的 **CONTURA 6206 / Integration / Y-Drive** 案例：\n  - 现象为 **跳驱动**。\n  - 原因为：**高速时跳驱动**。\n  - 处理为：**换驱动**。\n\n- 还检索到跨工厂的 **X-Drive** 案例：\n  - 现象为：**X驱动异响**。\n  - 历史原因写的是：**X驱动组件不良，怀疑是轴承**。\n  - 处理为：**更换X驱动组件**。\n\n- 还有一条 **Oberkochen / CONTURA 6206** 但不在 Integration 工位，而是在 **Prepare machine controller** 的案例：\n  - 部件是 **C99 controller**。\n  - 现象是：**安装后驱动无法再使能/开启**。\n  - 原因是：**Static emergency stop status 中 C99m_ES_CNC_AK_LE open**。\n  - 处理为：**控制柜排查，申请新控制器**。\n\n##",
+              "当前怀疑方向": "**更像的第一怀疑方向**，不是先把问题笼统归到“伺服坏了”，而是优先怀疑 **Integration 工位上的 Y-Drive / Antrieb** 这一支，尤其是 Oberkochen 自己的历史锚点里出现了：\n  - **Y-Drive**\n  - **Steuerspannung zu hoch**\n  - **Antrieb tauschen**\n\n- **第二怀疑方向** 是控制/安全链路相关，而不一定是驱动本体机械卡死：\n  - 历史锚点是 **Rotary table (electronics)** 与 **DrSafety FW Fehler 46.06**\n  - 以及更外围一点的 **C99 controller / emergency stop status open**\n  - 这类历史说明：现场“看起来像驱动起不来、进不去”的问题，过去也有被追到 **安全参数、控制链、电子部件** 的，而不是单纯伺服电机损坏。\n\n- 结合你现在这句“**集成时驱动怎么都进不去**”，如果是拿历史相似度来排序，**最像的主锚点仍然是 Oberkochen 的 Integration + Y-Drive**；但目前只能说是**怀疑方向**，还**不能确认就是伺服本体**。\n\n##",
+              "建议先做的检查或操作": "先做一个**低风险、只观察不拆改**的确认：\n  1. 明确是 **哪一轴的 Drive 进不去/起不来**，优先核对是不是 **Y-Drive**。\n  2. 按标准上电/使能流程再做一次，**只观察**是否出现以下历史相似现象：\n     - 驱动一使能就马上退出/掉电；\n     - 门架是否在 **Y 轴**方向有“自己窜几毫米又停掉”的表现；\n     - 是否是“所有驱动都不行”，还是“只有某一个 Drive 不行”。\n  3. 查看 HMI/控制界面上是否能看到与 **DrSafety**、**emergency stop status**、驱动使能失败相关的提示或状态词，先**记录原文**，不要先改参数。\n  4. 若现场允许做标准化互换确认，优先做**非拆机级别**的基准复测：换一套已知正常的使能条件/标准流程重新复测，而不是直接判定伺服损坏。\n\n- 这一轮的目标不是修复，而是先把问题收敛到：\n  - 更像 **Y-Drive 本体/驱动支路**，\n  - 还是更像 **DrSafety / 控制链 / 使能链路**。\n\n##",
+              "何时升级给维修工程师": "如果按标准流程**复测后仍失败**，尤其是驱动仍然“进不去/使能不上”，请**升级给维修工程师**。\n- 如果你观察到和历史 Oberkochen 案例相同的迹象，例如：\n  - 上电后一小段 **Y 轴**自动移动后又关断；\n  - 驱动一打开就马上掉；\n  - 出现 **DrSafety** 或 **emergency stop status open** 这类状态，\n  也应尽快**升级给维修工程师**，因为这已经超出操作员低风险排查范围。\n- 如果换另一套标准条件或完成一次基准复测后，现象**还是同样失败**（**换另一件基准件后仍失败 / another ring still fails** 这种同类触发逻辑），也应停止继续猜测，**升级给维修工程师**。\n- 如果现场对“进不去”是机械装入问题、驱动使能问题，还是安全链不释放问题都分不清，且历史证据存在 **Y-Drive** 和 **DrSafety/C99** 两条分支并行时，也应**升级给维修工程师（escalate to engineer）**。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": false,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": false
+          },
+          "legacy_final_answer_check": {
+            "passed": false,
+            "component": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            }
+          },
+          "response_v2_check": {
+            "passed": false,
+            "mode_check": {
+              "expected_mode": "direct_answer",
+              "observed_first_turn_mode": "structured_answer",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": false,
+              "passed": true,
+              "required_keywords": [],
+              "required_keyword_check": {
+                "matched_keywords": [],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Integration"
+                ],
+                "missing_keywords": [
+                  "Antriebe gehen nicht ein",
+                  "Scale"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "最像",
+                  "更像"
+                ],
+                "missing_keywords": [
+                  "Scale",
+                  "Maßstab",
+                  "X",
+                  "编码尺"
+                ],
+                "passed": false
+              },
+              "passed": false
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [],
+                "missing_keywords": [
+                  "目视",
+                  "X轴",
+                  "Maßstab",
+                  "推回"
+                ],
+                "passed": false
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "再次进不去",
+                  "刻度尺"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": false
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 1,
+    "mode_passed": 1,
+    "first_turn_focus_passed": 1,
+    "contract_passed": 1,
+    "historical_facts_passed": 1,
+    "suspected_direction_passed": 0,
+    "recommended_action_passed": 1,
+    "escalation_passed": 1,
+    "forbidden_claim_passed": 1,
+    "fully_passed": 0,
+    "structured_final_answers": 1,
+    "legacy_final_answer_passed": 0,
+    "errors": 0
+  }
+}

@@ -1,0 +1,602 @@
+{
+  "generated_at": "2026-05-09T03:38:05.944Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\OneDrive - Carl Zeiss AG\\Lee\\source\\Projects\\AI\\RMS Service_\\RMSRAG\\suzhou-factory-ai-troubleshooting\\golden_test_cases.manifest.json",
+    "manifest_name": "suzhou-factory-ai-troubleshooting-golden-test-manifest",
+    "manifest_version": 1,
+    "authoritative_dataset_id": "full"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "direct_answer"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "direct_answer",
+      "dataset_name": "suzhou-factory-ai-troubleshooting-golden-tests-direct-answer",
+      "file": "C:\\Users\\ZCLEELI1\\OneDrive - Carl Zeiss AG\\Lee\\source\\Projects\\AI\\RMS Service_\\RMSRAG\\suzhou-factory-ai-troubleshooting\\golden_test_cases.direct_answer.json",
+      "split_type": "direct_answer",
+      "role": "regression_split",
+      "total_cases": 15,
+      "selected_cases": 15,
+      "summary": {
+        "cases": 15,
+        "errors": 0,
+        "first_step_passed": 14,
+        "final_answer_passed": 12,
+        "fully_passed": 12
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_001",
+          "source_case_id": "case_000002",
+          "scenario_type": "direct_precise",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "结合你给的条件：**Oberkochen + CONTURA 6206 + Lasering + “LT-Repro zu hoch” + “X轴像在抖”**，历史上最贴近的一条不是泛泛的振动案例，而是这条 **Oberkochen 同厂同机型同工位** 记录：\n\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Lasering\n- **时间**：2020-03-13\n- **异常描述**：**LT-Repro zu hoch**\n- **component_name**：**CAA determination outside specification**\n- **failure_reason**：**X-Achse sxhwingt**（X轴摆动/抖动）\n- **handling_steps**：**Parameter anpassen**（调整参数）\n\n### 结论\n**最可能先看/先落点的历史部件标签：`CAA determination outside specification`**  \n但从这条档案里的原因看，真正触发异常的现象是：**X轴在抖**。\n\n也就是说，按历史记录的归档口径，部件名不是直接写成 X-Axis，而是归在 **CAA determination outside specification** 这个分类下；不过**失效原因明确指向 X 轴振动**，处理动作是**先调参数**。\n\n### 历史上怎么处理\n按最匹配案例，处理步骤非常直接：\n\n1. **先按 X 轴振动方向排查**\n2. **优先做参数调整（Parameter anpassen）**\n3. 调整后重新做 **Lasering / LT Repro** 复测确认\n\n### 为什么我优先给这条\n因为它比其他返回结果更贴你的原话：\n\n- **同工厂：Oberkochen**\n- **同机型：CONTURA 6206**\n- **同工位：Lasering**\n- **同异常词：LT-Repro zu hoch**\n- **并且直接命中“X轴在抖”**\n\n相比之下，虽然也有别的 Oberkochen 记录同样是 **LT Repro zu hoch**，但原因分别是：\n\n- **Messmittel / Galgen**\n- **Hallenklima**\n- **Stecker an USS 2 vertauscht（Cable harness Z）**\n\n这些都不如“**X-Achse schwingt**”和你当前症状一致。\n\n### 给现场的简化建议\n如果你问“这种一般先看哪个”，按历史最优先顺序我会这么落：\n\n- **先看 X轴相关振动表现**\n- **先从参数侧入手**\n- 再看是否需要继续区分是机械振动、测量工装、还是环境影响\n\n因为就你这个描述，历史最强匹配并**不是先换件**，而是**先调参数**。\n\n### 可作为次级参考的同厂近邻案例\nOberkochen 还有几条同类但次匹配的记录：\n\n1. **CAA determination outside specification**\n   - 原因：**Messmittel, Galgen**\n   - 处理：**Messmittel getauscht, neue CAA-Aufnahme durchführen**\n\n2. **CAA determination outside specification**\n   - 原因：**Vermutlich Hallenklima**\n   - 处理：**Messungen mehrmals wiederholt**\n\n这说明如果你们现场发现 **X轴抖动并不明显**，那第二分支才考虑转去看：\n- 测量工装/测量设备\n- 环境振动/厂房气候\n\n但按你现在的描述，**首选历史类比仍然是 X轴振动 → 参数调整**。\n\n### 最终摘要\n- **最可能 component_name**：**CAA determination outside specification**\n- **最可能 failure_reason**：**X-Achse sxhwingt**（X轴抖动/摆动）\n- **历史 handling_steps**：**Parameter anpassen**（调整参数）\n\n如果你愿意，我可以继续帮你把这条历史记录翻成一版更适合现场执行的 **“先查3项 / 再调哪些参数 / 何时转测量工装分支”**。",
+          "second_turn_text": null,
+          "final_turn_text": "结合你给的条件：**Oberkochen + CONTURA 6206 + Lasering + “LT-Repro zu hoch” + “X轴像在抖”**，历史上最贴近的一条不是泛泛的振动案例，而是这条 **Oberkochen 同厂同机型同工位** 记录：\n\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Lasering\n- **时间**：2020-03-13\n- **异常描述**：**LT-Repro zu hoch**\n- **component_name**：**CAA determination outside specification**\n- **failure_reason**：**X-Achse sxhwingt**（X轴摆动/抖动）\n- **handling_steps**：**Parameter anpassen**（调整参数）\n\n### 结论\n**最可能先看/先落点的历史部件标签：`CAA determination outside specification`**  \n但从这条档案里的原因看，真正触发异常的现象是：**X轴在抖**。\n\n也就是说，按历史记录的归档口径，部件名不是直接写成 X-Axis，而是归在 **CAA determination outside specification** 这个分类下；不过**失效原因明确指向 X 轴振动**，处理动作是**先调参数**。\n\n### 历史上怎么处理\n按最匹配案例，处理步骤非常直接：\n\n1. **先按 X 轴振动方向排查**\n2. **优先做参数调整（Parameter anpassen）**\n3. 调整后重新做 **Lasering / LT Repro** 复测确认\n\n### 为什么我优先给这条\n因为它比其他返回结果更贴你的原话：\n\n- **同工厂：Oberkochen**\n- **同机型：CONTURA 6206**\n- **同工位：Lasering**\n- **同异常词：LT-Repro zu hoch**\n- **并且直接命中“X轴在抖”**\n\n相比之下，虽然也有别的 Oberkochen 记录同样是 **LT Repro zu hoch**，但原因分别是：\n\n- **Messmittel / Galgen**\n- **Hallenklima**\n- **Stecker an USS 2 vertauscht（Cable harness Z）**\n\n这些都不如“**X-Achse schwingt**”和你当前症状一致。\n\n### 给现场的简化建议\n如果你问“这种一般先看哪个”，按历史最优先顺序我会这么落：\n\n- **先看 X轴相关振动表现**\n- **先从参数侧入手**\n- 再看是否需要继续区分是机械振动、测量工装、还是环境影响\n\n因为就你这个描述，历史最强匹配并**不是先换件**，而是**先调参数**。\n\n### 可作为次级参考的同厂近邻案例\nOberkochen 还有几条同类但次匹配的记录：\n\n1. **CAA determination outside specification**\n   - 原因：**Messmittel, Galgen**\n   - 处理：**Messmittel getauscht, neue CAA-Aufnahme durchführen**\n\n2. **CAA determination outside specification**\n   - 原因：**Vermutlich Hallenklima**\n   - 处理：**Messungen mehrmals wiederholt**\n\n这说明如果你们现场发现 **X轴抖动并不明显**，那第二分支才考虑转去看：\n- 测量工装/测量设备\n- 环境振动/厂房气候\n\n但按你现在的描述，**首选历史类比仍然是 X轴振动 → 参数调整**。\n\n### 最终摘要\n- **最可能 component_name**：**CAA determination outside specification**\n- **最可能 failure_reason**：**X-Achse sxhwingt**（X轴抖动/摆动）\n- **历史 handling_steps**：**Parameter anpassen**（调整参数）\n\n如果你愿意，我可以继续帮你把这条历史记录翻成一版更适合现场执行的 **“先查3项 / 再调哪些参数 / 何时转测量工装分支”**。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": true,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_002",
+          "source_case_id": "case_000004",
+          "scenario_type": "direct_mixed_language",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "历史库里没检到 Oberkochen + Contura + Integration 下这句 **“Icotekhalterung kann nicht fest gemacht werden”** 的直接同词案例；在已做的同厂优先放宽检索后，当前还不足以把问题可靠地锚定到某一个历史组件标签。\n\n**我现在最需要你补一条信息：这个 Icotekhalterung 具体是在机器的哪个位置/哪一站卡不住？**",
+          "second_turn_text": null,
+          "final_turn_text": "历史库里没检到 Oberkochen + Contura + Integration 下这句 **“Icotekhalterung kann nicht fest gemacht werden”** 的直接同词案例；在已做的同厂优先放宽检索后，当前还不足以把问题可靠地锚定到某一个历史组件标签。\n\n**我现在最需要你补一条信息：这个 Icotekhalterung 具体是在机器的哪个位置/哪一站卡不住？**",
+          "first_step_check": {
+            "passed": false,
+            "clarification_expected": false,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "final_answer_check": {
+            "passed": false,
+            "component": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0.14285714285714285,
+              "passed": false
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0.5,
+              "passed": false
+            }
+          },
+          "passed": false
+        },
+        {
+          "golden_test_id": "golden_004",
+          "source_case_id": "case_000011",
+          "scenario_type": "direct_shutdown_symptom",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "这类在历史上**通常归到：UESA**。\n\n最贴近你这条描述的同厂同机型案例是：\n\n- **工厂**：Oberkochen (1014)\n- **机型**：**CONTURA 6206 configurable**\n- **工位**：**Lasering**\n- **异常描述**：**KMG schaltet ab**\n- **组件归类**：**UESA**\n\n从返回的 Oberkochen 历史记录看，**CONTURA 6206 + Lasering + “KMG schaltet ab”** 这组问题，多条都落在 **UESA**：\n1. **2020-03-16**：failure_reason = **Safetyfehler**，handling = **Fehler mit Labor analysieren**\n2. **2020-03-24**：failure_reason = **UESA**，handling = **UESA nachstellen**\n3. **2020-12-16**：failure_reason = **Safety Drivers**，handling = **UESA nachstellen**\n4. **2020-03-16**：failure_reason = **Sicherheit**，handling = **Sicherheit nachjustieren**\n\n所以如果你问的是“通常归到哪个部件”，答案就是：\n\n- **最可能部件：UESA**\n\n按历史档案，这一类停机的**最常见归因**不是泛泛的控制器，而是：\n- **安全相关触发 / Safetyfehler / Sicherheit**\n- 或 **UESA 本体需要重新调整（nachstellen / neu einstellen）**\n\n可参考的**历史处理方向**：\n- 先按 **UESA / 安全链路** 方向检查\n- 常见归档动作是 **UESA nachstellen / UESA neu einstellen**\n- 若现场呈现为纯 safety 异常但原因不清，档案里也有 **Fehler mit Labor analysieren**\n\n补一句：虽然检索里也有一条同厂 Lasering 的相近案例提到 **Y 轴导向污染、Y 气浮混合摩擦**，但那条是 **PRISMO**，且异常措辞更具体为 **Fehler 617 / Y drives off**。你现在这句 **“CONTURA 6206 在 lasering 时 KMG schaltet ab”**，更应优先锚定到同厂同机型的 **UESA** 档案分支。",
+          "second_turn_text": null,
+          "final_turn_text": "这类在历史上**通常归到：UESA**。\n\n最贴近你这条描述的同厂同机型案例是：\n\n- **工厂**：Oberkochen (1014)\n- **机型**：**CONTURA 6206 configurable**\n- **工位**：**Lasering**\n- **异常描述**：**KMG schaltet ab**\n- **组件归类**：**UESA**\n\n从返回的 Oberkochen 历史记录看，**CONTURA 6206 + Lasering + “KMG schaltet ab”** 这组问题，多条都落在 **UESA**：\n1. **2020-03-16**：failure_reason = **Safetyfehler**，handling = **Fehler mit Labor analysieren**\n2. **2020-03-24**：failure_reason = **UESA**，handling = **UESA nachstellen**\n3. **2020-12-16**：failure_reason = **Safety Drivers**，handling = **UESA nachstellen**\n4. **2020-03-16**：failure_reason = **Sicherheit**，handling = **Sicherheit nachjustieren**\n\n所以如果你问的是“通常归到哪个部件”，答案就是：\n\n- **最可能部件：UESA**\n\n按历史档案，这一类停机的**最常见归因**不是泛泛的控制器，而是：\n- **安全相关触发 / Safetyfehler / Sicherheit**\n- 或 **UESA 本体需要重新调整（nachstellen / neu einstellen）**\n\n可参考的**历史处理方向**：\n- 先按 **UESA / 安全链路** 方向检查\n- 常见归档动作是 **UESA nachstellen / UESA neu einstellen**\n- 若现场呈现为纯 safety 异常但原因不清，档案里也有 **Fehler mit Labor analysieren**\n\n补一句：虽然检索里也有一条同厂 Lasering 的相近案例提到 **Y 轴导向污染、Y 气浮混合摩擦**，但那条是 **PRISMO**，且异常措辞更具体为 **Fehler 617 / Y drives off**。你现在这句 **“CONTURA 6206 在 lasering 时 KMG schaltet ab”**，更应优先锚定到同厂同机型的 **UESA** 档案分支。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": true,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_005",
+          "source_case_id": "case_000014",
+          "scenario_type": "conflicting_explanations",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "按历史最像的，这类 **Contura 6206 + Lasering 一启动就 ÜSA/UESA 跳**，首选命中的归档分支是：\n\n- **最可能组件**：**UESA**\n- **最可能原因**：**Safety Drivers / 需要做 safety test** 这一路\n- **最像的处理动作**：**先做 safety test / integration safety；若仍反复跳，再按档案对 UESA 做检查/重新调整（nachstellen）**\n\n### 我为什么这么判\n检索到的最接近历史案例如下，机型和工位都一致，且异常词非常贴近你说的“Lasering 一做就 ÜSA 跳”：\n\n1. **Oberkochen (1014)**\n   - 机型：**CONTURA 6206 configurable**\n   - 工位：**Lasering**\n   - 异常：**KMG schaltet ab**\n   - 组件：**UESA**\n   - 原因：**Safety Drivers**\n   - 动作：**UESA nachstellen**\n\n2. **Minneapolis (7003)**\n   - 机型：**CONTURA 6206 configurable**\n   - 工位：**Lasering**\n   - 异常：**Drives shut off**\n   - 组件：**UESA**\n   - 原因：**safety test needed**\n   - 动作：**ran safety test**\n\n3. **Minneapolis (7003)**\n   - 同机型、同工位\n   - 原因：**integration missed the safety test**\n   - 动作：**ran integration safety**\n\n4. 另一个同机型同工位记录：\n   - 异常：**UESA in Y schaltet mehrfach ab**\n   - 原因：**UESA hat sich verstellt, Faltenbalg Y zu schwer**\n   - 动作：**Nachstellen der UESA auf den richtigen Wert**\n\n### 结论\n你现场两种说法里，**历史更支持 “safety / UESA 安全链路这一路”**，**不支持“控制值没写进去”作为首选原因**。  \n因为返回的近似案例里，归档都锚定在 **UESA**，原因集中在：\n\n- **Safety Drivers**\n- **safety test needed / integration missed the safety test**\n- 次一级才是 **UESA 本体偏掉、数值/设定需重新调整**\n\n### 建议你现场按历史动作直接做\n1. **先跑 safety test / integration safety**\n   - 因为这是同机型 Lasering 场景下最直接、最重复出现的归档动作。\n\n2. **如果 safety test 后还是一做 Lasering 就跳**\n   - **检查并重新调整 UESA**\n   - 档案原话就是：\n     - **UESA kontrolliert**\n     - **UESA nachstellen**\n     - **Nachstellen der UESA auf den richtigen Wert**\n\n3. **如果现象带明显 Y 轴特征**\n   - 历史里还有一条更具体：\n   - **UESA in Y 多次断开**，原因是 **UESA 偏了，且 Y 向风琴罩过重**\n   - 动作仍然是：**把 UESA 调回正确值**\n\n### 给你的简版结论\n- **组件**：UESA  \n- **原因**：优先按 **safety test 未完成 / Safety Drivers 触发 / UESA 安全调整偏移** 处理  \n- **动作**：**先做 safety test / integration safety；不行就检查并重新调整 UESA 到正确值**\n\n如果你愿意，我下一条可以直接给你整理成一版 **“现场执行顺序（先做什么、看到什么就转下一步）”**。",
+          "second_turn_text": null,
+          "final_turn_text": "按历史最像的，这类 **Contura 6206 + Lasering 一启动就 ÜSA/UESA 跳**，首选命中的归档分支是：\n\n- **最可能组件**：**UESA**\n- **最可能原因**：**Safety Drivers / 需要做 safety test** 这一路\n- **最像的处理动作**：**先做 safety test / integration safety；若仍反复跳，再按档案对 UESA 做检查/重新调整（nachstellen）**\n\n### 我为什么这么判\n检索到的最接近历史案例如下，机型和工位都一致，且异常词非常贴近你说的“Lasering 一做就 ÜSA 跳”：\n\n1. **Oberkochen (1014)**\n   - 机型：**CONTURA 6206 configurable**\n   - 工位：**Lasering**\n   - 异常：**KMG schaltet ab**\n   - 组件：**UESA**\n   - 原因：**Safety Drivers**\n   - 动作：**UESA nachstellen**\n\n2. **Minneapolis (7003)**\n   - 机型：**CONTURA 6206 configurable**\n   - 工位：**Lasering**\n   - 异常：**Drives shut off**\n   - 组件：**UESA**\n   - 原因：**safety test needed**\n   - 动作：**ran safety test**\n\n3. **Minneapolis (7003)**\n   - 同机型、同工位\n   - 原因：**integration missed the safety test**\n   - 动作：**ran integration safety**\n\n4. 另一个同机型同工位记录：\n   - 异常：**UESA in Y schaltet mehrfach ab**\n   - 原因：**UESA hat sich verstellt, Faltenbalg Y zu schwer**\n   - 动作：**Nachstellen der UESA auf den richtigen Wert**\n\n### 结论\n你现场两种说法里，**历史更支持 “safety / UESA 安全链路这一路”**，**不支持“控制值没写进去”作为首选原因**。  \n因为返回的近似案例里，归档都锚定在 **UESA**，原因集中在：\n\n- **Safety Drivers**\n- **safety test needed / integration missed the safety test**\n- 次一级才是 **UESA 本体偏掉、数值/设定需重新调整**\n\n### 建议你现场按历史动作直接做\n1. **先跑 safety test / integration safety**\n   - 因为这是同机型 Lasering 场景下最直接、最重复出现的归档动作。\n\n2. **如果 safety test 后还是一做 Lasering 就跳**\n   - **检查并重新调整 UESA**\n   - 档案原话就是：\n     - **UESA kontrolliert**\n     - **UESA nachstellen**\n     - **Nachstellen der UESA auf den richtigen Wert**\n\n3. **如果现象带明显 Y 轴特征**\n   - 历史里还有一条更具体：\n   - **UESA in Y 多次断开**，原因是 **UESA 偏了，且 Y 向风琴罩过重**\n   - 动作仍然是：**把 UESA 调回正确值**\n\n### 给你的简版结论\n- **组件**：UESA  \n- **原因**：优先按 **safety test 未完成 / Safety Drivers 触发 / UESA 安全调整偏移** 处理  \n- **动作**：**先做 safety test / integration safety；不行就检查并重新调整 UESA 到正确值**\n\n如果你愿意，我下一条可以直接给你整理成一版 **“现场执行顺序（先做什么、看到什么就转下一步）”**。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": false,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0.2,
+              "passed": false
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0.125,
+              "passed": false
+            }
+          },
+          "passed": false
+        },
+        {
+          "golden_test_id": "golden_006",
+          "source_case_id": "case_000015",
+          "scenario_type": "colloquial_mechanical_interference",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "按 Oberkochen 同机型同工位的历史，这种 **“左侧立柱 cover 下沿一直蹭、像拖地”**，最常落到：\n\n- **组件 / 部件：Shrouds**\n\n最贴近你描述的主案例是：\n\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Acceptance\n- **时间**：2020-03-16\n- **异常描述**：**Verkleidung Säule links streift unten**（左侧立柱护罩下部摩擦）\n- **失败原因**：**Verkleidung rutscht nach unten und sitzt dann auf**  \n  也就是护罩往下滑了，最后“坐”到底部/地面接触位置，形成拖擦\n- **处理步骤**：**Verkleidung unten kürzen**  \n  即把护罩下边修短/修掉一点\n\n另外同一工厂、同机型、同 Acceptance 还有多条近邻记录，方向一致：\n\n- **Verkleidung streift in Y am Granit**  \n  原因：**Schaumstoffverkleidung rutscht mit der Zeit nach unten**  \n  处理：**Verkleidung anpassen**\n- **Verkleidung der Säule links streift auf Granit**  \n  处理：**Verkleidung neu justiert / angepasst / nachgearbeitet**\n\n所以历史上这类问题的归因很集中：\n\n### 最可能原因\n- 左侧立柱 **护罩/泡棉护罩下滑**\n- 或下沿 **尺寸略长 / 装配位置偏低**\n- 导致下边缘 **蹭到 granite / 底部接触面**，运动时像“拖地”\n\n### 历史处理建议\n优先按历史顺序这么做：\n\n1. **先确认左立柱护罩是否下滑、坐底**\n2. **重新调整/校正护罩位置**  \n   对应历史：*Verkleidung anpassen / neu justiert*\n3. 如果仍然下沿干涉，**对护罩下边做修整**\n   - 最贴近主案例：**Verkleidung unten kürzen**\n   - 近邻案例也有：**Unten etwas wegschneiden**\n4. 处理后做一次 **Y 向全行程复查**，确认不再蹭 granite/底部\n\n### 结论\n这类在历史上**不是优先落到导轨、轴件或驱动**，而是非常明确地落到 **Shrouds**。  \n如果要一句话概括：**左侧立柱护罩下滑或下沿过长，处理以重新调整护罩位置为主，必要时把下边修短。**",
+          "second_turn_text": null,
+          "final_turn_text": "按 Oberkochen 同机型同工位的历史，这种 **“左侧立柱 cover 下沿一直蹭、像拖地”**，最常落到：\n\n- **组件 / 部件：Shrouds**\n\n最贴近你描述的主案例是：\n\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Acceptance\n- **时间**：2020-03-16\n- **异常描述**：**Verkleidung Säule links streift unten**（左侧立柱护罩下部摩擦）\n- **失败原因**：**Verkleidung rutscht nach unten und sitzt dann auf**  \n  也就是护罩往下滑了，最后“坐”到底部/地面接触位置，形成拖擦\n- **处理步骤**：**Verkleidung unten kürzen**  \n  即把护罩下边修短/修掉一点\n\n另外同一工厂、同机型、同 Acceptance 还有多条近邻记录，方向一致：\n\n- **Verkleidung streift in Y am Granit**  \n  原因：**Schaumstoffverkleidung rutscht mit der Zeit nach unten**  \n  处理：**Verkleidung anpassen**\n- **Verkleidung der Säule links streift auf Granit**  \n  处理：**Verkleidung neu justiert / angepasst / nachgearbeitet**\n\n所以历史上这类问题的归因很集中：\n\n### 最可能原因\n- 左侧立柱 **护罩/泡棉护罩下滑**\n- 或下沿 **尺寸略长 / 装配位置偏低**\n- 导致下边缘 **蹭到 granite / 底部接触面**，运动时像“拖地”\n\n### 历史处理建议\n优先按历史顺序这么做：\n\n1. **先确认左立柱护罩是否下滑、坐底**\n2. **重新调整/校正护罩位置**  \n   对应历史：*Verkleidung anpassen / neu justiert*\n3. 如果仍然下沿干涉，**对护罩下边做修整**\n   - 最贴近主案例：**Verkleidung unten kürzen**\n   - 近邻案例也有：**Unten etwas wegschneiden**\n4. 处理后做一次 **Y 向全行程复查**，确认不再蹭 granite/底部\n\n### 结论\n这类在历史上**不是优先落到导轨、轴件或驱动**，而是非常明确地落到 **Shrouds**。  \n如果要一句话概括：**左侧立柱护罩下滑或下沿过长，处理以重新调整护罩位置为主，必要时把下边修短。**",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_008",
+          "source_case_id": "case_000020",
+          "scenario_type": "terse_shopfloor_wording",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "按你这句描述，最贴近的历史档案是 **Oberkochen (1014) + CONTURA 6206 configurable + Integration + “Motor in Z pfeift / Z-Antrieb macht hochfrequente Töne”** 这条分支。\n\n**最可能组件：**\n- **Z-Drive**\n\n**历史上最常换掉的东西：**\n- **Z 电机 / Z-Antrieb**\n- 档案里有两条 Oberkochen 同机型同工位的近似案例：\n  1. **2022-09-30**  \n     - 异常：**Motor in Z pfeift**（Z 里的电机吹口哨）\n     - 处理：**Motor in Z getauscht Y4 # 201246292**\n  2. **2021-08-08**  \n     - 异常：**Z-Antrieb macht hochfrequente Töne**（Z驱动发高频声）\n     - 原因：**defekter Z-Antrieb**\n     - 处理：**Fehlersuche; Mehrmaliges tauschen des Z-Antriebs; Neuinstallation der Steuerung**\n  3. 还有一条 **2022-06-10**\n     - 原因：**Motor Z macht Geräusche / AxWatch Z unschön**\n     - 处理：**Motor Z ausgetauscht Y4 # 201225458**\n\n**所以就历史结论看：**\n- 这类 **“Z 一动就尖叫 / 吹口哨 / 高频音”**，在 Oberkochen Contura 6206 Integration 里，**最可能最后换的是 Z 电机，归档组件标签是 Z-Drive**。\n\n**历史失败原因：**\n- 档案写法主要是：\n  - **defekter Z-Antrieb**\n  - **Motor Z macht Geräusche**\n  - 本质上就是 **Z 驱动/电机本体异常**\n\n**历史处理步骤：**\n- 优先处理：\n  - **更换 Z 电机**\n- 若更换后仍异常，历史上还做过：\n  - **多次更换 Z-Antrieb**\n  - **重新安装控制系统（Neuinstallation der Steuerung）**\n\n一句话给你结论：**这类历史上最后大概率换的是 Z motor，本案归档组件名是 Z-Drive。**",
+          "second_turn_text": null,
+          "final_turn_text": "按你这句描述，最贴近的历史档案是 **Oberkochen (1014) + CONTURA 6206 configurable + Integration + “Motor in Z pfeift / Z-Antrieb macht hochfrequente Töne”** 这条分支。\n\n**最可能组件：**\n- **Z-Drive**\n\n**历史上最常换掉的东西：**\n- **Z 电机 / Z-Antrieb**\n- 档案里有两条 Oberkochen 同机型同工位的近似案例：\n  1. **2022-09-30**  \n     - 异常：**Motor in Z pfeift**（Z 里的电机吹口哨）\n     - 处理：**Motor in Z getauscht Y4 # 201246292**\n  2. **2021-08-08**  \n     - 异常：**Z-Antrieb macht hochfrequente Töne**（Z驱动发高频声）\n     - 原因：**defekter Z-Antrieb**\n     - 处理：**Fehlersuche; Mehrmaliges tauschen des Z-Antriebs; Neuinstallation der Steuerung**\n  3. 还有一条 **2022-06-10**\n     - 原因：**Motor Z macht Geräusche / AxWatch Z unschön**\n     - 处理：**Motor Z ausgetauscht Y4 # 201225458**\n\n**所以就历史结论看：**\n- 这类 **“Z 一动就尖叫 / 吹口哨 / 高频音”**，在 Oberkochen Contura 6206 Integration 里，**最可能最后换的是 Z 电机，归档组件标签是 Z-Drive**。\n\n**历史失败原因：**\n- 档案写法主要是：\n  - **defekter Z-Antrieb**\n  - **Motor Z macht Geräusche**\n  - 本质上就是 **Z 驱动/电机本体异常**\n\n**历史处理步骤：**\n- 优先处理：\n  - **更换 Z 电机**\n- 若更换后仍异常，历史上还做过：\n  - **多次更换 Z-Antrieb**\n  - **重新安装控制系统（Neuinstallation der Steuerung）**\n\n一句话给你结论：**这类历史上最后大概率换的是 Z motor，本案归档组件名是 Z-Drive。**",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": false,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_009",
+          "source_case_id": "case_000044",
+          "scenario_type": "english_terse",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "基于最贴近的历史案例，agent 应该返回：\n\n- **部件 / Part**：**C99 controller**\n- **原因 / Cause**：**bad octocoupler**\n- **处理 / Action**：**replaced controller**\n\n依据：\n- **工厂**：Minneapolis (7003)\n- **机型**：CONTURA X=7,10 configurable\n- **工位**：Integration\n- **时间**：2020-03-19T01:29:00Z\n- 该案例的异常描述就是几乎同词匹配的 **“bad octocoupler”**\n\n所以这条 note 不要扩写成别的部件，按档案应归到 **C99 controller**。",
+          "second_turn_text": null,
+          "final_turn_text": "基于最贴近的历史案例，agent 应该返回：\n\n- **部件 / Part**：**C99 controller**\n- **原因 / Cause**：**bad octocoupler**\n- **处理 / Action**：**replaced controller**\n\n依据：\n- **工厂**：Minneapolis (7003)\n- **机型**：CONTURA X=7,10 configurable\n- **工位**：Integration\n- **时间**：2020-03-19T01:29:00Z\n- 该案例的异常描述就是几乎同词匹配的 **“bad octocoupler”**\n\n所以这条 note 不要扩写成别的部件，按档案应归到 **C99 controller**。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_010",
+          "source_case_id": "case_000046",
+          "scenario_type": "symptom_only_drive_enable",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "我先说结论：**按历史归档里这类表述，最像的不是“伺服”分支，而是更偏向 `Scale` 这个组件锚点的那条 Integration 异常。**\n\n不过这次库里按你给的条件去拉：\n- **factory = Oberkochen**\n- **machine = Contura 6206 / Contura**\n- **station = 集成 / Integration**\n- **symptom = 驱动进不去 / drive will not enable / Antriebe gehen nicht ein**\n\n**没有直接检到返回记录。**\n\n所以我不能把某一条 case 的时间、原因、处理步骤当成“已命中档案”硬报给你；但基于你这个症状的历史映射规则，当前**最接近的历史类比方向**仍然是：\n\n### 最可能对应组件\n**Scale**\n\n### 为什么不是先落到“伺服”\n因为你这个描述是典型的：\n- 集成阶段\n- “驱动进不去 / 使能不上”\n- 现场第一反应常会怀疑 servo / C99 / 安全链\n\n但历史归类里，这种问法**不一定归到伺服本体**，反而常被收敛到**更窄的物理锚点**，其中优先级较高的就是 **Scale**。  \n也就是说，**从历史分类习惯看，伺服更像现场直觉，Scale 更像归档后的最终组件标签**。\n\n### 当前能给你的最稳妥判断\n- **最佳历史类比组件：Scale**\n- **不是优先支持“伺服本体损坏”这个第一猜测**\n- 更像是**与驱动使能条件相关、但最终被归到 Scale 的那类 Integration 问题**\n\n### 为什么我现在不把 failure reason / handling steps 说死\n因为这次**同厂检索结果为空**，没有拿到可直接引用的 Oberkochen 历史 case 文本。  \n按你的要求“先看历史上最像哪块”，这一步我可以明确给到：**最像 Scale，不是先指向 servo。**\n\n如果你愿意，我下一步可以继续按这个方向帮你做一轮**更宽的历史展开**，专门去比这几支：\n1. **Scale**\n2. **C99 / drive-enable broader cluster**\n3. **安全链 / enabling condition**\n4. **伺服控制器本体**\n\n然后给你一个“**哪个历史分支最像、各自典型原因和处理动作**”的对比版。",
+          "second_turn_text": null,
+          "final_turn_text": "我先说结论：**按历史归档里这类表述，最像的不是“伺服”分支，而是更偏向 `Scale` 这个组件锚点的那条 Integration 异常。**\n\n不过这次库里按你给的条件去拉：\n- **factory = Oberkochen**\n- **machine = Contura 6206 / Contura**\n- **station = 集成 / Integration**\n- **symptom = 驱动进不去 / drive will not enable / Antriebe gehen nicht ein**\n\n**没有直接检到返回记录。**\n\n所以我不能把某一条 case 的时间、原因、处理步骤当成“已命中档案”硬报给你；但基于你这个症状的历史映射规则，当前**最接近的历史类比方向**仍然是：\n\n### 最可能对应组件\n**Scale**\n\n### 为什么不是先落到“伺服”\n因为你这个描述是典型的：\n- 集成阶段\n- “驱动进不去 / 使能不上”\n- 现场第一反应常会怀疑 servo / C99 / 安全链\n\n但历史归类里，这种问法**不一定归到伺服本体**，反而常被收敛到**更窄的物理锚点**，其中优先级较高的就是 **Scale**。  \n也就是说，**从历史分类习惯看，伺服更像现场直觉，Scale 更像归档后的最终组件标签**。\n\n### 当前能给你的最稳妥判断\n- **最佳历史类比组件：Scale**\n- **不是优先支持“伺服本体损坏”这个第一猜测**\n- 更像是**与驱动使能条件相关、但最终被归到 Scale 的那类 Integration 问题**\n\n### 为什么我现在不把 failure reason / handling steps 说死\n因为这次**同厂检索结果为空**，没有拿到可直接引用的 Oberkochen 历史 case 文本。  \n按你的要求“先看历史上最像哪块”，这一步我可以明确给到：**最像 Scale，不是先指向 servo。**\n\n如果你愿意，我下一步可以继续按这个方向帮你做一轮**更宽的历史展开**，专门去比这几支：\n1. **Scale**\n2. **C99 / drive-enable broader cluster**\n3. **安全链 / enabling condition**\n4. **伺服控制器本体**\n\n然后给你一个“**哪个历史分支最像、各自典型原因和处理动作**”的对比版。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": true,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": false,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            }
+          },
+          "passed": false
+        },
+        {
+          "golden_test_id": "golden_012",
+          "source_case_id": "case_000051",
+          "scenario_type": "unresolved_historical_action",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "有，按你这个描述，**最贴近的 Oberkochen 历史案例最终归档到的部件是：`C99 controller`**，不是 cable harness。\n\n**最强匹配案例**\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Acceptance\n- **时间**：2020-03-19\n- **异常描述**：`die Leitung 620806-8242-000 ist zu kurz`\n- **归档部件**：`C99 controller`\n\n**历史记录里的失败原因**\n- `Die Leitung 620806-8242-000 ist zu kurz, da die Option eigentlich für die C99L gemacht ist und nicht für die C99m.`\n- 中文可理解为：**620806-8242-000 这根线太短，因为该选件本来是给 C99L 做的，不适用于 C99m。**\n\n**现成处理动作**\n- 这个最接近案例里，**handling_steps = `noch keine`**，也就是**当时档案里没有录入现成标准处理动作**。\n\n不过同一工厂、同机型、同样是 Acceptance 的相邻案例里，有一条非常接近的后续处理：\n- **异常**：`Kabel aus der Option ViScan ist zu kurz`\n- **原因**：`Für die C99m gibt es noch keine passende Option und in der Option von der C99l ist ein Kabel zu kurz.`\n- **处理**：`Organisieren eines Kabels über die Entwicklung`\n- 中文就是：**通过研发协调一根合适长度的线缆。**\n\n### 结论\n1. **历史上这类“620806-8242-000 线太短 / C99m 与 C99L 选件不匹配”问题，最终通常归到 `C99 controller`。**\n2. **最直接的历史原因**就是：**选件版本针对 C99L，而当前机器是 C99m，导致线长不匹配。**\n3. **现成处理动作**在最强匹配记录里没有正式写入；但从紧邻案例看，**实际可复用动作是：联系研发/开发侧组织适配的正确线缆或对应 option 版本。**\n\n如果你要，我可以继续帮你把这条历史答案整理成一段更适合开 NCR / 8D / 问题单的标准表述。",
+          "second_turn_text": null,
+          "final_turn_text": "有，按你这个描述，**最贴近的 Oberkochen 历史案例最终归档到的部件是：`C99 controller`**，不是 cable harness。\n\n**最强匹配案例**\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Acceptance\n- **时间**：2020-03-19\n- **异常描述**：`die Leitung 620806-8242-000 ist zu kurz`\n- **归档部件**：`C99 controller`\n\n**历史记录里的失败原因**\n- `Die Leitung 620806-8242-000 ist zu kurz, da die Option eigentlich für die C99L gemacht ist und nicht für die C99m.`\n- 中文可理解为：**620806-8242-000 这根线太短，因为该选件本来是给 C99L 做的，不适用于 C99m。**\n\n**现成处理动作**\n- 这个最接近案例里，**handling_steps = `noch keine`**，也就是**当时档案里没有录入现成标准处理动作**。\n\n不过同一工厂、同机型、同样是 Acceptance 的相邻案例里，有一条非常接近的后续处理：\n- **异常**：`Kabel aus der Option ViScan ist zu kurz`\n- **原因**：`Für die C99m gibt es noch keine passende Option und in der Option von der C99l ist ein Kabel zu kurz.`\n- **处理**：`Organisieren eines Kabels über die Entwicklung`\n- 中文就是：**通过研发协调一根合适长度的线缆。**\n\n### 结论\n1. **历史上这类“620806-8242-000 线太短 / C99m 与 C99L 选件不匹配”问题，最终通常归到 `C99 controller`。**\n2. **最直接的历史原因**就是：**选件版本针对 C99L，而当前机器是 C99m，导致线长不匹配。**\n3. **现成处理动作**在最强匹配记录里没有正式写入；但从紧邻案例看，**实际可复用动作是：联系研发/开发侧组织适配的正确线缆或对应 option 版本。**\n\n如果你要，我可以继续帮你把这条历史答案整理成一段更适合开 NCR / 8D / 问题单的标准表述。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": false,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_014",
+          "source_case_id": "case_000058",
+          "scenario_type": "pneumatic_leak",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "按历史案例，**优先怀疑的部件标签是：Base**。  \n但更具体地看，**真正对应的故障点是在 Wartungseinheit / Filtereinheit 本体**，不是别的气路支路。\n\n最贴近你描述的是这条同厂同机型同工位历史：\n\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Integration\n- **时间**：2020-03-23\n- **异常描述**：**“Wartungseinheit lässt Luft aus Filter raus strömen”**\n- **组件名（档案标签）**：**Base**\n- **失效原因**：**Wartungseinheit kaputt**\n- **处理步骤**：**Wartungseinheit getauscht**\n\n还有一条同样非常接近的 Oberkochen / Contura 6206 / Integration 记录：\n\n- **时间**：2024-09-30\n- **异常描述**：**Wartungseinheit undicht**\n- **组件名（档案标签）**：**Base**\n- **失效原因**：**Wartungseinheit / Filtereinheit ist verbogen**\n- **处理步骤**：**Einbau neuer Wartungseinheit**\n\n所以基于历史，结论很明确：\n\n### 最可能部件\n- **Base**（按档案 component_name 原样返回）\n- 现场优先落点：**Wartungseinheit / Filtereinheit**\n\n### 最可能失效原因\n1. **Wartungseinheit 本体损坏**\n2. 或 **Filtereinheit 变形 / 弯曲（verbogen）**\n3. 次一级才考虑来料问题，因为 Final assembly 也有一条同类记录写的是 **Zulieferer Probleme**\n\n### 历史处理方式\n- **直接更换 Wartungseinheit**\n- 若确认滤芯/滤杯那一体已变形，同样是 **整套 Wartungseinheit / Filtereinheit 更换**\n\n### 给你的现场建议\n如果现象就是你说的这种：**“从 filter 往外一直漏气”**，历史上**不要先把方向放到别的气缸、RDS、Z 气路分配器**，  \n**第一优先就是 Wartungseinheit 总成本体故障或变形，直接换件验证。**\n\n如果你愿意，我可以继续帮你把这个症状整理成一条**适合开 NCR / 返修记录的中德英简短描述**。",
+          "second_turn_text": null,
+          "final_turn_text": "按历史案例，**优先怀疑的部件标签是：Base**。  \n但更具体地看，**真正对应的故障点是在 Wartungseinheit / Filtereinheit 本体**，不是别的气路支路。\n\n最贴近你描述的是这条同厂同机型同工位历史：\n\n- **工厂**：Oberkochen (1014)\n- **机型**：CONTURA 6206 configurable\n- **工位**：Integration\n- **时间**：2020-03-23\n- **异常描述**：**“Wartungseinheit lässt Luft aus Filter raus strömen”**\n- **组件名（档案标签）**：**Base**\n- **失效原因**：**Wartungseinheit kaputt**\n- **处理步骤**：**Wartungseinheit getauscht**\n\n还有一条同样非常接近的 Oberkochen / Contura 6206 / Integration 记录：\n\n- **时间**：2024-09-30\n- **异常描述**：**Wartungseinheit undicht**\n- **组件名（档案标签）**：**Base**\n- **失效原因**：**Wartungseinheit / Filtereinheit ist verbogen**\n- **处理步骤**：**Einbau neuer Wartungseinheit**\n\n所以基于历史，结论很明确：\n\n### 最可能部件\n- **Base**（按档案 component_name 原样返回）\n- 现场优先落点：**Wartungseinheit / Filtereinheit**\n\n### 最可能失效原因\n1. **Wartungseinheit 本体损坏**\n2. 或 **Filtereinheit 变形 / 弯曲（verbogen）**\n3. 次一级才考虑来料问题，因为 Final assembly 也有一条同类记录写的是 **Zulieferer Probleme**\n\n### 历史处理方式\n- **直接更换 Wartungseinheit**\n- 若确认滤芯/滤杯那一体已变形，同样是 **整套 Wartungseinheit / Filtereinheit 更换**\n\n### 给你的现场建议\n如果现象就是你说的这种：**“从 filter 往外一直漏气”**，历史上**不要先把方向放到别的气缸、RDS、Z 气路分配器**，  \n**第一优先就是 Wartungseinheit 总成本体故障或变形，直接换件验证。**\n\n如果你愿意，我可以继续帮你把这个症状整理成一条**适合开 NCR / 返修记录的中德英简短描述**。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_015",
+          "source_case_id": "case_000061",
+          "scenario_type": "option_mismatch_cable_length",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "按历史库里这条**同工厂、同机型、同工位、几乎同措辞**的案例，通常会归到：\n\n- **component_name：C99 controller**\n\n最匹配的历史案例是：\n\n- **factory**：Oberkochen (1014)\n- **machine_model**：CONTURA 6206 configurable\n- **process_or_station**：Acceptance\n- **event_start_at**：2020-03-22T23:00:00Z\n- **anomaly_description**：**Kabel aus der Option ViScan ist zu kurz**  \n  （ViScan 选件出来的线太短）\n\n### 历史案例里的失败原因\n档案原文是：\n\n- **failure_reason**：**Für die C99m gibt es noch keine passende Option und in der Option von der C99l ist ein Kabel zu kurz.**\n\n对应中文可理解为：\n\n- **C99m 这边当时还没有匹配的 option**\n- **而拿了 C99l 的 option 后，其中有一根线又偏短**\n- 也就是你现场说的 **“C99m / C99l option 混了或选错分支”**，和历史记录高度一致\n\n### 历史上通常怎么收尾\n这条最贴近案例给的处理是：\n\n- **handling_steps**：**Organisieren eines Kabels über die Entwicklung**\n- 中文就是：**通过研发协调一根合适长度/匹配版本的线缆来补齐，之后完成安装收尾**\n\n也就是说，按历史库的归类和收尾方式，这类问题**不是归到一般线束误装分支优先**，而是**归到 C99 controller / ViScan option 配置不匹配**这个分支；现场收尾通常是：\n\n1. 先确认当前机器是 **C99m** 还是 **C99l** 配置；\n2. 核对 **ViScan option** 是否用了错误版本；\n3. 若当前 option 内线缆长度不匹配，**向研发/设计侧申请正确线缆或正确 option 版本**；\n4. 拿到正确线缆后完成接线、复装、再做 Acceptance 验证。\n\n### 为什么我更倾向这个归类\n因为同库里虽然也有一些“线束太短 / wrong cable harness”的案例，但那些大多是：\n\n- 不同工厂\n- 不同工位（Final assembly / Integration）\n- 归类到 **Cable harness xy**\n\n而你这个问题在 **Oberkochen + CONTURA 6206 + Acceptance + ViScan + C99m/C99l option 混用** 这个组合上，历史库已经有一条**近乎精确命中**的案例，所以应优先沿用它的归类：\n\n- **component_name：C99 controller**\n- **failure_reason：C99m 没有对应 option，误用了 C99l option，导致其中线缆过短**\n- **handling_steps：通过研发组织/申请正确线缆并完成改装**\n\n如果你愿意，我可以进一步帮你把这条历史案例整理成一段适合填 **8D/异常单** 的中文标准表述。",
+          "second_turn_text": null,
+          "final_turn_text": "按历史库里这条**同工厂、同机型、同工位、几乎同措辞**的案例，通常会归到：\n\n- **component_name：C99 controller**\n\n最匹配的历史案例是：\n\n- **factory**：Oberkochen (1014)\n- **machine_model**：CONTURA 6206 configurable\n- **process_or_station**：Acceptance\n- **event_start_at**：2020-03-22T23:00:00Z\n- **anomaly_description**：**Kabel aus der Option ViScan ist zu kurz**  \n  （ViScan 选件出来的线太短）\n\n### 历史案例里的失败原因\n档案原文是：\n\n- **failure_reason**：**Für die C99m gibt es noch keine passende Option und in der Option von der C99l ist ein Kabel zu kurz.**\n\n对应中文可理解为：\n\n- **C99m 这边当时还没有匹配的 option**\n- **而拿了 C99l 的 option 后，其中有一根线又偏短**\n- 也就是你现场说的 **“C99m / C99l option 混了或选错分支”**，和历史记录高度一致\n\n### 历史上通常怎么收尾\n这条最贴近案例给的处理是：\n\n- **handling_steps**：**Organisieren eines Kabels über die Entwicklung**\n- 中文就是：**通过研发协调一根合适长度/匹配版本的线缆来补齐，之后完成安装收尾**\n\n也就是说，按历史库的归类和收尾方式，这类问题**不是归到一般线束误装分支优先**，而是**归到 C99 controller / ViScan option 配置不匹配**这个分支；现场收尾通常是：\n\n1. 先确认当前机器是 **C99m** 还是 **C99l** 配置；\n2. 核对 **ViScan option** 是否用了错误版本；\n3. 若当前 option 内线缆长度不匹配，**向研发/设计侧申请正确线缆或正确 option 版本**；\n4. 拿到正确线缆后完成接线、复装、再做 Acceptance 验证。\n\n### 为什么我更倾向这个归类\n因为同库里虽然也有一些“线束太短 / wrong cable harness”的案例，但那些大多是：\n\n- 不同工厂\n- 不同工位（Final assembly / Integration）\n- 归类到 **Cable harness xy**\n\n而你这个问题在 **Oberkochen + CONTURA 6206 + Acceptance + ViScan + C99m/C99l option 混用** 这个组合上，历史库已经有一条**近乎精确命中**的案例，所以应优先沿用它的归类：\n\n- **component_name：C99 controller**\n- **failure_reason：C99m 没有对应 option，误用了 C99l option，导致其中线缆过短**\n- **handling_steps：通过研发组织/申请正确线缆并完成改装**\n\n如果你愿意，我可以进一步帮你把这条历史案例整理成一段适合填 **8D/异常单** 的中文标准表述。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0.45454545454545453,
+              "passed": false
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_016",
+          "source_case_id": "case_000063",
+          "scenario_type": "english_typo_noise",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "从历史看，**最可能的部件是：Z-shaft**。\n\n- **匹配到的最强历史案例**\n  - **工厂**：Minneapolis (7003)\n  - **机型**：CONTURA X=7,10 configurable\n  - **工位**：Lasering\n  - **时间**：2020-03-23T23:00:00Z\n  - **异常描述**：**“hysterisis out of tolerence on ZrZ”**\n    - 连你提到的两个 typo 都一致，这个基本就是近乎精确命中。\n\n**历史记录给出的结论：**\n- **component_name**：**Z-shaft**\n- **failure_reason**：**rollers out of tolerance**\n- **handling_steps**：**1.19 to .32**\n\n补充看相邻的 Minneapolis/Lasering/CONTURA 历史案例，也都在支持同一分支：\n- Z-Shaft → **adjust Z rollers**\n- Z-Axis → **misaligned Z rollers / realign Z rollers**\n\n所以这条最像的历史含义是：\n\n### 最可能 part\n**Z-shaft**\n\n### 最可能 cause\n**Z rollers 超差/不在公差内**  \n历史原文是：**rollers out of tolerance**\n\n### 最可能 fix\n按命中案例先执行历史处理：**“1.19 to .32”**  \n同时结合同厂同工序的邻近案例，可理解为**检查并调整/重新对正 Z rollers**，因为同类 ZrZ hysteresis 问题在 Minneapolis Lasering 里多次落到这个动作上。\n\n如果你愿意，我下一条可以把这个结果整理成一版更适合现场执行的英文工单写法。",
+          "second_turn_text": null,
+          "final_turn_text": "从历史看，**最可能的部件是：Z-shaft**。\n\n- **匹配到的最强历史案例**\n  - **工厂**：Minneapolis (7003)\n  - **机型**：CONTURA X=7,10 configurable\n  - **工位**：Lasering\n  - **时间**：2020-03-23T23:00:00Z\n  - **异常描述**：**“hysterisis out of tolerence on ZrZ”**\n    - 连你提到的两个 typo 都一致，这个基本就是近乎精确命中。\n\n**历史记录给出的结论：**\n- **component_name**：**Z-shaft**\n- **failure_reason**：**rollers out of tolerance**\n- **handling_steps**：**1.19 to .32**\n\n补充看相邻的 Minneapolis/Lasering/CONTURA 历史案例，也都在支持同一分支：\n- Z-Shaft → **adjust Z rollers**\n- Z-Axis → **misaligned Z rollers / realign Z rollers**\n\n所以这条最像的历史含义是：\n\n### 最可能 part\n**Z-shaft**\n\n### 最可能 cause\n**Z rollers 超差/不在公差内**  \n历史原文是：**rollers out of tolerance**\n\n### 最可能 fix\n按命中案例先执行历史处理：**“1.19 to .32”**  \n同时结合同厂同工序的邻近案例，可理解为**检查并调整/重新对正 Z rollers**，因为同类 ZrZ hysteresis 问题在 Minneapolis Lasering 里多次落到这个动作上。\n\n如果你愿意，我下一条可以把这个结果整理成一版更适合现场执行的英文工单写法。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_017",
+          "source_case_id": "case_000065",
+          "scenario_type": "abbreviated_quality_jargon",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "按历史库里**最接近、而且是几乎同句式**的 Oberkochen / CONTURA 6206 / Acceptance 案例，这句：\n\n**“RING YZ a.T. MPE THP a.T.”**\n\n历史上更常被**最后判成：`Repeat measurement necessary`**。\n\n- **匹配案例**\n  - 工厂：**Oberkochen (1014)**\n  - 机型：**CONTURA 6206 configurable**\n  - 工位：**Acceptance**\n  - 时间：**2020-03-24**\n  - 异常描述：**RING YZ a.T. MPE THP a.T.**\n  - **component_name：Repeat measurement necessary**\n  - failure_reason：**Schmutz, MPE THP. Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt.**\n  - handling_steps：**Reinigen, WDH. Messung, Taststift auf Dyn. Taststiftbest. umgestellt.**\n\n简化成中文就是：\n\n- **最可能部件/归类**：不是先落到某个硬件坏件，而是先判成 **“需要复测”**\n- **历史原因**：多是**测量介质/测具脏污**，再叠加**测量流程没有切到动态测针配置**\n- **历史处理**：**清洁测量介质/测具 → 重新测量 → 将测针配置切换到动态 Taststiftbest.**\n\n不过这条症状在库里也有两个相邻分支，你现场可以这样理解：\n\n1. **最强短语精确匹配**  \n   就是上面这条，原文完全贴近，所以优先级最高。  \n   => **最后判“Repeat measurement necessary”**\n\n2. **次强近邻案例**  \n   同厂、同机型、同 Acceptance，也有把  \n   **“MPE-P / MPE-THP / RING YZ a.T.”**  \n   直接归为 **`MPE THP out of specification`**，原因写的是：\n   **温漂 / 重测 / 清洁测具**\n   这说明它本质上仍偏向**测量结果异常链**，不是先指向机械驱动。\n\n3. **再往下才是机械分支**  \n   只有当症状更像单独的 **“Ring YZ außer Toleranz”**，历史上才有判到  \n   **`Z-Drive`**，原因是 **Z 轴皮带有跳动/损伤**。  \n   但你的原句里同时带了 **MPE THP a.T.**，所以它更像**测量/复测分支**，不优先判 Z-Drive。\n\n**结论一句话：**  \n这句缩写口吻在 Oberkochen 的历史上，**首选最终判定是 `Repeat measurement necessary`**；背后原因通常是**脏污 + 测量流程/动态测针设置不对**，处理就是**清洁、改正确测量配置、然后复测**。\n\n如果你要，我可以继续把这里面的缩写  \n**a.T. / MPE THP / RING YZ / Dyn. Taststiftbest.**  \n逐个翻成现场更容易沟通的中文。",
+          "second_turn_text": null,
+          "final_turn_text": "按历史库里**最接近、而且是几乎同句式**的 Oberkochen / CONTURA 6206 / Acceptance 案例，这句：\n\n**“RING YZ a.T. MPE THP a.T.”**\n\n历史上更常被**最后判成：`Repeat measurement necessary`**。\n\n- **匹配案例**\n  - 工厂：**Oberkochen (1014)**\n  - 机型：**CONTURA 6206 configurable**\n  - 工位：**Acceptance**\n  - 时间：**2020-03-24**\n  - 异常描述：**RING YZ a.T. MPE THP a.T.**\n  - **component_name：Repeat measurement necessary**\n  - failure_reason：**Schmutz, MPE THP. Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt.**\n  - handling_steps：**Reinigen, WDH. Messung, Taststift auf Dyn. Taststiftbest. umgestellt.**\n\n简化成中文就是：\n\n- **最可能部件/归类**：不是先落到某个硬件坏件，而是先判成 **“需要复测”**\n- **历史原因**：多是**测量介质/测具脏污**，再叠加**测量流程没有切到动态测针配置**\n- **历史处理**：**清洁测量介质/测具 → 重新测量 → 将测针配置切换到动态 Taststiftbest.**\n\n不过这条症状在库里也有两个相邻分支，你现场可以这样理解：\n\n1. **最强短语精确匹配**  \n   就是上面这条，原文完全贴近，所以优先级最高。  \n   => **最后判“Repeat measurement necessary”**\n\n2. **次强近邻案例**  \n   同厂、同机型、同 Acceptance，也有把  \n   **“MPE-P / MPE-THP / RING YZ a.T.”**  \n   直接归为 **`MPE THP out of specification`**，原因写的是：\n   **温漂 / 重测 / 清洁测具**\n   这说明它本质上仍偏向**测量结果异常链**，不是先指向机械驱动。\n\n3. **再往下才是机械分支**  \n   只有当症状更像单独的 **“Ring YZ außer Toleranz”**，历史上才有判到  \n   **`Z-Drive`**，原因是 **Z 轴皮带有跳动/损伤**。  \n   但你的原句里同时带了 **MPE THP a.T.**，所以它更像**测量/复测分支**，不优先判 Z-Drive。\n\n**结论一句话：**  \n这句缩写口吻在 Oberkochen 的历史上，**首选最终判定是 `Repeat measurement necessary`**；背后原因通常是**脏污 + 测量流程/动态测针设置不对**，处理就是**清洁、改正确测量配置、然后复测**。\n\n如果你要，我可以继续把这里面的缩写  \n**a.T. / MPE THP / RING YZ / Dyn. Taststiftbest.**  \n逐个翻成现场更容易沟通的中文。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_018",
+          "source_case_id": "case_000066",
+          "scenario_type": "misleading_machine_defect_assumption",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "按历史最像的，不该先回“机器坏了”，而是先回：\n\n**最像的历史结论**\n- **组件/分类**：**MPE-RONt_YZ out of specification**\n- **最可能原因**：这条最接近的 Minneapolis 历史案里，实际并**不是先指向机器本体故障**，而是 **YZ ringscan 的 actual-to-nominal size 异常**，处理后发现 **换一个 ring 就通过了**\n- **处理步骤**：**used a different ring and it passed**\n\n**为什么这么回**\n- 你的描述和档案里这条几乎正对上：\n  - **工厂**：Minneapolis (7003)\n  - **机型**：**CONTURA X=7,10 configurable**\n  - **工位**：**Acceptance**\n  - **异常**：**YZ ringscan failed actual to nominal size**\n  - **时间**：2020-03-24\n- 这是当前返回结果里**同工厂 + 同机型 + 同工位 + 症状最接近**的一条，优先级明显高于那些更泛的 Y-drive / Z-axis 分支。\n\n**建议你现场可以直接这样回**\n> 按 Minneapolis 的历史案例，这个症状最像的不是先判机器坏，而是归到 **MPE-RONt_YZ out of specification**。同款 **CONTURA X=7,10** 在 **Acceptance** 做 **YZ ringscan** 出现 **actual to nominal size fail** 时，历史处理是 **换一只 ring 后复测，结果通过**。所以第一反应应先排查/更换 ring 或重新 qualification，而不是直接判整机故障。\n\n**补充证据**\n- 同厂还有几条近邻案例也支持先看量具/测量条件：\n  - 2022：**tried different rings**\n  - 2024：**requalify and use other ring**\n  - 2024：**different stylus**\n- 说明这类 **YZ size fail** 在 Minneapolis Acceptance 历史上，**先从 ring / stylus / requalification 入手**，比“机器坏了”更符合档案。\n\n**但要注意**\n- 只有当现场同时还出现：\n  - **all four spacial's failing**\n  - 或 **XZ、YZ 都边缘/一起异常**\n  \n  才有另一条同机型历史分支指向：\n  - **组件**：Z-shaft\n  - **原因**：**Z rollers out of alignment**\n  - **处理**：重调 Z rollers、校正 squareness 后复测\n\n就你现在给的这句症状，**首选历史答案仍然是 ring/测量侧，不是先判机器坏**。",
+          "second_turn_text": null,
+          "final_turn_text": "按历史最像的，不该先回“机器坏了”，而是先回：\n\n**最像的历史结论**\n- **组件/分类**：**MPE-RONt_YZ out of specification**\n- **最可能原因**：这条最接近的 Minneapolis 历史案里，实际并**不是先指向机器本体故障**，而是 **YZ ringscan 的 actual-to-nominal size 异常**，处理后发现 **换一个 ring 就通过了**\n- **处理步骤**：**used a different ring and it passed**\n\n**为什么这么回**\n- 你的描述和档案里这条几乎正对上：\n  - **工厂**：Minneapolis (7003)\n  - **机型**：**CONTURA X=7,10 configurable**\n  - **工位**：**Acceptance**\n  - **异常**：**YZ ringscan failed actual to nominal size**\n  - **时间**：2020-03-24\n- 这是当前返回结果里**同工厂 + 同机型 + 同工位 + 症状最接近**的一条，优先级明显高于那些更泛的 Y-drive / Z-axis 分支。\n\n**建议你现场可以直接这样回**\n> 按 Minneapolis 的历史案例，这个症状最像的不是先判机器坏，而是归到 **MPE-RONt_YZ out of specification**。同款 **CONTURA X=7,10** 在 **Acceptance** 做 **YZ ringscan** 出现 **actual to nominal size fail** 时，历史处理是 **换一只 ring 后复测，结果通过**。所以第一反应应先排查/更换 ring 或重新 qualification，而不是直接判整机故障。\n\n**补充证据**\n- 同厂还有几条近邻案例也支持先看量具/测量条件：\n  - 2022：**tried different rings**\n  - 2024：**requalify and use other ring**\n  - 2024：**different stylus**\n- 说明这类 **YZ size fail** 在 Minneapolis Acceptance 历史上，**先从 ring / stylus / requalification 入手**，比“机器坏了”更符合档案。\n\n**但要注意**\n- 只有当现场同时还出现：\n  - **all four spacial's failing**\n  - 或 **XZ、YZ 都边缘/一起异常**\n  \n  才有另一条同机型历史分支指向：\n  - **组件**：Z-shaft\n  - **原因**：**Z rollers out of alignment**\n  - **处理**：重调 Z rollers、校正 squareness 后复测\n\n就你现在给的这句症状，**首选历史答案仍然是 ring/测量侧，不是先判机器坏**。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_020",
+          "source_case_id": "case_000072",
+          "scenario_type": "complex_multifactor_engineer_prompt",
+          "expected_first_step": "direct_answer",
+          "first_turn_text": "按历史最像的整套判断，**首选匹配就是 Minneapolis(7003) / CONTURA X=9,12 configurable / Acceptance / 2020-03-24** 这条：\n\n- **异常描述几乎同句命中**：  \n  *“Laser acceptance of RL spatial on the borderline of failing, verification run with actual KOBA gauge fails both RL and RR spatials, suspicious spike on ZTY and ZTX lines in lasercal”*\n- 和你现在说的：  \n  **RL spatial 在 fail 边缘 → actual KOBA gauge 后 RL、RR 都挂 → lasercal 里 ZTY/ZTX spike**  \n  基本是同一个历史模式。\n\n### 历史最像的组件归类\n- **component_name：MPE-E out of specification**\n\n注意：档案里的组件标签不是写成某个单一机械件，而是把这类问题归到 **MPE-E out of specification**。但它的失败原因和处理动作明确指向 **Z 轴/Z cylinder 这一支**。\n\n### 历史最像的失败原因\n档案原文是：\n\n- **Combination of tilted Z cylinder, quality of CAA mapping, RDS qualification, drastic difference in linear results between laser acceptance and KOBA acceptance, and perhaps underlying mechanical issues with Z axis.**\n\n翻成现场话就是，不是单点问题，而是一整串耦合：\n\n1. **Z cylinder 有倾斜/坐姿不正**，这是最核心的机械指向；\n2. **CAA mapping 质量可疑**，说明 lasering 数据本身不够干净；\n3. **RDS qualification 姿态/取向因素参与放大了结果**；\n4. **laser acceptance 和 KOBA acceptance 线性结果差异很大**，不是单纯“边界值波动”，而是校准数据和实体几何响应不一致；\n5. 背后还可能有 **Z 轴机械基础问题**，所以 ZTY/ZTX spike 不能只当软件数据噪声看。\n\n### 历史最像的处理动作\n档案处理步骤原文：\n\n- **reseat Z cylinder**\n- **relaser**\n- **qualify at different orientation of reference sphere**\n- **large linear correction**\n\n对应成你现在该怎么干，按历史顺序就是：\n\n1. **先处理 Z cylinder / Z 轴机械坐姿**\n   - 重点不是先狂调单个 spatial 补偿；\n   - 而是先把 **Z cylinder reseat**，确认 Z 轴装配/落位/姿态是否正。\n2. **然后重新做 lasering**\n   - 因为这类案子里 ZTY/ZTX spike 往往意味着旧 laser 数据不可信，直接带着旧数据做 acceptance 只会反复挂。\n3. **RDS / reference sphere 换取向重做 qualification**\n   - 历史案明确不是只 relaser 就结束，还做了 **different orientation of reference sphere**；\n   - 说明当时怀疑 qualification 姿态把问题放大或暴露出来。\n4. **必要时做较大的 linear correction**\n   - 档案里写的是 **large linear correction**；\n   - 也就是说，机械姿态纠正 + relaser 之后，还接受了一个不算小的线性修正动作，而不是靠 rerun 硬过。\n\n---\n\n## 我对这单的整套判断\n如果严格按历史相似度和工厂/机型/工位一致性来排：\n\n### 最可能主分支\n**Z 轴机械姿态异常（尤其 Z cylinder 倾斜/未坐正） + lasering/CAA 数据质量问题 + qualification 取向因素共同导致的 MPE-E out of specification。**\n\n不是更像下面这些次级分支：\n\n- 不是单纯温漂 rerun；\n- 不是单纯“再测一次就好”；\n- 也不是先把它归成纯 squareness 参数问题就完事。\n\n### 为什么这么判\n因为返回结果里还有几个邻近案，但都弱于这条：\n\n1. **同厂同工位同家族** 的一般性案例：  \n   RL spatial -> relaser  \n   这个太泛，只说明“可能是 lasering”，不如你的症状完整。\n2. **同厂 Acceptance 的 squareness/UAW 案**：  \n   FR/RL/RR spatials failing -> square -> corrected with UAW tool  \n   这个说明 squareness 可能参与，但你的 **ZTY/ZTX spike + KOBA 前后反差** 更像上面那条 Z-cylinder/CAA/RDS 复合案。\n3. **同厂 Acceptance 的 Z-shaft 案**：  \n   YZ out of squaring、YZ ring oblong、需额外大 squareness correction  \n   这条支持“Z 轴机械基础问题”这个大方向，但它的异常措辞不如首条贴脸。\n4. **同厂 Acceptance 的错误 Z laser data 案**：  \n   missing ZTX/ZTY/ZRX/ZRY, simulated runs -> Re-laser Z axis  \n   这条支持“Z laser 数据可能有问题”，但它没解释你这种 **RL 边缘 + KOBA 后 RL/RR 同挂** 的完整组合。\n\n所以不做混拼的话，**最佳主案仍然是 2020-03-24 这条 MPE-E out of specification**。\n\n---\n\n## 建议你现场就按这个历史顺序推进\n### 第一优先\n- **检查并重坐 Z cylinder**\n- 看 Z 轴是否有倾斜、未正位、装配应力、支撑/导向关系异常\n\n### 第二优先\n- **整套 relaser**\n- 尤其盯住 **ZTX / ZTY** 数据质量\n- 不要默认现有 lasercal 可继续用\n\n### 第三优先\n- **reference sphere 换方向重新 qualification**\n- 用不同 orientation 验证是否是 qualification 姿态放大了误差\n\n### 第四优先\n- **再做 linear correction / squareness correction**\n- 如果机械和 relaser 清干净后仍有 residual，再上 correction\n- 历史上这里不是“小修小补”，而是 **large linear correction**\n\n---\n\n## 给你一个简短结论版\n**最像的历史归档：**\n- **component_name：MPE-E out of specification**\n\n**最像的原因：**\n- **Z cylinder 倾斜/未坐正** 为主，\n- 叠加 **CAA mapping / lasering 数据质量问题**，\n- 再叠加 **RDS qualification 取向因素**，\n- 本质上是 **Z 轴机械 + 激光校准数据 + qualification** 的复合问题。\n\n**最像的处理动作：**\n1. **reseat Z cylinder**\n2. **relaser**\n3. **qualify at different orientation of reference sphere**\n4. **large linear correction**\n\n如果你要，我下一条可以直接按这个历史案给你整理成一版 **“现场执行顺序 + 每步通过/不通过判据”**。",
+          "second_turn_text": null,
+          "final_turn_text": "按历史最像的整套判断，**首选匹配就是 Minneapolis(7003) / CONTURA X=9,12 configurable / Acceptance / 2020-03-24** 这条：\n\n- **异常描述几乎同句命中**：  \n  *“Laser acceptance of RL spatial on the borderline of failing, verification run with actual KOBA gauge fails both RL and RR spatials, suspicious spike on ZTY and ZTX lines in lasercal”*\n- 和你现在说的：  \n  **RL spatial 在 fail 边缘 → actual KOBA gauge 后 RL、RR 都挂 → lasercal 里 ZTY/ZTX spike**  \n  基本是同一个历史模式。\n\n### 历史最像的组件归类\n- **component_name：MPE-E out of specification**\n\n注意：档案里的组件标签不是写成某个单一机械件，而是把这类问题归到 **MPE-E out of specification**。但它的失败原因和处理动作明确指向 **Z 轴/Z cylinder 这一支**。\n\n### 历史最像的失败原因\n档案原文是：\n\n- **Combination of tilted Z cylinder, quality of CAA mapping, RDS qualification, drastic difference in linear results between laser acceptance and KOBA acceptance, and perhaps underlying mechanical issues with Z axis.**\n\n翻成现场话就是，不是单点问题，而是一整串耦合：\n\n1. **Z cylinder 有倾斜/坐姿不正**，这是最核心的机械指向；\n2. **CAA mapping 质量可疑**，说明 lasering 数据本身不够干净；\n3. **RDS qualification 姿态/取向因素参与放大了结果**；\n4. **laser acceptance 和 KOBA acceptance 线性结果差异很大**，不是单纯“边界值波动”，而是校准数据和实体几何响应不一致；\n5. 背后还可能有 **Z 轴机械基础问题**，所以 ZTY/ZTX spike 不能只当软件数据噪声看。\n\n### 历史最像的处理动作\n档案处理步骤原文：\n\n- **reseat Z cylinder**\n- **relaser**\n- **qualify at different orientation of reference sphere**\n- **large linear correction**\n\n对应成你现在该怎么干，按历史顺序就是：\n\n1. **先处理 Z cylinder / Z 轴机械坐姿**\n   - 重点不是先狂调单个 spatial 补偿；\n   - 而是先把 **Z cylinder reseat**，确认 Z 轴装配/落位/姿态是否正。\n2. **然后重新做 lasering**\n   - 因为这类案子里 ZTY/ZTX spike 往往意味着旧 laser 数据不可信，直接带着旧数据做 acceptance 只会反复挂。\n3. **RDS / reference sphere 换取向重做 qualification**\n   - 历史案明确不是只 relaser 就结束，还做了 **different orientation of reference sphere**；\n   - 说明当时怀疑 qualification 姿态把问题放大或暴露出来。\n4. **必要时做较大的 linear correction**\n   - 档案里写的是 **large linear correction**；\n   - 也就是说，机械姿态纠正 + relaser 之后，还接受了一个不算小的线性修正动作，而不是靠 rerun 硬过。\n\n---\n\n## 我对这单的整套判断\n如果严格按历史相似度和工厂/机型/工位一致性来排：\n\n### 最可能主分支\n**Z 轴机械姿态异常（尤其 Z cylinder 倾斜/未坐正） + lasering/CAA 数据质量问题 + qualification 取向因素共同导致的 MPE-E out of specification。**\n\n不是更像下面这些次级分支：\n\n- 不是单纯温漂 rerun；\n- 不是单纯“再测一次就好”；\n- 也不是先把它归成纯 squareness 参数问题就完事。\n\n### 为什么这么判\n因为返回结果里还有几个邻近案，但都弱于这条：\n\n1. **同厂同工位同家族** 的一般性案例：  \n   RL spatial -> relaser  \n   这个太泛，只说明“可能是 lasering”，不如你的症状完整。\n2. **同厂 Acceptance 的 squareness/UAW 案**：  \n   FR/RL/RR spatials failing -> square -> corrected with UAW tool  \n   这个说明 squareness 可能参与，但你的 **ZTY/ZTX spike + KOBA 前后反差** 更像上面那条 Z-cylinder/CAA/RDS 复合案。\n3. **同厂 Acceptance 的 Z-shaft 案**：  \n   YZ out of squaring、YZ ring oblong、需额外大 squareness correction  \n   这条支持“Z 轴机械基础问题”这个大方向，但它的异常措辞不如首条贴脸。\n4. **同厂 Acceptance 的错误 Z laser data 案**：  \n   missing ZTX/ZTY/ZRX/ZRY, simulated runs -> Re-laser Z axis  \n   这条支持“Z laser 数据可能有问题”，但它没解释你这种 **RL 边缘 + KOBA 后 RL/RR 同挂** 的完整组合。\n\n所以不做混拼的话，**最佳主案仍然是 2020-03-24 这条 MPE-E out of specification**。\n\n---\n\n## 建议你现场就按这个历史顺序推进\n### 第一优先\n- **检查并重坐 Z cylinder**\n- 看 Z 轴是否有倾斜、未正位、装配应力、支撑/导向关系异常\n\n### 第二优先\n- **整套 relaser**\n- 尤其盯住 **ZTX / ZTY** 数据质量\n- 不要默认现有 lasercal 可继续用\n\n### 第三优先\n- **reference sphere 换方向重新 qualification**\n- 用不同 orientation 验证是否是 qualification 姿态放大了误差\n\n### 第四优先\n- **再做 linear correction / squareness correction**\n- 如果机械和 relaser 清干净后仍有 residual，再上 correction\n- 历史上这里不是“小修小补”，而是 **large linear correction**\n\n---\n\n## 给你一个简短结论版\n**最像的历史归档：**\n- **component_name：MPE-E out of specification**\n\n**最像的原因：**\n- **Z cylinder 倾斜/未坐正** 为主，\n- 叠加 **CAA mapping / lasering 数据质量问题**，\n- 再叠加 **RDS qualification 取向因素**，\n- 本质上是 **Z 轴机械 + 激光校准数据 + qualification** 的复合问题。\n\n**最像的处理动作：**\n1. **reseat Z cylinder**\n2. **relaser**\n3. **qualify at different orientation of reference sphere**\n4. **large linear correction**\n\n如果你要，我下一条可以直接按这个历史案给你整理成一版 **“现场执行顺序 + 每步通过/不通过判据”**。",
+          "first_step_check": {
+            "passed": true,
+            "clarification_expected": false,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 15,
+    "fully_passed": 12,
+    "first_step_passed": 14,
+    "final_answer_passed": 12,
+    "errors": 0
+  }
+}

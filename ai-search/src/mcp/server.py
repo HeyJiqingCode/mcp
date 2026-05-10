@@ -1234,7 +1234,7 @@ async def agentic_retrieval(
     knowledge_base_name : str
         Name of the knowledge base to query.
     query : str
-        User query or question (mandatory).
+        User query or question. Required unless intent_query is provided.
     intent_query : Optional[str]
         Optional explicit search intent to bypass model query planning.
     reasoning_effort : Optional[str]
@@ -1283,6 +1283,7 @@ async def agentic_retrieval(
     """
     # Convert empty strings and sentinel values to None
     intent_query = None if intent_query == "" else intent_query
+    query = None if query == "" else query
     reasoning_effort = None if reasoning_effort == "" else reasoning_effort
     max_runtime_seconds = None if max_runtime_seconds == 0 else max_runtime_seconds
     max_output_size = None if max_output_size == 0 else max_output_size
@@ -1298,9 +1299,13 @@ async def agentic_retrieval(
         "outputMode": output_mode,
     }
 
-    if not query:
-        raise ValueError("`query` must be provided for agentic retrieval requests.")
-    request_body["messages"] = _build_messages_from_query(query)
+    if query and intent_query:
+        raise ValueError("Azure Search agentic retrieval does not accept both query messages and intents in the same request. Provide either query or intent_query.")
+    if not query and not intent_query:
+        raise ValueError("Either `query` or `intent_query` must be provided for agentic retrieval requests.")
+
+    if query:
+        request_body["messages"] = _build_messages_from_query(query)
 
     if intent_query:
         request_body.setdefault("intents", []).append({"type": "semantic", "search": intent_query})

@@ -1,0 +1,234 @@
+{
+  "generated_at": "2026-05-10T06:23:46.677Z",
+  "manifest": {
+    "path": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-007-only\\golden_test_cases.golden_007.manifest.json",
+    "manifest_name": "golden-007-only-live-batch",
+    "manifest_version": 2,
+    "authoritative_dataset_id": "golden_007"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "golden_007"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "golden_007",
+      "dataset_name": "golden-007-only",
+      "evaluation_target": "response_contract_v2",
+      "evaluation_version": 2,
+      "file": "C:\\Users\\ZCLEELI1\\Documents\\mcp\\ai-foundry-agent\\samples\\foundry-agent-sdk-ts\\tmp\\golden-007-only\\golden_test_cases.clarify_then_answer.golden_007.json",
+      "split_type": "clarify_then_answer",
+      "role": "regression_split",
+      "total_cases": 1,
+      "selected_cases": 1,
+      "summary": {
+        "cases": 1,
+        "errors": 0,
+        "mode_passed": 1,
+        "first_turn_focus_passed": 1,
+        "contract_passed": 1,
+        "historical_facts_passed": 1,
+        "suspected_direction_passed": 1,
+        "recommended_action_passed": 1,
+        "escalation_passed": 1,
+        "forbidden_claim_passed": 1,
+        "fully_passed": 1,
+        "structured_final_answers": 1,
+        "legacy_final_answer_passed": 1
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_007",
+          "source_case_id": "case_000017",
+          "scenario_type": "colloquial_quality_judgment",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "请问是哪个工厂的 Contura 6206？",
+          "second_turn_text": "### 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Acceptance** 的历史案例里，和你描述最接近的一条明确写的是：**“Ring YZ ist ein Ei”**，对应结果项为 **MPE-RONt_YZ out of specification**，最后记录的原因是 **Riemen in Z**，处理为 **tauschen des Z-Riemens**（更换 Z 皮带），时间是 **2020-03-16**。\n- 同一工厂、同机型、同工位还有一条相关案例把部件直接记为 **Z-Drive**，异常为 **Ring YZ außer Toleranz**，原因写的是 **Antriebsriemen in der Z-Achse hat einen Schlag**（Z 轴驱动皮带有跳动/缺陷），处理为 **Tauschen des Riemens gegen einen neuen**，时间是 **2021-03-03**。\n- 还有一组同样在 **Acceptance** 的 **MPE-RONt_YZ out of specification** 案例，并不都落在机械件上：\n  - 一条记录原因是 **CAA Fehler**，处理为 **Neue CAA-Traceraufnahme, danach den YZ-Ring im Calypso neu gemessen**；记录里写到 **YZ-Ring 原先 100% 吃满公差，做完新的 CAA tracer 后回到 73%**。\n  - 另一条排查记录写到：**Z-Antrieb Riementausch/versuch - ohne Erfolg. Neue CAA-Aufnahme gestartet**，说明当时曾先尝试 **Z-Antrieb** 皮带方向，但**未立即解决**，之后转去做新的 **CAA** 采集。\n  - 还有一条原因为 **Kleberest auf Granit / Y Führung / Luftlager streift**，处理为 **Kleberest entfernt**，说明也有历史案例是 **花岗岩/ Y 导轨附近残胶导致气浮轴承擦碰**，从而引发 **Ring YZ** 超差。\n- 另外还有较弱但相关的同厂记录：\n  - **Messmittel Reinigen / Wiederholmessung**（清洁量具后复测）\n  - **gereinigt, Rewi nachgestellt, Taststift neu kalibriert**（清洁、调整、重新校针）\n  这些说明历史上也存在先通过低风险复测与清洁动作缩小问题范围的做法。\n\n### 当前怀疑方向\n- **更像的第一怀疑方向**：**Z-Drive / Z-Antrieb / Riemen in Z**。  \n  因为你原话“**Ring YZ 像个鸡蛋**”和历史案例中的德文原句 **“Ring YZ ist ein Ei”** 高度贴合，而且在 **Oberkochen (1014) + Contura 6206 + Acceptance** 的同场景里，最直接落地到的原因就是 **Z 轴驱动皮带**。\n- **第二怀疑方向**：**CAA Fehler / CAA-Traceraufnahme**。  \n  历史上同样的 **MPE-RONt_YZ** 问题并不是都由机械件造成；至少有一条最终是通过 **Neue CAA-Traceraufnahme** 后恢复正常，且还有一条明确写到 **Z-Antrieb Riementausch/versuch - ohne Erfolg**，说明这条分支不能忽略。\n- **第三个次级分支**：**Y Führung / Luftlager / Kleberest auf Granit**。  \n  如果现场伴随轻微擦碰感、运行不顺、或导轨区域有污染物，那这也是历史上在同厂同机型同工位真实出现过的原因锚点。\n\n### 建议先做的检查或操作\n- 先做**低风险复测确认**：\n  - 按同样程序再跑一次 **Ring YZ**。\n  - 如现场允许，记录这次结果是否稳定重复为“像鸡蛋/椭圆”。\n- 做**基础清洁检查**：\n  - 清洁 **量具/环规/测针** 接触相关部位。\n  - 观察 **花岗岩台面、Y 导轨可见区域** 是否有明显残胶、异物、污染。\n- 做**外观与运行观察**，不要拆机：\n  - 注意 Z 轴运行时是否有异常抖动、周期性感觉、异响。\n  - 注意 Y 方向附近是否有擦碰迹象，尤其是类似历史记录里的 **Luftlager streift** 现象。\n- 如果现场标准流程允许，可做：\n  - **重新校针/复测**\n  - 更换或确认量具状态后再做一次复测  \n  这一步是为了先排除历史上出现过的 **Messmittel / 清洁 / 校准** 分支。\n- 不建议操作员自行做：\n  - **Z-Riemen 调整或更换**\n  - **Z-Drive / Z-Antrieb 拆检**\n  - **CAA 深层维护动作**  \n  这些超出低风险现场操作范围。\n\n### 何时升级给维修工程师\n- 如果 **Ring YZ** 连续复测都呈现同样“鸡蛋形/不圆”，应尽快升级。\n- 如果你观察到 **Z 轴周期性抖动、异响、明显带感异常**，优先升级给维修工程师，重点带上历史锚点：**Z-Drive / Z-Antrieb / Riemen in Z**。\n- 如果清洁、复测、重新校针后问题仍无改善，也应升级，因为历史上这类问题常需要在 **机械传动** 和 **CAA** 之间进一步判定。\n- 如果发现 **Y Führung、花岗岩、气浮区域** 有擦碰、残胶、污染或可疑痕迹，应停止继续猜测并升级。\n- 如果现场已经尝试过基础排查，但历史证据出现**多分支**（Z 皮带、CAA、导轨/气浮擦碰）且无法区分，就应由维修工程师介入，不建议操作员继续扩大操作范围。\n\n如果你愿意，我下一步可以把这些历史案例按“**最像你这个症状的 3 条**”再压缩成一张简短对照表。",
+          "final_turn_text": "### 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Acceptance** 的历史案例里，和你描述最接近的一条明确写的是：**“Ring YZ ist ein Ei”**，对应结果项为 **MPE-RONt_YZ out of specification**，最后记录的原因是 **Riemen in Z**，处理为 **tauschen des Z-Riemens**（更换 Z 皮带），时间是 **2020-03-16**。\n- 同一工厂、同机型、同工位还有一条相关案例把部件直接记为 **Z-Drive**，异常为 **Ring YZ außer Toleranz**，原因写的是 **Antriebsriemen in der Z-Achse hat einen Schlag**（Z 轴驱动皮带有跳动/缺陷），处理为 **Tauschen des Riemens gegen einen neuen**，时间是 **2021-03-03**。\n- 还有一组同样在 **Acceptance** 的 **MPE-RONt_YZ out of specification** 案例，并不都落在机械件上：\n  - 一条记录原因是 **CAA Fehler**，处理为 **Neue CAA-Traceraufnahme, danach den YZ-Ring im Calypso neu gemessen**；记录里写到 **YZ-Ring 原先 100% 吃满公差，做完新的 CAA tracer 后回到 73%**。\n  - 另一条排查记录写到：**Z-Antrieb Riementausch/versuch - ohne Erfolg. Neue CAA-Aufnahme gestartet**，说明当时曾先尝试 **Z-Antrieb** 皮带方向，但**未立即解决**，之后转去做新的 **CAA** 采集。\n  - 还有一条原因为 **Kleberest auf Granit / Y Führung / Luftlager streift**，处理为 **Kleberest entfernt**，说明也有历史案例是 **花岗岩/ Y 导轨附近残胶导致气浮轴承擦碰**，从而引发 **Ring YZ** 超差。\n- 另外还有较弱但相关的同厂记录：\n  - **Messmittel Reinigen / Wiederholmessung**（清洁量具后复测）\n  - **gereinigt, Rewi nachgestellt, Taststift neu kalibriert**（清洁、调整、重新校针）\n  这些说明历史上也存在先通过低风险复测与清洁动作缩小问题范围的做法。\n\n### 当前怀疑方向\n- **更像的第一怀疑方向**：**Z-Drive / Z-Antrieb / Riemen in Z**。  \n  因为你原话“**Ring YZ 像个鸡蛋**”和历史案例中的德文原句 **“Ring YZ ist ein Ei”** 高度贴合，而且在 **Oberkochen (1014) + Contura 6206 + Acceptance** 的同场景里，最直接落地到的原因就是 **Z 轴驱动皮带**。\n- **第二怀疑方向**：**CAA Fehler / CAA-Traceraufnahme**。  \n  历史上同样的 **MPE-RONt_YZ** 问题并不是都由机械件造成；至少有一条最终是通过 **Neue CAA-Traceraufnahme** 后恢复正常，且还有一条明确写到 **Z-Antrieb Riementausch/versuch - ohne Erfolg**，说明这条分支不能忽略。\n- **第三个次级分支**：**Y Führung / Luftlager / Kleberest auf Granit**。  \n  如果现场伴随轻微擦碰感、运行不顺、或导轨区域有污染物，那这也是历史上在同厂同机型同工位真实出现过的原因锚点。\n\n### 建议先做的检查或操作\n- 先做**低风险复测确认**：\n  - 按同样程序再跑一次 **Ring YZ**。\n  - 如现场允许，记录这次结果是否稳定重复为“像鸡蛋/椭圆”。\n- 做**基础清洁检查**：\n  - 清洁 **量具/环规/测针** 接触相关部位。\n  - 观察 **花岗岩台面、Y 导轨可见区域** 是否有明显残胶、异物、污染。\n- 做**外观与运行观察**，不要拆机：\n  - 注意 Z 轴运行时是否有异常抖动、周期性感觉、异响。\n  - 注意 Y 方向附近是否有擦碰迹象，尤其是类似历史记录里的 **Luftlager streift** 现象。\n- 如果现场标准流程允许，可做：\n  - **重新校针/复测**\n  - 更换或确认量具状态后再做一次复测  \n  这一步是为了先排除历史上出现过的 **Messmittel / 清洁 / 校准** 分支。\n- 不建议操作员自行做：\n  - **Z-Riemen 调整或更换**\n  - **Z-Drive / Z-Antrieb 拆检**\n  - **CAA 深层维护动作**  \n  这些超出低风险现场操作范围。\n\n### 何时升级给维修工程师\n- 如果 **Ring YZ** 连续复测都呈现同样“鸡蛋形/不圆”，应尽快升级。\n- 如果你观察到 **Z 轴周期性抖动、异响、明显带感异常**，优先升级给维修工程师，重点带上历史锚点：**Z-Drive / Z-Antrieb / Riemen in Z**。\n- 如果清洁、复测、重新校针后问题仍无改善，也应升级，因为历史上这类问题常需要在 **机械传动** 和 **CAA** 之间进一步判定。\n- 如果发现 **Y Führung、花岗岩、气浮区域** 有擦碰、残胶、污染或可疑痕迹，应停止继续猜测并升级。\n- 如果现场已经尝试过基础排查，但历史证据出现**多分支**（Z 皮带、CAA、导轨/气浮擦碰）且无法区分，就应由维修工程师介入，不建议操作员继续扩大操作范围。\n\n如果你愿意，我下一步可以把这些历史案例按“**最像你这个症状的 3 条**”再压缩成一张简短对照表。",
+          "first_turn_contract": {
+            "observed_mode": "clarification",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Acceptance** 的历史案例里，和你描述最接近的一条明确写的是：**“Ring YZ ist ein Ei”**，对应结果项为 **MPE-RONt_YZ out of specification**，最后记录的原因是 **Riemen in Z**，处理为 **tauschen des Z-Riemens**（更换 Z 皮带），时间是 **2020-03-16**。\n- 同一工厂、同机型、同工位还有一条相关案例把部件直接记为 **Z-Drive**，异常为 **Ring YZ außer Toleranz**，原因写的是 **Antriebsriemen in der Z-Achse hat einen Schlag**（Z 轴驱动皮带有跳动/缺陷），处理为 **Tauschen des Riemens gegen einen neuen**，时间是 **2021-03-03**。\n- 还有一组同样在 **Acceptance** 的 **MPE-RONt_YZ out of specification** 案例，并不都落在机械件上：\n  - 一条记录原因是 **CAA Fehler**，处理为 **Neue CAA-Traceraufnahme, danach den YZ-Ring im Calypso neu gemessen**；记录里写到 **YZ-Ring 原先 100% 吃满公差，做完新的 CAA tracer 后回到 73%**。\n  - 另一条排查记录写到：**Z-Antrieb Riementausch/versuch - ohne Erfolg. Neue CAA-Aufnahme gestartet**，说明当时曾先尝试 **Z-Antrieb** 皮带方向，但**未立即解决**，之后转去做新的 **CAA** 采集。\n  - 还有一条原因为 **Kleberest auf Granit / Y Führung / Luftlager streift**，处理为 **Kleberest entfernt**，说明也有历史案例是 **花岗岩/ Y 导轨附近残胶导致气浮轴承擦碰**，从而引发 **Ring YZ** 超差。\n- 另外还有较弱但相关的同厂记录：\n  - **Messmittel Reinigen / Wiederholmessung**（清洁量具后复测）\n  - **gereinigt, Rewi nachgestellt, Taststift neu kalibriert**（清洁、调整、重新校针）\n  这些说明历史上也存在先通过低风险复测与清洁动作缩小问题范围的做法。\n\n###",
+              "当前怀疑方向": "**更像的第一怀疑方向**：**Z-Drive / Z-Antrieb / Riemen in Z**。  \n  因为你原话“**Ring YZ 像个鸡蛋**”和历史案例中的德文原句 **“Ring YZ ist ein Ei”** 高度贴合，而且在 **Oberkochen (1014) + Contura 6206 + Acceptance** 的同场景里，最直接落地到的原因就是 **Z 轴驱动皮带**。\n- **第二怀疑方向**：**CAA Fehler / CAA-Traceraufnahme**。  \n  历史上同样的 **MPE-RONt_YZ** 问题并不是都由机械件造成；至少有一条最终是通过 **Neue CAA-Traceraufnahme** 后恢复正常，且还有一条明确写到 **Z-Antrieb Riementausch/versuch - ohne Erfolg**，说明这条分支不能忽略。\n- **第三个次级分支**：**Y Führung / Luftlager / Kleberest auf Granit**。  \n  如果现场伴随轻微擦碰感、运行不顺、或导轨区域有污染物，那这也是历史上在同厂同机型同工位真实出现过的原因锚点。\n\n###",
+              "建议先做的检查或操作": "先做**低风险复测确认**：\n  - 按同样程序再跑一次 **Ring YZ**。\n  - 如现场允许，记录这次结果是否稳定重复为“像鸡蛋/椭圆”。\n- 做**基础清洁检查**：\n  - 清洁 **量具/环规/测针** 接触相关部位。\n  - 观察 **花岗岩台面、Y 导轨可见区域** 是否有明显残胶、异物、污染。\n- 做**外观与运行观察**，不要拆机：\n  - 注意 Z 轴运行时是否有异常抖动、周期性感觉、异响。\n  - 注意 Y 方向附近是否有擦碰迹象，尤其是类似历史记录里的 **Luftlager streift** 现象。\n- 如果现场标准流程允许，可做：\n  - **重新校针/复测**\n  - 更换或确认量具状态后再做一次复测  \n  这一步是为了先排除历史上出现过的 **Messmittel / 清洁 / 校准** 分支。\n- 不建议操作员自行做：\n  - **Z-Riemen 调整或更换**\n  - **Z-Drive / Z-Antrieb 拆检**\n  - **CAA 深层维护动作**  \n  这些超出低风险现场操作范围。\n\n###",
+              "何时升级给维修工程师": "如果 **Ring YZ** 连续复测都呈现同样“鸡蛋形/不圆”，应尽快升级。\n- 如果你观察到 **Z 轴周期性抖动、异响、明显带感异常**，优先升级给维修工程师，重点带上历史锚点：**Z-Drive / Z-Antrieb / Riemen in Z**。\n- 如果清洁、复测、重新校针后问题仍无改善，也应升级，因为历史上这类问题常需要在 **机械传动** 和 **CAA** 之间进一步判定。\n- 如果发现 **Y Führung、花岗岩、气浮区域** 有擦碰、残胶、污染或可疑痕迹，应停止继续猜测并升级。\n- 如果现场已经尝试过基础排查，但历史证据出现**多分支**（Z 皮带、CAA、导轨/气浮擦碰）且无法区分，就应由维修工程师介入，不建议操作员继续扩大操作范围。\n\n如果你愿意，我下一步可以把这些历史案例按“**最像你这个症状的 3 条**”再压缩成一张简短对照表。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "clarification",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "工厂",
+                "factory"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "工厂"
+                ],
+                "missing_keywords": [
+                  "factory"
+                ],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Acceptance",
+                  "Ring YZ"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "更像",
+                  "Z-Drive",
+                  "CAA"
+                ],
+                "missing_keywords": [
+                  "Z 轴皮带",
+                  "Z-Riemen"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "复测",
+                  "清洁",
+                  "校准"
+                ],
+                "missing_keywords": [
+                  "Z轴"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师",
+                  "异响"
+                ],
+                "missing_keywords": [
+                  "复测后仍"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 1,
+    "mode_passed": 1,
+    "first_turn_focus_passed": 1,
+    "contract_passed": 1,
+    "historical_facts_passed": 1,
+    "suspected_direction_passed": 1,
+    "recommended_action_passed": 1,
+    "escalation_passed": 1,
+    "forbidden_claim_passed": 1,
+    "fully_passed": 1,
+    "structured_final_answers": 1,
+    "legacy_final_answer_passed": 1,
+    "errors": 0
+  }
+}

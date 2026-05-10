@@ -1,0 +1,136 @@
+{
+  "dataset_name": "golden-017-018",
+  "source_dataset": "golden_test_cases.json",
+  "source_cases_file": "cases.json",
+  "split_type": "direct_answer",
+  "test_case_count": 2,
+  "scope": "CONTURA-family troubleshooting prompts that should be answered directly without clarification",
+  "notes": [
+    "These cases are copied from golden_test_cases.json.",
+    "Every case in this split expects the agent to answer directly from the initial user message.",
+    "Regression scoring now prioritizes expected_mode, the four-section response contract, historical-fact grounding, and escalation guidance.",
+    "Legacy component/failure/action anchors remain in correct_answer only as backward-reference fields."
+  ],
+  "test_cases": [
+    {
+      "golden_test_id": "golden_017",
+      "source_case_id": "case_000065",
+      "scenario_type": "abbreviated_quality_jargon",
+      "initial_user_input": "Oberkochen 的 CONTURA 6206 在 Acceptance 出现 'RING YZ a.T. MPE THP a.T.'，这种缩写口吻历史上最后怎么判？",
+      "follow_up_user_reply": null,
+      "expected_first_step": "direct_answer",
+      "correct_answer": {
+        "component_name": "Repeat measurement necessary",
+        "failure_reason": "Schmutz,MPE THP. Messablauf hat nicht auf Dyn. Taststiftbest. umgestellt.",
+        "handling_steps": "Reinigen ,WDH.Messung .Taststift auf Dyn. Taststiftbest.Umgestellt.",
+        "answer_notes": null
+      },
+      "reference_context": {
+        "factory": "Oberkochen (1014)",
+        "machine_model": "CONTURA 6206 configurable",
+        "process_or_station": "Acceptance",
+        "event_start_at": "2020-03-24T13:20:00+08:00",
+        "anomaly_description": "RING YZ a.T. MPE THP a.T."
+      },
+      "expected_mode": "direct_answer",
+      "required_historical_fact_keywords": [
+        "Oberkochen",
+        "Acceptance",
+        "RING YZ",
+        "MPE THP"
+      ],
+      "required_historical_fact_keyword_matches": 2,
+      "acceptable_suspected_direction_keywords": [
+        "Schmutz",
+        "Taststift",
+        "Dyn.",
+        "Repeat measurement"
+      ],
+      "acceptable_suspected_direction_keyword_matches": 1,
+      "required_recommended_action_keywords": [
+        "清洁",
+        "复测",
+        "Dyn.",
+        "Taststift"
+      ],
+      "required_recommended_action_keyword_matches": 1,
+      "required_escalation_keywords": [
+        "升级",
+        "维修工程师",
+        "复测后仍",
+        "探针"
+      ],
+      "required_escalation_keyword_matches": 1
+    },
+    {
+      "golden_test_id": "golden_018",
+      "source_case_id": "case_000066",
+      "scenario_type": "misleading_machine_defect_assumption",
+      "initial_user_input": "Minneapolis 那台 CONTURA X=7,10 在 Acceptance 做 YZ ringscan，actual to nominal size fail。现场一口咬定机器坏了。按历史最像的答案应该怎么回？",
+      "follow_up_user_reply": null,
+      "expected_first_step": "direct_answer",
+      "correct_answer": {
+        "component_name": "MPE-RONt_YZ out of specification",
+        "failure_reason": "fail",
+        "handling_steps": "used a different ring and it passed",
+        "answer_notes": "The agent should not overstate a machine defect when the historical action suggests a reference ring/tooling issue."
+      },
+      "reference_context": {
+        "factory": "Minneapolis (7003)",
+        "machine_model": "CONTURA X=7,10 configurable",
+        "process_or_station": "Acceptance",
+        "event_start_at": "2020-03-24T13:49:00+08:00",
+        "anomaly_description": "YZ ringscan failed actual to nominal size"
+      },
+      "expected_mode": "direct_answer",
+      "required_historical_fact_keywords": [
+        "Minneapolis",
+        "Acceptance",
+        "YZ ringscan",
+        "actual to nominal"
+      ],
+      "required_historical_fact_keyword_matches": 2,
+      "acceptable_suspected_direction_keywords": [
+        "ring",
+        "reference ring",
+        "tooling",
+        "not machine"
+      ],
+      "acceptable_suspected_direction_keyword_matches": 1,
+      "required_recommended_action_keywords": [
+        "different ring",
+        "换一个 ring",
+        "复测",
+        "对比"
+      ],
+      "required_recommended_action_keyword_matches": 1,
+      "required_escalation_keywords": [
+        "escalate",
+        "engineer",
+        "another ring still fails",
+        "multiple rings"
+      ],
+      "required_escalation_keyword_matches": 1
+    }
+  ],
+  "evaluation_version": 2,
+  "evaluation_target": "response_contract_v2",
+  "response_contract_defaults": {
+    "required_sections": [
+      "历史案例事实",
+      "当前怀疑方向",
+      "建议先做的检查或操作",
+      "何时升级给维修工程师"
+    ],
+    "require_historical_fact_grounding": true,
+    "require_suspected_direction_hedging": true,
+    "require_recommended_action_section": true,
+    "require_escalation_section": true,
+    "required_escalation_keywords": [
+      "升级",
+      "维修工程师",
+      "停止继续",
+      "超出操作员"
+    ]
+  }
+}

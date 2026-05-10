@@ -1,0 +1,919 @@
+{
+  "generated_at": "2026-05-10T06:25:12.516Z",
+  "manifest": {
+    "path": "c:\\Users\\ZCLEELI1\\OneDrive - Carl Zeiss AG\\Lee\\source\\Projects\\AI\\RMS Service_\\RMSRAG\\suzhou-factory-ai-troubleshooting\\golden_test_cases.manifest.json",
+    "manifest_name": "suzhou-factory-ai-troubleshooting-golden-test-manifest",
+    "manifest_version": 2,
+    "authoritative_dataset_id": "full"
+  },
+  "mode": "live",
+  "selected_dataset_ids": [
+    "clarify_then_answer"
+  ],
+  "datasets": [
+    {
+      "dataset_id": "clarify_then_answer",
+      "dataset_name": "suzhou-factory-ai-troubleshooting-golden-tests-clarify-then-answer",
+      "evaluation_target": "response_contract_v2",
+      "evaluation_version": 2,
+      "file": "c:\\Users\\ZCLEELI1\\OneDrive - Carl Zeiss AG\\Lee\\source\\Projects\\AI\\RMS Service_\\RMSRAG\\suzhou-factory-ai-troubleshooting\\golden_test_cases.clarify_then_answer.json",
+      "split_type": "clarify_then_answer",
+      "role": "regression_split",
+      "total_cases": 5,
+      "selected_cases": 5,
+      "summary": {
+        "cases": 5,
+        "errors": 0,
+        "mode_passed": 4,
+        "first_turn_focus_passed": 5,
+        "contract_passed": 5,
+        "historical_facts_passed": 5,
+        "suspected_direction_passed": 5,
+        "recommended_action_passed": 5,
+        "escalation_passed": 5,
+        "forbidden_claim_passed": 5,
+        "fully_passed": 4,
+        "structured_final_answers": 5,
+        "legacy_final_answer_passed": 4
+      },
+      "case_results": [
+        {
+          "golden_test_id": "golden_003",
+          "source_case_id": "case_000007",
+          "scenario_type": "missing_factory_requires_clarification",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "请先告诉我是哪一个工厂（factory）。",
+          "second_turn_text": "### 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 的历史案例里，存在一条与您描述高度一致的记录：  \n  - 部件：**Cable harness xy**  \n  - 异常：**“PIN 2 in Stecker X170 nicht angeschlossen”**（X170 插头的 PIN 2 未接上）  \n  - 处理：**“PIN 2 in Stecker X170 angeschlossen”**（将 X170 的 PIN 2 接上）  \n  - 时间：2020-03-16\n- 同一工厂、同机型、同为 Integration，还有另一条相关案例：  \n  - 部件：**C99 controller**  \n  - 异常：**“Kabel X170 falsch rum in den Kabelstrang”**（X170 电缆/线缆在束线中方向装反）  \n  - 处理：**“Kabel X170 umgedreht”**（将 X170 电缆方向纠正）  \n  - 时间：2020-05-12\n- 还有一条同工厂同站点但相关性次一级的案例：  \n  - 部件：**Sensor system**  \n  - 异常：连接器某个 PIN 弯了（X1401，不是 X170）  \n  - 原因：可能插接时压弯  \n  - 处理：排查后把 PIN 校正  \n  - 时间：2024-02-18\n- 跨工厂也检索到一条相似模式案例：  \n  - 部件：**Cable harness Z**  \n  - 异常：PIN 未完全到位，被顶回去，导致无连接  \n  - 处理：把 PIN 拉回并坐实到位  \n- 另外有一条跨工厂记录直接提到：  \n  - **X170线束接触不良**，处理为更换 X170 线束。  \n  但这条不是 Oberkochen，本地优先级低于上面两条。\n\n### 当前怀疑方向\n- **最像的怀疑方向**是：**Cable harness xy / X170 连接位的 PIN 2 未插到位、漏插，或端子未真正锁止到位**。  \n  这是因为你当前描述“**X170 那边 PIN 2 没接上，像是线束问题**”，与 Oberkochen 同厂同机型同站点历史案例 **“PIN 2 in Stecker X170 nicht angeschlossen”** 几乎直接重合。\n- 第二可疑分支是：**X170 线缆装反 / 插接方向错误**，对应历史锚点是 **“Kabel X170 falsch rum”**。  \n  如果现场不是单纯“PIN 2 缺连接”，而是整个 X170 插接状态异常、线束姿态不对、插头方向可疑，那么这条分支也很强。\n- 次一级怀疑是：**PIN 机械损伤或退针**，也就是端子弯曲、缩回、未坐实。  \n  这不是当前最强锚点，但从历史上看，连接器 PIN 类问题确实会表现成“看起来像线束问题，实际是 PIN 本体异常”。\n\n### 建议先做的检查或操作\n- 先做**低风险目视确认**：  \n  1. 核对 **X170** 插头是否已经完全插入、锁扣是否到位。  \n  2. 重点查看 **PIN 2** 是否明显漏插、退针、缩回、歪斜。  \n  3. 对照装配图/针位定义，确认 **X170 插头方向**是否正确，排除 **“Kabel X170 falsch rum”** 这种情况。  \n  4. 轻微观察线束出口处是否有明显拉扯、应力过大、护套位置异常，但**不要强拉线束**。  \n  5. 如果现场规范允许，由操作员执行的仅限**重新确认插头完全就位**，不要自行拆 PIN、撬端子或修针脚。\n- 如果你们现场有标准化点检卡，可优先按 **X170 插接状态 / 针位 / 方向** 三项做快速复核。\n\n### 何时升级给维修工程师\n- 如果出现以下任一情况，建议尽快升级给维修工程师：\n  - 你已确认 **X170 已插好**，但 **PIN 2 仍无连接**。\n  - 发现 **PIN 2 弯曲、退针、端子缩回、锁止失效**。\n  - 怀疑是**线束内部断线**、接触不良，或需要**更换 X170 线束 / 返修端子**。\n  - 你无法确定是否存在 **“Kabel X170 falsch rum”** 的装配问题。\n  - 同一台设备该问题**重复出现**，即使重插后暂时恢复也应升级。\n  - 需要拆接插件、修复端子、做电测或更换部件时，应由维修工程师处理。\n\n如果你愿意，我下一步可以直接帮你把这次情况整理成一个**“最可能原因优先级列表”**，按 1、2、3 排出来，方便你现场先查。",
+          "final_turn_text": "### 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 的历史案例里，存在一条与您描述高度一致的记录：  \n  - 部件：**Cable harness xy**  \n  - 异常：**“PIN 2 in Stecker X170 nicht angeschlossen”**（X170 插头的 PIN 2 未接上）  \n  - 处理：**“PIN 2 in Stecker X170 angeschlossen”**（将 X170 的 PIN 2 接上）  \n  - 时间：2020-03-16\n- 同一工厂、同机型、同为 Integration，还有另一条相关案例：  \n  - 部件：**C99 controller**  \n  - 异常：**“Kabel X170 falsch rum in den Kabelstrang”**（X170 电缆/线缆在束线中方向装反）  \n  - 处理：**“Kabel X170 umgedreht”**（将 X170 电缆方向纠正）  \n  - 时间：2020-05-12\n- 还有一条同工厂同站点但相关性次一级的案例：  \n  - 部件：**Sensor system**  \n  - 异常：连接器某个 PIN 弯了（X1401，不是 X170）  \n  - 原因：可能插接时压弯  \n  - 处理：排查后把 PIN 校正  \n  - 时间：2024-02-18\n- 跨工厂也检索到一条相似模式案例：  \n  - 部件：**Cable harness Z**  \n  - 异常：PIN 未完全到位，被顶回去，导致无连接  \n  - 处理：把 PIN 拉回并坐实到位  \n- 另外有一条跨工厂记录直接提到：  \n  - **X170线束接触不良**，处理为更换 X170 线束。  \n  但这条不是 Oberkochen，本地优先级低于上面两条。\n\n### 当前怀疑方向\n- **最像的怀疑方向**是：**Cable harness xy / X170 连接位的 PIN 2 未插到位、漏插，或端子未真正锁止到位**。  \n  这是因为你当前描述“**X170 那边 PIN 2 没接上，像是线束问题**”，与 Oberkochen 同厂同机型同站点历史案例 **“PIN 2 in Stecker X170 nicht angeschlossen”** 几乎直接重合。\n- 第二可疑分支是：**X170 线缆装反 / 插接方向错误**，对应历史锚点是 **“Kabel X170 falsch rum”**。  \n  如果现场不是单纯“PIN 2 缺连接”，而是整个 X170 插接状态异常、线束姿态不对、插头方向可疑，那么这条分支也很强。\n- 次一级怀疑是：**PIN 机械损伤或退针**，也就是端子弯曲、缩回、未坐实。  \n  这不是当前最强锚点，但从历史上看，连接器 PIN 类问题确实会表现成“看起来像线束问题，实际是 PIN 本体异常”。\n\n### 建议先做的检查或操作\n- 先做**低风险目视确认**：  \n  1. 核对 **X170** 插头是否已经完全插入、锁扣是否到位。  \n  2. 重点查看 **PIN 2** 是否明显漏插、退针、缩回、歪斜。  \n  3. 对照装配图/针位定义，确认 **X170 插头方向**是否正确，排除 **“Kabel X170 falsch rum”** 这种情况。  \n  4. 轻微观察线束出口处是否有明显拉扯、应力过大、护套位置异常，但**不要强拉线束**。  \n  5. 如果现场规范允许，由操作员执行的仅限**重新确认插头完全就位**，不要自行拆 PIN、撬端子或修针脚。\n- 如果你们现场有标准化点检卡，可优先按 **X170 插接状态 / 针位 / 方向** 三项做快速复核。\n\n### 何时升级给维修工程师\n- 如果出现以下任一情况，建议尽快升级给维修工程师：\n  - 你已确认 **X170 已插好**，但 **PIN 2 仍无连接**。\n  - 发现 **PIN 2 弯曲、退针、端子缩回、锁止失效**。\n  - 怀疑是**线束内部断线**、接触不良，或需要**更换 X170 线束 / 返修端子**。\n  - 你无法确定是否存在 **“Kabel X170 falsch rum”** 的装配问题。\n  - 同一台设备该问题**重复出现**，即使重插后暂时恢复也应升级。\n  - 需要拆接插件、修复端子、做电测或更换部件时，应由维修工程师处理。\n\n如果你愿意，我下一步可以直接帮你把这次情况整理成一个**“最可能原因优先级列表”**，按 1、2、3 排出来，方便你现场先查。",
+          "first_turn_contract": {
+            "observed_mode": "unstructured_answer",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Integration** 的历史案例里，存在一条与您描述高度一致的记录：  \n  - 部件：**Cable harness xy**  \n  - 异常：**“PIN 2 in Stecker X170 nicht angeschlossen”**（X170 插头的 PIN 2 未接上）  \n  - 处理：**“PIN 2 in Stecker X170 angeschlossen”**（将 X170 的 PIN 2 接上）  \n  - 时间：2020-03-16\n- 同一工厂、同机型、同为 Integration，还有另一条相关案例：  \n  - 部件：**C99 controller**  \n  - 异常：**“Kabel X170 falsch rum in den Kabelstrang”**（X170 电缆/线缆在束线中方向装反）  \n  - 处理：**“Kabel X170 umgedreht”**（将 X170 电缆方向纠正）  \n  - 时间：2020-05-12\n- 还有一条同工厂同站点但相关性次一级的案例：  \n  - 部件：**Sensor system**  \n  - 异常：连接器某个 PIN 弯了（X1401，不是 X170）  \n  - 原因：可能插接时压弯  \n  - 处理：排查后把 PIN 校正  \n  - 时间：2024-02-18\n- 跨工厂也检索到一条相似模式案例：  \n  - 部件：**Cable harness Z**  \n  - 异常：PIN 未完全到位，被顶回去，导致无连接  \n  - 处理：把 PIN 拉回并坐实到位  \n- 另外有一条跨工厂记录直接提到：  \n  - **X170线束接触不良**，处理为更换 X170 线束。  \n  但这条不是 Oberkochen，本地优先级低于上面两条。\n\n###",
+              "当前怀疑方向": "**最像的怀疑方向**是：**Cable harness xy / X170 连接位的 PIN 2 未插到位、漏插，或端子未真正锁止到位**。  \n  这是因为你当前描述“**X170 那边 PIN 2 没接上，像是线束问题**”，与 Oberkochen 同厂同机型同站点历史案例 **“PIN 2 in Stecker X170 nicht angeschlossen”** 几乎直接重合。\n- 第二可疑分支是：**X170 线缆装反 / 插接方向错误**，对应历史锚点是 **“Kabel X170 falsch rum”**。  \n  如果现场不是单纯“PIN 2 缺连接”，而是整个 X170 插接状态异常、线束姿态不对、插头方向可疑，那么这条分支也很强。\n- 次一级怀疑是：**PIN 机械损伤或退针**，也就是端子弯曲、缩回、未坐实。  \n  这不是当前最强锚点，但从历史上看，连接器 PIN 类问题确实会表现成“看起来像线束问题，实际是 PIN 本体异常”。\n\n###",
+              "建议先做的检查或操作": "先做**低风险目视确认**：  \n  1. 核对 **X170** 插头是否已经完全插入、锁扣是否到位。  \n  2. 重点查看 **PIN 2** 是否明显漏插、退针、缩回、歪斜。  \n  3. 对照装配图/针位定义，确认 **X170 插头方向**是否正确，排除 **“Kabel X170 falsch rum”** 这种情况。  \n  4. 轻微观察线束出口处是否有明显拉扯、应力过大、护套位置异常，但**不要强拉线束**。  \n  5. 如果现场规范允许，由操作员执行的仅限**重新确认插头完全就位**，不要自行拆 PIN、撬端子或修针脚。\n- 如果你们现场有标准化点检卡，可优先按 **X170 插接状态 / 针位 / 方向** 三项做快速复核。\n\n###",
+              "何时升级给维修工程师": "如果出现以下任一情况，建议尽快升级给维修工程师：\n  - 你已确认 **X170 已插好**，但 **PIN 2 仍无连接**。\n  - 发现 **PIN 2 弯曲、退针、端子缩回、锁止失效**。\n  - 怀疑是**线束内部断线**、接触不良，或需要**更换 X170 线束 / 返修端子**。\n  - 你无法确定是否存在 **“Kabel X170 falsch rum”** 的装配问题。\n  - 同一台设备该问题**重复出现**，即使重插后暂时恢复也应升级。\n  - 需要拆接插件、修复端子、做电测或更换部件时，应由维修工程师处理。\n\n如果你愿意，我下一步可以直接帮你把这次情况整理成一个**“最可能原因优先级列表”**，按 1、2、3 排出来，方便你现场先查。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": false,
+            "clarification_expected": true,
+            "observed_clarification": false,
+            "answer_signal": true
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": false,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": false,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "unstructured_answer",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": false
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "工厂",
+                "factory"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "工厂",
+                  "factory"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Integration",
+                  "X170",
+                  "PIN 2"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "最像",
+                  "X170",
+                  "PIN 2",
+                  "线束",
+                  "端子"
+                ],
+                "missing_keywords": [
+                  "接头"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "目视",
+                  "锁扣",
+                  "方向"
+                ],
+                "missing_keywords": [
+                  "轻拉"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师",
+                  "线束内部"
+                ],
+                "missing_keywords": [
+                  "端子损伤"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": false
+        },
+        {
+          "golden_test_id": "golden_007",
+          "source_case_id": "case_000017",
+          "scenario_type": "colloquial_quality_judgment",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "请先告诉我是哪个工厂？",
+          "second_turn_text": "### 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Acceptance** 的历史案例里，和你描述最接近的一条明确写的是：**“Ring YZ ist ein Ei”**，对应异常项是 **MPE-RONt_YZ out of specification**。该案例最后记录的原因是 **“Riemen in Z”**，处理是 **“tauschen des Z-Riemens”**。  \n- 同一机型、同一工位还有多条 **YZ Ring außer Toleranz / Ring YZ a.T.** 的历史记录，反复出现的锚点包括：  \n  1. **CAA Fehler**：处理记录为 **Neue CAA-Traceraufnahme, danach den YZ-Ring im Calypso neu gemessen**；并记录到 **YZ-Ring 从 100% Toleranzausnutzung 回到 73%**。  \n  2. **Z-Drive / Z-Antrieb**：有案例写明 **Antriebsriemen in der Z-Achse hat einen Schlag**，处理为 **Tauschen des Riemens gegen einen neuen**；也有案例写 **Z-Antrieb Laufgeräusche und Vibrationen**，处理为 **Motor getauscht, Antrieb neu ausgerichtet, neu optimiert**。  \n  3. **Kleberest auf Granit / Y Führung / Luftlager streift**：处理记录为 **Kleberest entfernt**。  \n  4. 还有较弱证据指向 **Messmittel/测量环污染**、**Rewi nachgestellt**、**Taststift neu kalibriert**、以及 **重复测量后恢复**。  \n\n### 当前怀疑方向\n- 按历史相似度看，**最强怀疑方向** 不是泛泛的“测量异常”，而是两条更具体的历史原因锚点：  \n  1. **Z-Drive / Z-Antrieb / Riemen in Z**  \n  2. **CAA Fehler / 需要新的 CAA-Traceraufnahme**  \n- 尤其因为你的原话是 **“Ring YZ 像个鸡蛋”**，这和历史案例中的原始描述 **“Ring YZ ist ein Ei”** 高度贴合；那条案例最后落到的是 **Z 轴皮带（Riemen in Z）**。  \n- 但目前还**不能确认**就是 Z 轴皮带本体，因为同一症状历史上也出现过 **CAA Fehler**，以及少数 **Granit 上胶残留 / Y Führung / Luftlager 擦碰** 这类机械运动链问题。  \n- 所以当前更像是：**优先怀疑 Z-Drive / Z-Antrieb 方向，其次怀疑 CAA 链路异常**。  \n\n### 建议先做的检查或操作\n- 先做**低风险**确认，不要直接拆件：  \n  1. **先重复测量一次 YZ Ring**，确认现象是否稳定复现。  \n  2. **清洁测量环/测量基准和触针相关接触面**，再复测一次，排除 **Messmittel 污染** 这种最简单因素。  \n  3. 如果现场权限允许，查看近期是否刚做过或遗漏了 **CAA/Traceraufnahme**，并核对是否存在明显的校准链异常记录。  \n  4. 操作员可做的感知性检查：留意设备在相关运动时，是否有 **Z-Antrieb 的异常声音、振动、走行不顺**；如果有，只做观察记录，不要自行拆开传动部分。  \n  5. 目视检查可见区域是否有明显异物、残胶、擦碰痕迹，尤其是历史上出现过的 **Granit / Y Führung / Luftlager streift** 相关线索。  \n\n### 何时升级给维修工程师\n- 出现以下任一情况，建议尽快升级给维修工程师：  \n  1. **YZ Ring 复测后仍稳定“像鸡蛋”/持续 out of tolerance**。  \n  2. 清洁测量环、复测后**没有改善**。  \n  3. 发现或怀疑 **Z-Drive / Z-Antrieb** 有**异响、振动、周期性波动**。  \n  4. 怀疑需要做 **CAA-Traceraufnahme**、重新校准、传动检查、皮带检查/更换、驱动重新对中这类超出操作员权限的动作。  \n  5. 现场证据互相冲突：比如清洁后无变化，但又没有明显污染痕迹；或者重复测量结果漂移很大。  \n- 如果你愿意，我下一步可以把这几条 **Oberkochen 1014 / Contura 6206 / Acceptance / Ring YZ** 的历史案例按“**最像你这次症状的优先级**”再给你排个序。",
+          "final_turn_text": "### 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Acceptance** 的历史案例里，和你描述最接近的一条明确写的是：**“Ring YZ ist ein Ei”**，对应异常项是 **MPE-RONt_YZ out of specification**。该案例最后记录的原因是 **“Riemen in Z”**，处理是 **“tauschen des Z-Riemens”**。  \n- 同一机型、同一工位还有多条 **YZ Ring außer Toleranz / Ring YZ a.T.** 的历史记录，反复出现的锚点包括：  \n  1. **CAA Fehler**：处理记录为 **Neue CAA-Traceraufnahme, danach den YZ-Ring im Calypso neu gemessen**；并记录到 **YZ-Ring 从 100% Toleranzausnutzung 回到 73%**。  \n  2. **Z-Drive / Z-Antrieb**：有案例写明 **Antriebsriemen in der Z-Achse hat einen Schlag**，处理为 **Tauschen des Riemens gegen einen neuen**；也有案例写 **Z-Antrieb Laufgeräusche und Vibrationen**，处理为 **Motor getauscht, Antrieb neu ausgerichtet, neu optimiert**。  \n  3. **Kleberest auf Granit / Y Führung / Luftlager streift**：处理记录为 **Kleberest entfernt**。  \n  4. 还有较弱证据指向 **Messmittel/测量环污染**、**Rewi nachgestellt**、**Taststift neu kalibriert**、以及 **重复测量后恢复**。  \n\n### 当前怀疑方向\n- 按历史相似度看，**最强怀疑方向** 不是泛泛的“测量异常”，而是两条更具体的历史原因锚点：  \n  1. **Z-Drive / Z-Antrieb / Riemen in Z**  \n  2. **CAA Fehler / 需要新的 CAA-Traceraufnahme**  \n- 尤其因为你的原话是 **“Ring YZ 像个鸡蛋”**，这和历史案例中的原始描述 **“Ring YZ ist ein Ei”** 高度贴合；那条案例最后落到的是 **Z 轴皮带（Riemen in Z）**。  \n- 但目前还**不能确认**就是 Z 轴皮带本体，因为同一症状历史上也出现过 **CAA Fehler**，以及少数 **Granit 上胶残留 / Y Führung / Luftlager 擦碰** 这类机械运动链问题。  \n- 所以当前更像是：**优先怀疑 Z-Drive / Z-Antrieb 方向，其次怀疑 CAA 链路异常**。  \n\n### 建议先做的检查或操作\n- 先做**低风险**确认，不要直接拆件：  \n  1. **先重复测量一次 YZ Ring**，确认现象是否稳定复现。  \n  2. **清洁测量环/测量基准和触针相关接触面**，再复测一次，排除 **Messmittel 污染** 这种最简单因素。  \n  3. 如果现场权限允许，查看近期是否刚做过或遗漏了 **CAA/Traceraufnahme**，并核对是否存在明显的校准链异常记录。  \n  4. 操作员可做的感知性检查：留意设备在相关运动时，是否有 **Z-Antrieb 的异常声音、振动、走行不顺**；如果有，只做观察记录，不要自行拆开传动部分。  \n  5. 目视检查可见区域是否有明显异物、残胶、擦碰痕迹，尤其是历史上出现过的 **Granit / Y Führung / Luftlager streift** 相关线索。  \n\n### 何时升级给维修工程师\n- 出现以下任一情况，建议尽快升级给维修工程师：  \n  1. **YZ Ring 复测后仍稳定“像鸡蛋”/持续 out of tolerance**。  \n  2. 清洁测量环、复测后**没有改善**。  \n  3. 发现或怀疑 **Z-Drive / Z-Antrieb** 有**异响、振动、周期性波动**。  \n  4. 怀疑需要做 **CAA-Traceraufnahme**、重新校准、传动检查、皮带检查/更换、驱动重新对中这类超出操作员权限的动作。  \n  5. 现场证据互相冲突：比如清洁后无变化，但又没有明显污染痕迹；或者重复测量结果漂移很大。  \n- 如果你愿意，我下一步可以把这几条 **Oberkochen 1014 / Contura 6206 / Acceptance / Ring YZ** 的历史案例按“**最像你这次症状的优先级**”再给你排个序。",
+          "first_turn_contract": {
+            "observed_mode": "clarification",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Acceptance** 的历史案例里，和你描述最接近的一条明确写的是：**“Ring YZ ist ein Ei”**，对应异常项是 **MPE-RONt_YZ out of specification**。该案例最后记录的原因是 **“Riemen in Z”**，处理是 **“tauschen des Z-Riemens”**。  \n- 同一机型、同一工位还有多条 **YZ Ring außer Toleranz / Ring YZ a.T.** 的历史记录，反复出现的锚点包括：  \n  1. **CAA Fehler**：处理记录为 **Neue CAA-Traceraufnahme, danach den YZ-Ring im Calypso neu gemessen**；并记录到 **YZ-Ring 从 100% Toleranzausnutzung 回到 73%**。  \n  2. **Z-Drive / Z-Antrieb**：有案例写明 **Antriebsriemen in der Z-Achse hat einen Schlag**，处理为 **Tauschen des Riemens gegen einen neuen**；也有案例写 **Z-Antrieb Laufgeräusche und Vibrationen**，处理为 **Motor getauscht, Antrieb neu ausgerichtet, neu optimiert**。  \n  3. **Kleberest auf Granit / Y Führung / Luftlager streift**：处理记录为 **Kleberest entfernt**。  \n  4. 还有较弱证据指向 **Messmittel/测量环污染**、**Rewi nachgestellt**、**Taststift neu kalibriert**、以及 **重复测量后恢复**。  \n\n###",
+              "当前怀疑方向": "按历史相似度看，**最强怀疑方向** 不是泛泛的“测量异常”，而是两条更具体的历史原因锚点：  \n  1. **Z-Drive / Z-Antrieb / Riemen in Z**  \n  2. **CAA Fehler / 需要新的 CAA-Traceraufnahme**  \n- 尤其因为你的原话是 **“Ring YZ 像个鸡蛋”**，这和历史案例中的原始描述 **“Ring YZ ist ein Ei”** 高度贴合；那条案例最后落到的是 **Z 轴皮带（Riemen in Z）**。  \n- 但目前还**不能确认**就是 Z 轴皮带本体，因为同一症状历史上也出现过 **CAA Fehler**，以及少数 **Granit 上胶残留 / Y Führung / Luftlager 擦碰** 这类机械运动链问题。  \n- 所以当前更像是：**优先怀疑 Z-Drive / Z-Antrieb 方向，其次怀疑 CAA 链路异常**。  \n\n###",
+              "建议先做的检查或操作": "先做**低风险**确认，不要直接拆件：  \n  1. **先重复测量一次 YZ Ring**，确认现象是否稳定复现。  \n  2. **清洁测量环/测量基准和触针相关接触面**，再复测一次，排除 **Messmittel 污染** 这种最简单因素。  \n  3. 如果现场权限允许，查看近期是否刚做过或遗漏了 **CAA/Traceraufnahme**，并核对是否存在明显的校准链异常记录。  \n  4. 操作员可做的感知性检查：留意设备在相关运动时，是否有 **Z-Antrieb 的异常声音、振动、走行不顺**；如果有，只做观察记录，不要自行拆开传动部分。  \n  5. 目视检查可见区域是否有明显异物、残胶、擦碰痕迹，尤其是历史上出现过的 **Granit / Y Führung / Luftlager streift** 相关线索。  \n\n###",
+              "何时升级给维修工程师": "出现以下任一情况，建议尽快升级给维修工程师：  \n  1. **YZ Ring 复测后仍稳定“像鸡蛋”/持续 out of tolerance**。  \n  2. 清洁测量环、复测后**没有改善**。  \n  3. 发现或怀疑 **Z-Drive / Z-Antrieb** 有**异响、振动、周期性波动**。  \n  4. 怀疑需要做 **CAA-Traceraufnahme**、重新校准、传动检查、皮带检查/更换、驱动重新对中这类超出操作员权限的动作。  \n  5. 现场证据互相冲突：比如清洁后无变化，但又没有明显污染痕迹；或者重复测量结果漂移很大。  \n- 如果你愿意，我下一步可以把这几条 **Oberkochen 1014 / Contura 6206 / Acceptance / Ring YZ** 的历史案例按“**最像你这次症状的优先级**”再给你排个序。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "clarification",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "工厂",
+                "factory"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "工厂"
+                ],
+                "missing_keywords": [
+                  "factory"
+                ],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Acceptance",
+                  "Ring YZ"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "更像",
+                  "Z-Drive",
+                  "Z 轴皮带",
+                  "CAA"
+                ],
+                "missing_keywords": [
+                  "Z-Riemen"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "复测",
+                  "清洁",
+                  "校准"
+                ],
+                "missing_keywords": [
+                  "Z轴"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师",
+                  "异响",
+                  "复测后仍"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_011",
+          "source_case_id": "case_000050",
+          "scenario_type": "long_noisy_option_specific",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "请先告诉我是哪个工厂？",
+          "second_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Install shrouds** 工位，历史上有一条与您描述高度一致的案例：\n  - 异常现象：**“Bei der Option Faltenbalg lässt sich die weiße Abdeckung vorne und hinten schlecht montieren. (Verkantet sich)”**\n  - 对应部件：**Shrouds**\n  - 记录原因：**“Bohrbild (Option Faltenbalg) passt nicht und die Gewinde an der weißen Abdeckung sind schlecht.”**\n  - 历史处理：**“Die Bohrungen aufbohren und die Gewinde nachschneiden.”**\n  - 时间：**2020-03-20**\n- 同样在 **Oberkochen (1014)**、**Install shrouds** 工位，还有一条与 **Faltenbalg / 前后 Abdeckung 不匹配** 相关的案例：\n  - 异常现象：**“Abdeckung Kasten Faltenbalg vorne und hinten nicht passend”**\n  - 对应部件：**Bellows**\n  - 记录原因：**“Grundkörper passt nicht zur Verkleidung”**\n  - 历史处理：**“Bohrungen aufgebohrt Y4 #201147631 und #201147629”**\n  - 时间：**2021-03-31**\n- 还有一条同厂历史案例显示，**装错 Faltenbalg** 也会导致装配不对：\n  - 异常现象：**“Falschen Faltenbalg von einer größeren KMG verbaut”**\n  - 对应部件：**Bellows**\n  - 记录原因：**“nicht auf ZKM geachtet”**\n  - 历史处理：**拆掉错误 Faltenbalg，换装正确件**\n  - 时间：**2024-07-17**\n\n## 当前怀疑方向\n- **较大概率的怀疑方向 1：Shrouds / 白色 Abdeckung 的孔位与 Faltenbalg 选件组合不匹配。**  \n  这是当前最强的历史锚点，因为同厂同机型同工位曾明确记录过：**Faltenbalg 选件下，前后白色 Abdeckung 安装困难并且 Verkantet sich（卡斜）**，历史原因直接指向 **Bohrbild 不匹配 + 白色 Abdeckung 螺纹状态差**。\n- **次强怀疑方向 2：Bellows / Faltenbalg 基体与 Verkleidung（外罩/Abdeckung）组合不匹配。**  \n  历史里另一条 Oberkochen 案例不是单纯说“难装”，而是直接写到 **Grundkörper passt nicht zur Verkleidung**，这说明问题也可能不在手法，而在 **Bellows 基体与前后 Abdeckung 的匹配关系**。\n- **补充分支：装错 Faltenbalg 或拿错规格件。**  \n  历史上同厂出现过 **Falschen Faltenbalg von einer größeren KMG verbaut**。所以如果这次现场感觉“怎么装都不顺、整体关系不对”，也要保留 **Faltenbalg 型号/对应 ZKM 不对** 这个怀疑方向。\n\n## 建议先做的检查或操作\n- **先不要强行拧紧或硬压装。** 既然历史上有 **Bohrbild 不匹配** 和 **螺纹状态差** 的案例，继续硬装容易把孔、牙或外罩边缘带坏。\n- **做一个低风险对位确认：**\n  1. 将前后白色 **Abdeckung** 先轻放定位，不上紧固件；\n  2. 观察孔位是否自然对正，是否一开始就需要“带偏”才能进孔；\n  3. 检查是否是某一侧先碰到、导致整体 **Verkantet（卡斜）**。\n- **检查白色 Abdeckung 的螺纹入口状态**：\n  - 看是否有明显毛刺、牙口不顺、首牙损伤；\n  - 用手试探螺钉能否自然起牙，若一开始就发紧，不要继续硬上。\n- **核对 Faltenbalg 是否为该台 CONTURA 6206 对应件**：\n  - 核对标签、料号、版本或机型对应关系；\n  - 特别排除历史上出现过的 **“更大 KMG 的 Faltenbalg 装到了当前机型”** 这种错件情况。\n- **观察 Bellows 基体与 Verkleidung 的相对关系**：\n  - 不拆改、不返修的前提下，看是否存在基体本身把 Abdeckung 顶偏、撑偏的情况；\n  - 如果前后两端都同时“不顺”，更要怀疑不是单点手法问题，而是整体匹配问题。\n\n## 何时升级给维修工程师\n- 如果出现以下任一情况，建议**停止继续尝试装配并升级维修工程师**：\n  - 前后白色 **Abdeckung** 都明显 **Verkantet**，孔位无法自然对正；\n  - 螺钉无法顺利起牙，怀疑 **白色 Abdeckung 螺纹损伤**；\n  - 目视可见 **Bohrbild** 偏差，或 Bellows/Abdeckung 组合关系明显不对；\n  - 已核对装配手法仍重复发生，且不是单件偶发；\n  - 需要进行 **Bohrungen aufbohren / Gewinde nachschneiden** 这类返修动作时。  \n    这些都已经超出操作员低风险处理范围，应交由维修或工艺/质量进一步确认。\n- 如果现场无法快速确认是 **Shrouds 的 Bohrbild/螺纹问题**，还是 **Bellows 基体/Faltenbalg 规格不匹配**，也应升级，因为这两个就是当前最强的历史原因锚点。",
+          "final_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Install shrouds** 工位，历史上有一条与您描述高度一致的案例：\n  - 异常现象：**“Bei der Option Faltenbalg lässt sich die weiße Abdeckung vorne und hinten schlecht montieren. (Verkantet sich)”**\n  - 对应部件：**Shrouds**\n  - 记录原因：**“Bohrbild (Option Faltenbalg) passt nicht und die Gewinde an der weißen Abdeckung sind schlecht.”**\n  - 历史处理：**“Die Bohrungen aufbohren und die Gewinde nachschneiden.”**\n  - 时间：**2020-03-20**\n- 同样在 **Oberkochen (1014)**、**Install shrouds** 工位，还有一条与 **Faltenbalg / 前后 Abdeckung 不匹配** 相关的案例：\n  - 异常现象：**“Abdeckung Kasten Faltenbalg vorne und hinten nicht passend”**\n  - 对应部件：**Bellows**\n  - 记录原因：**“Grundkörper passt nicht zur Verkleidung”**\n  - 历史处理：**“Bohrungen aufgebohrt Y4 #201147631 und #201147629”**\n  - 时间：**2021-03-31**\n- 还有一条同厂历史案例显示，**装错 Faltenbalg** 也会导致装配不对：\n  - 异常现象：**“Falschen Faltenbalg von einer größeren KMG verbaut”**\n  - 对应部件：**Bellows**\n  - 记录原因：**“nicht auf ZKM geachtet”**\n  - 历史处理：**拆掉错误 Faltenbalg，换装正确件**\n  - 时间：**2024-07-17**\n\n## 当前怀疑方向\n- **较大概率的怀疑方向 1：Shrouds / 白色 Abdeckung 的孔位与 Faltenbalg 选件组合不匹配。**  \n  这是当前最强的历史锚点，因为同厂同机型同工位曾明确记录过：**Faltenbalg 选件下，前后白色 Abdeckung 安装困难并且 Verkantet sich（卡斜）**，历史原因直接指向 **Bohrbild 不匹配 + 白色 Abdeckung 螺纹状态差**。\n- **次强怀疑方向 2：Bellows / Faltenbalg 基体与 Verkleidung（外罩/Abdeckung）组合不匹配。**  \n  历史里另一条 Oberkochen 案例不是单纯说“难装”，而是直接写到 **Grundkörper passt nicht zur Verkleidung**，这说明问题也可能不在手法，而在 **Bellows 基体与前后 Abdeckung 的匹配关系**。\n- **补充分支：装错 Faltenbalg 或拿错规格件。**  \n  历史上同厂出现过 **Falschen Faltenbalg von einer größeren KMG verbaut**。所以如果这次现场感觉“怎么装都不顺、整体关系不对”，也要保留 **Faltenbalg 型号/对应 ZKM 不对** 这个怀疑方向。\n\n## 建议先做的检查或操作\n- **先不要强行拧紧或硬压装。** 既然历史上有 **Bohrbild 不匹配** 和 **螺纹状态差** 的案例，继续硬装容易把孔、牙或外罩边缘带坏。\n- **做一个低风险对位确认：**\n  1. 将前后白色 **Abdeckung** 先轻放定位，不上紧固件；\n  2. 观察孔位是否自然对正，是否一开始就需要“带偏”才能进孔；\n  3. 检查是否是某一侧先碰到、导致整体 **Verkantet（卡斜）**。\n- **检查白色 Abdeckung 的螺纹入口状态**：\n  - 看是否有明显毛刺、牙口不顺、首牙损伤；\n  - 用手试探螺钉能否自然起牙，若一开始就发紧，不要继续硬上。\n- **核对 Faltenbalg 是否为该台 CONTURA 6206 对应件**：\n  - 核对标签、料号、版本或机型对应关系；\n  - 特别排除历史上出现过的 **“更大 KMG 的 Faltenbalg 装到了当前机型”** 这种错件情况。\n- **观察 Bellows 基体与 Verkleidung 的相对关系**：\n  - 不拆改、不返修的前提下，看是否存在基体本身把 Abdeckung 顶偏、撑偏的情况；\n  - 如果前后两端都同时“不顺”，更要怀疑不是单点手法问题，而是整体匹配问题。\n\n## 何时升级给维修工程师\n- 如果出现以下任一情况，建议**停止继续尝试装配并升级维修工程师**：\n  - 前后白色 **Abdeckung** 都明显 **Verkantet**，孔位无法自然对正；\n  - 螺钉无法顺利起牙，怀疑 **白色 Abdeckung 螺纹损伤**；\n  - 目视可见 **Bohrbild** 偏差，或 Bellows/Abdeckung 组合关系明显不对；\n  - 已核对装配手法仍重复发生，且不是单件偶发；\n  - 需要进行 **Bohrungen aufbohren / Gewinde nachschneiden** 这类返修动作时。  \n    这些都已经超出操作员低风险处理范围，应交由维修或工艺/质量进一步确认。\n- 如果现场无法快速确认是 **Shrouds 的 Bohrbild/螺纹问题**，还是 **Bellows 基体/Faltenbalg 规格不匹配**，也应升级，因为这两个就是当前最强的历史原因锚点。",
+          "first_turn_contract": {
+            "observed_mode": "clarification",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014)**、**CONTURA 6206 configurable**、**Install shrouds** 工位，历史上有一条与您描述高度一致的案例：\n  - 异常现象：**“Bei der Option Faltenbalg lässt sich die weiße Abdeckung vorne und hinten schlecht montieren. (Verkantet sich)”**\n  - 对应部件：**Shrouds**\n  - 记录原因：**“Bohrbild (Option Faltenbalg) passt nicht und die Gewinde an der weißen Abdeckung sind schlecht.”**\n  - 历史处理：**“Die Bohrungen aufbohren und die Gewinde nachschneiden.”**\n  - 时间：**2020-03-20**\n- 同样在 **Oberkochen (1014)**、**Install shrouds** 工位，还有一条与 **Faltenbalg / 前后 Abdeckung 不匹配** 相关的案例：\n  - 异常现象：**“Abdeckung Kasten Faltenbalg vorne und hinten nicht passend”**\n  - 对应部件：**Bellows**\n  - 记录原因：**“Grundkörper passt nicht zur Verkleidung”**\n  - 历史处理：**“Bohrungen aufgebohrt Y4 #201147631 und #201147629”**\n  - 时间：**2021-03-31**\n- 还有一条同厂历史案例显示，**装错 Faltenbalg** 也会导致装配不对：\n  - 异常现象：**“Falschen Faltenbalg von einer größeren KMG verbaut”**\n  - 对应部件：**Bellows**\n  - 记录原因：**“nicht auf ZKM geachtet”**\n  - 历史处理：**拆掉错误 Faltenbalg，换装正确件**\n  - 时间：**2024-07-17**\n\n##",
+              "当前怀疑方向": "**较大概率的怀疑方向 1：Shrouds / 白色 Abdeckung 的孔位与 Faltenbalg 选件组合不匹配。**  \n  这是当前最强的历史锚点，因为同厂同机型同工位曾明确记录过：**Faltenbalg 选件下，前后白色 Abdeckung 安装困难并且 Verkantet sich（卡斜）**，历史原因直接指向 **Bohrbild 不匹配 + 白色 Abdeckung 螺纹状态差**。\n- **次强怀疑方向 2：Bellows / Faltenbalg 基体与 Verkleidung（外罩/Abdeckung）组合不匹配。**  \n  历史里另一条 Oberkochen 案例不是单纯说“难装”，而是直接写到 **Grundkörper passt nicht zur Verkleidung**，这说明问题也可能不在手法，而在 **Bellows 基体与前后 Abdeckung 的匹配关系**。\n- **补充分支：装错 Faltenbalg 或拿错规格件。**  \n  历史上同厂出现过 **Falschen Faltenbalg von einer größeren KMG verbaut**。所以如果这次现场感觉“怎么装都不顺、整体关系不对”，也要保留 **Faltenbalg 型号/对应 ZKM 不对** 这个怀疑方向。\n\n##",
+              "建议先做的检查或操作": "**先不要强行拧紧或硬压装。** 既然历史上有 **Bohrbild 不匹配** 和 **螺纹状态差** 的案例，继续硬装容易把孔、牙或外罩边缘带坏。\n- **做一个低风险对位确认：**\n  1. 将前后白色 **Abdeckung** 先轻放定位，不上紧固件；\n  2. 观察孔位是否自然对正，是否一开始就需要“带偏”才能进孔；\n  3. 检查是否是某一侧先碰到、导致整体 **Verkantet（卡斜）**。\n- **检查白色 Abdeckung 的螺纹入口状态**：\n  - 看是否有明显毛刺、牙口不顺、首牙损伤；\n  - 用手试探螺钉能否自然起牙，若一开始就发紧，不要继续硬上。\n- **核对 Faltenbalg 是否为该台 CONTURA 6206 对应件**：\n  - 核对标签、料号、版本或机型对应关系；\n  - 特别排除历史上出现过的 **“更大 KMG 的 Faltenbalg 装到了当前机型”** 这种错件情况。\n- **观察 Bellows 基体与 Verkleidung 的相对关系**：\n  - 不拆改、不返修的前提下，看是否存在基体本身把 Abdeckung 顶偏、撑偏的情况；\n  - 如果前后两端都同时“不顺”，更要怀疑不是单点手法问题，而是整体匹配问题。\n\n##",
+              "何时升级给维修工程师": "如果出现以下任一情况，建议**停止继续尝试装配并升级维修工程师**：\n  - 前后白色 **Abdeckung** 都明显 **Verkantet**，孔位无法自然对正；\n  - 螺钉无法顺利起牙，怀疑 **白色 Abdeckung 螺纹损伤**；\n  - 目视可见 **Bohrbild** 偏差，或 Bellows/Abdeckung 组合关系明显不对；\n  - 已核对装配手法仍重复发生，且不是单件偶发；\n  - 需要进行 **Bohrungen aufbohren / Gewinde nachschneiden** 这类返修动作时。  \n    这些都已经超出操作员低风险处理范围，应交由维修或工艺/质量进一步确认。\n- 如果现场无法快速确认是 **Shrouds 的 Bohrbild/螺纹问题**，还是 **Bellows 基体/Faltenbalg 规格不匹配**，也应升级，因为这两个就是当前最强的历史原因锚点。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "clarification",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "工厂",
+                "factory"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "工厂"
+                ],
+                "missing_keywords": [
+                  "factory"
+                ],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Install shrouds",
+                  "Faltenbalg"
+                ],
+                "missing_keywords": [
+                  "白色 Abdeckung"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "可能",
+                  "孔位",
+                  "螺纹",
+                  "Faltenbalg",
+                  "白色 Abdeckung"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [],
+                "missing_keywords": [
+                  "核对物料",
+                  "空配",
+                  "目视",
+                  "不要硬锁"
+                ],
+                "passed": false
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "扩孔",
+                  "修螺纹",
+                  "换件"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_013",
+          "source_case_id": "case_000057",
+          "scenario_type": "mounting_hole_offset",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_for_factory_before_answering",
+          "first_turn_text": "请问是哪个工厂的 Contura 6206？",
+          "second_turn_text": "### 历史案例事实\n- 这次先按你补充的 **Oberkochen (1014) + Install shrouds** 去检索，但**没有直接命中 Oberkochen 同厂案例**。\n- 在跨厂的 **CONTURA 6206 configurable / Install shrouds** 历史里，和你描述最接近的证据有几类：\n  1. **Z-Tower / missing cage nut on Z tower**  \n     - 异常：`missing cage nut on Z tower`\n     - 原因：`missing cage nut on Z tower`\n     - 处理：`had to have cage nut installed`\n  2. **Shrouds / missing PEM nut on internal plate**  \n     - 异常：`missing PEM nut on internal plate`\n     - 处理：`replaced`\n  3. **Shrouds / Z shroud weld nut missing**\n     - 异常：`Z shroud weld nut missing`\n     - 处理：`Replaced Z shroud`\n- 另外还检到一些“**孔位对不上/孔偏**”的历史锚点，虽然不一定是同机型同厂：\n  1. **Y外罩支架孔位对不上**\n     - 原因：`折弯尺寸不良造成孔位偏`\n  2. **外罩孔位与支架孔位对不上无法安装**\n     - 历史里进一步怀疑到：**支架/本体焊接孔位偏移**，而不只是单个外罩件问题\n  3. **螺纹孔偏**\n     - 表现为安装时螺丝卡死\n\n### 当前怀疑方向\n- 结合你原话里几个强锚点：**Contura 6206、Install shrouds、Y 后面的那块板子、end position 锁不上、像 cage nut 的孔位偏后了**，按历史看，**更像是紧固点位异常**，而不是单纯少料。\n- 当前**优先怀疑方向**是这两条历史原因锚点：\n  1. **Käfigmutter / cage nut 位置异常或缺失**\n     - 因为历史里同为 **CONTURA 6206 + Install shrouds**，最接近的就是 `missing cage nut on Z tower`、`missing PEM nut on internal plate`、`weld nut missing`\n     - 你现在描述的是“到了 end position 还是锁不上，而且像 cage nut 孔位偏后”，这和**内侧螺母件/卡式螺母件没有在正确位置承接**非常贴近\n  2. **Shrouds 或其后侧内板/支架的孔位偏移**\n     - 历史里有明确的“**Y外罩支架孔位对不上**”“**折弯尺寸不良造成孔位偏**”以及“**本体焊接孔位偏移**”这类锚点\n     - 所以第二怀疑分支是：不是 Käfigmutter 本身掉了，而是**Y 后面那块板子或支架实际 stop/end position 到位后，整体孔系仍然后偏**\n\n### 建议先做的检查或操作\n- 先做**不强拧、不扩孔、不硬压锁紧**的低风险检查：\n  1. **目视确认 Käfigmutter / cage nut 是否存在、是否装反、是否未完全卡入**\n     - 看看它是不是有“在位但后缩”“浮起来”“歪斜卡住”的情况\n  2. **在 end position 保持定位时，用手电看孔中心是否明显后偏**\n     - 重点看：是**螺母件后偏**，还是**整块 Y 后板/内板孔位后偏**\n  3. **轻微回退再重新推到位一次**\n     - 观察到位过程有没有被线束、密封条、橡胶块、导轨条或内侧干涉件提前顶住，造成“看起来到位，实际没完全坐实”\n  4. **对比同机另一侧或同站正常样机**\n     - 看 Käfigmutter 的露出量、孔中心位置、板件边缘与基准面的相对位置是否一致\n  5. **检查 shroud 件号/左右件/方向是否拿错**\n     - 历史里虽然也有 missing shroud 这类低级问题，但你这个症状更像装配匹配关系异常，仍值得顺手排除\n\n### 何时升级给维修工程师\n- 出现以下情况，建议不要继续猜，直接升级给维修工程师或质量：\n  1. **Käfigmutter 明显缺失、脱落、变形、装不住**\n  2. **确认 end position 已到，但孔位仍持续后偏，且重复装配结果一致**\n  3. **换人复核后仍判断是内板/支架/焊接孔位问题**\n  4. **需要拆内板、调整支架、补装螺母件、返修焊接点** 才能继续\n  5. **现场有人建议强拧、扩孔、硬压装配**  \n     - 这种已经超出操作员的低风险处理范围，应先升级确认\n\n如果你愿意，我下一步可以按你这个症状，继续帮你把它收敛成一个更具体的判断：**更像“cage nut 本体问题”还是“Y 后板/支架孔位偏移”**。",
+          "final_turn_text": "### 历史案例事实\n- 这次先按你补充的 **Oberkochen (1014) + Install shrouds** 去检索，但**没有直接命中 Oberkochen 同厂案例**。\n- 在跨厂的 **CONTURA 6206 configurable / Install shrouds** 历史里，和你描述最接近的证据有几类：\n  1. **Z-Tower / missing cage nut on Z tower**  \n     - 异常：`missing cage nut on Z tower`\n     - 原因：`missing cage nut on Z tower`\n     - 处理：`had to have cage nut installed`\n  2. **Shrouds / missing PEM nut on internal plate**  \n     - 异常：`missing PEM nut on internal plate`\n     - 处理：`replaced`\n  3. **Shrouds / Z shroud weld nut missing**\n     - 异常：`Z shroud weld nut missing`\n     - 处理：`Replaced Z shroud`\n- 另外还检到一些“**孔位对不上/孔偏**”的历史锚点，虽然不一定是同机型同厂：\n  1. **Y外罩支架孔位对不上**\n     - 原因：`折弯尺寸不良造成孔位偏`\n  2. **外罩孔位与支架孔位对不上无法安装**\n     - 历史里进一步怀疑到：**支架/本体焊接孔位偏移**，而不只是单个外罩件问题\n  3. **螺纹孔偏**\n     - 表现为安装时螺丝卡死\n\n### 当前怀疑方向\n- 结合你原话里几个强锚点：**Contura 6206、Install shrouds、Y 后面的那块板子、end position 锁不上、像 cage nut 的孔位偏后了**，按历史看，**更像是紧固点位异常**，而不是单纯少料。\n- 当前**优先怀疑方向**是这两条历史原因锚点：\n  1. **Käfigmutter / cage nut 位置异常或缺失**\n     - 因为历史里同为 **CONTURA 6206 + Install shrouds**，最接近的就是 `missing cage nut on Z tower`、`missing PEM nut on internal plate`、`weld nut missing`\n     - 你现在描述的是“到了 end position 还是锁不上，而且像 cage nut 孔位偏后”，这和**内侧螺母件/卡式螺母件没有在正确位置承接**非常贴近\n  2. **Shrouds 或其后侧内板/支架的孔位偏移**\n     - 历史里有明确的“**Y外罩支架孔位对不上**”“**折弯尺寸不良造成孔位偏**”以及“**本体焊接孔位偏移**”这类锚点\n     - 所以第二怀疑分支是：不是 Käfigmutter 本身掉了，而是**Y 后面那块板子或支架实际 stop/end position 到位后，整体孔系仍然后偏**\n\n### 建议先做的检查或操作\n- 先做**不强拧、不扩孔、不硬压锁紧**的低风险检查：\n  1. **目视确认 Käfigmutter / cage nut 是否存在、是否装反、是否未完全卡入**\n     - 看看它是不是有“在位但后缩”“浮起来”“歪斜卡住”的情况\n  2. **在 end position 保持定位时，用手电看孔中心是否明显后偏**\n     - 重点看：是**螺母件后偏**，还是**整块 Y 后板/内板孔位后偏**\n  3. **轻微回退再重新推到位一次**\n     - 观察到位过程有没有被线束、密封条、橡胶块、导轨条或内侧干涉件提前顶住，造成“看起来到位，实际没完全坐实”\n  4. **对比同机另一侧或同站正常样机**\n     - 看 Käfigmutter 的露出量、孔中心位置、板件边缘与基准面的相对位置是否一致\n  5. **检查 shroud 件号/左右件/方向是否拿错**\n     - 历史里虽然也有 missing shroud 这类低级问题，但你这个症状更像装配匹配关系异常，仍值得顺手排除\n\n### 何时升级给维修工程师\n- 出现以下情况，建议不要继续猜，直接升级给维修工程师或质量：\n  1. **Käfigmutter 明显缺失、脱落、变形、装不住**\n  2. **确认 end position 已到，但孔位仍持续后偏，且重复装配结果一致**\n  3. **换人复核后仍判断是内板/支架/焊接孔位问题**\n  4. **需要拆内板、调整支架、补装螺母件、返修焊接点** 才能继续\n  5. **现场有人建议强拧、扩孔、硬压装配**  \n     - 这种已经超出操作员的低风险处理范围，应先升级确认\n\n如果你愿意，我下一步可以按你这个症状，继续帮你把它收敛成一个更具体的判断：**更像“cage nut 本体问题”还是“Y 后板/支架孔位偏移”**。",
+          "first_turn_contract": {
+            "observed_mode": "clarification",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "这次先按你补充的 **Oberkochen (1014) + Install shrouds** 去检索，但**没有直接命中 Oberkochen 同厂案例**。\n- 在跨厂的 **CONTURA 6206 configurable / Install shrouds** 历史里，和你描述最接近的证据有几类：\n  1. **Z-Tower / missing cage nut on Z tower**  \n     - 异常：`missing cage nut on Z tower`\n     - 原因：`missing cage nut on Z tower`\n     - 处理：`had to have cage nut installed`\n  2. **Shrouds / missing PEM nut on internal plate**  \n     - 异常：`missing PEM nut on internal plate`\n     - 处理：`replaced`\n  3. **Shrouds / Z shroud weld nut missing**\n     - 异常：`Z shroud weld nut missing`\n     - 处理：`Replaced Z shroud`\n- 另外还检到一些“**孔位对不上/孔偏**”的历史锚点，虽然不一定是同机型同厂：\n  1. **Y外罩支架孔位对不上**\n     - 原因：`折弯尺寸不良造成孔位偏`\n  2. **外罩孔位与支架孔位对不上无法安装**\n     - 历史里进一步怀疑到：**支架/本体焊接孔位偏移**，而不只是单个外罩件问题\n  3. **螺纹孔偏**\n     - 表现为安装时螺丝卡死\n\n###",
+              "当前怀疑方向": "结合你原话里几个强锚点：**Contura 6206、Install shrouds、Y 后面的那块板子、end position 锁不上、像 cage nut 的孔位偏后了**，按历史看，**更像是紧固点位异常**，而不是单纯少料。\n- 当前**优先怀疑方向**是这两条历史原因锚点：\n  1. **Käfigmutter / cage nut 位置异常或缺失**\n     - 因为历史里同为 **CONTURA 6206 + Install shrouds**，最接近的就是 `missing cage nut on Z tower`、`missing PEM nut on internal plate`、`weld nut missing`\n     - 你现在描述的是“到了 end position 还是锁不上，而且像 cage nut 孔位偏后”，这和**内侧螺母件/卡式螺母件没有在正确位置承接**非常贴近\n  2. **Shrouds 或其后侧内板/支架的孔位偏移**\n     - 历史里有明确的“**Y外罩支架孔位对不上**”“**折弯尺寸不良造成孔位偏**”以及“**本体焊接孔位偏移**”这类锚点\n     - 所以第二怀疑分支是：不是 Käfigmutter 本身掉了，而是**Y 后面那块板子或支架实际 stop/end position 到位后，整体孔系仍然后偏**\n\n###",
+              "建议先做的检查或操作": "先做**不强拧、不扩孔、不硬压锁紧**的低风险检查：\n  1. **目视确认 Käfigmutter / cage nut 是否存在、是否装反、是否未完全卡入**\n     - 看看它是不是有“在位但后缩”“浮起来”“歪斜卡住”的情况\n  2. **在 end position 保持定位时，用手电看孔中心是否明显后偏**\n     - 重点看：是**螺母件后偏**，还是**整块 Y 后板/内板孔位后偏**\n  3. **轻微回退再重新推到位一次**\n     - 观察到位过程有没有被线束、密封条、橡胶块、导轨条或内侧干涉件提前顶住，造成“看起来到位，实际没完全坐实”\n  4. **对比同机另一侧或同站正常样机**\n     - 看 Käfigmutter 的露出量、孔中心位置、板件边缘与基准面的相对位置是否一致\n  5. **检查 shroud 件号/左右件/方向是否拿错**\n     - 历史里虽然也有 missing shroud 这类低级问题，但你这个症状更像装配匹配关系异常，仍值得顺手排除\n\n###",
+              "何时升级给维修工程师": "出现以下情况，建议不要继续猜，直接升级给维修工程师或质量：\n  1. **Käfigmutter 明显缺失、脱落、变形、装不住**\n  2. **确认 end position 已到，但孔位仍持续后偏，且重复装配结果一致**\n  3. **换人复核后仍判断是内板/支架/焊接孔位问题**\n  4. **需要拆内板、调整支架、补装螺母件、返修焊接点** 才能继续\n  5. **现场有人建议强拧、扩孔、硬压装配**  \n     - 这种已经超出操作员的低风险处理范围，应先升级确认\n\n如果你愿意，我下一步可以按你这个症状，继续帮你把它收敛成一个更具体的判断：**更像“cage nut 本体问题”还是“Y 后板/支架孔位偏移”**。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": false
+          },
+          "legacy_final_answer_check": {
+            "passed": false,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0.1,
+              "passed": false
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": false,
+              "token_coverage": 0,
+              "passed": false
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "clarification",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "工厂",
+                "factory"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "工厂"
+                ],
+                "missing_keywords": [
+                  "factory"
+                ],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Install shrouds"
+                ],
+                "missing_keywords": [
+                  "Y- Abdeckung",
+                  "Endlage"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "更像",
+                  "Shrouds",
+                  "Käfigmutter",
+                  "孔位"
+                ],
+                "missing_keywords": [
+                  "Bohrung"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "目视",
+                  "孔位",
+                  "扩孔"
+                ],
+                "missing_keywords": [
+                  "空配"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "孔位偏差",
+                  "换件"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        },
+        {
+          "golden_test_id": "golden_019",
+          "source_case_id": "case_000067",
+          "scenario_type": "contradictory_axis_hint_requires_clarification",
+          "expected_mode": "clarify_then_answer",
+          "expected_first_step": "ask_to_resolve_which_axis_is_affected",
+          "first_turn_text": "请先确认：受影响的轴到底是 **X 轴 / X-Drive**，还是 **Z 轴**？只回这一个槽位即可。",
+          "second_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014) / Integration / CONTURA 6206 configurable / X-Drive** 的历史记录里，有多条与您原话 **“X-Antrieb schwingt”** 高度贴近的案例。  \n- 其中一条直接记录为：**anomaly_description = “X-Antrieb schwingt.”**，处理步骤是 **“Parameter geändert.”**  \n- 另一条同机型同工位记录为：**“X-Antrieb schwingt beim Fahren”**，历史原因写的是 **“Bei Aktivdämpfung ist der Parameter F216 manchmal zu hoch”**，处理步骤是 **“Anpassen des Parameters”**。  \n- 还有一条同机型同工位记录为：**“X-Antrieb schwingt nach dem Dauerlauf.”**，处理步骤是 **“Neue Firmware (F40.12) auf die Steuerung hochladen. Antriebe optimieren.”**  \n- 同厂但不同设备/工位的相似案例中，出现过 **“X-Antrieb vibriert stark”**，历史原因是 **“Kupplung des X-Antriebs verbogen, X-Antrieb schlecht ausgerichtet”**。  \n- 另有同机型同工位的 X 轴相关案例表现为 **“Maschine schaltet bei Fahrt in X- die Antriebe ab”**，历史原因写的是 **“X-Antrieb fehlerhaft”**，最终处理为 **“Fehlersuche; Austausch Antrieb X”**。  \n\n## 当前怀疑方向\n- **更像的首要怀疑方向**：这次最像历史上的 **Oberkochen / Integration / CONTURA 6206 / X-Drive 的参数或驱动优化类问题**，尤其是原始锚点 **“X-Antrieb schwingt”**、**“X-Antrieb schwingt beim Fahren”** 和 **“Bei Aktivdämpfung ist der Parameter F216 manchmal zu hoch”**。  \n- **第二怀疑方向**：如果现场的“晃得厉害”更接近明显机械振动，而不是特定工况下的调参型振荡，那么历史上较强的另一条原因锚点是 **“Kupplung des X-Antriebs verbogen, X-Antrieb schlecht ausgerichtet”**。不过这条来自同厂但不同设备/工位，所以当前只能作为次级参考，不如前面的同机型同工位证据强。  \n- **较弱但不能完全排除的分支**：若后续伴随 X 方向驱动切断、无法稳定运行，历史上还出现过 **“X-Antrieb fehlerhaft”** 甚至需要 **Austausch Antrieb X** 的情况。但就你现在给出的原话 **“X-Antrieb schwingt”** 来看，它不如参数/F216 这条贴近。  \n\n## 建议先做的检查或操作\n- 先把现象按**低风险方式复现并记录**：  \n  - 只在安全条件下观察，确认是否是 **仅 X 轴运动时** 才出现 **schwingt / 抖动**。  \n  - 记录是在 **刚开机、运动中、还是 Dauerlauf 后** 更明显。  \n- 先检查并记录 **是否近期做过参数、固件、驱动优化相关变更**；如果有，优先把这些变更信息提供给维修。  \n- 让操作员侧先做**不拆机的外观确认**：  \n  - 是否有明显异常噪音、撞击声、周期性抖动；  \n  - 是否只有高速时明显，低速是否减轻；  \n  - 是否伴随驱动关闭、报错或停机。  \n- 若现场允许查看只读信息，可先把 **X-Drive 相关参数版本/固件版本**、是否启用 **Aktivdämpfung**、以及最近一次调参时间记录下来，供维修工程师判断。  \n- **不要**自行做驱动重新对中、联轴器调整、固件上传或参数深改。  \n\n## 何时升级给维修工程师\n- 如果机器已经出现明显**整机晃动厉害**、有持续加重趋势，或操作员无法安全判断是否继续运动，**立即升级**。  \n- 如果复现后确认是 **X 轴运动就抖**，且不是一次性偶发，而是可重复出现，建议直接按 **X-Antrieb / X-Drive 振动** 升级给维修。  \n- 如果出现以下任一情况，不要继续猜测，直接升级：  \n  - 伴随报警、驱动切断、停机；  \n  - 伴随异常机械噪音；  \n  - 经历过近期参数/固件变更后开始出现；  \n  - 同一问题重复发生。  \n- 由于历史证据里既有 **F216/参数类**，也有 **X-Antrieb 对中/联轴器或驱动本体故障类**，一旦现场无法通过简单观察把分支缩小，就应交给维修工程师做进一步判定。",
+          "final_turn_text": "## 历史案例事实\n- 在 **Oberkochen (1014) / Integration / CONTURA 6206 configurable / X-Drive** 的历史记录里，有多条与您原话 **“X-Antrieb schwingt”** 高度贴近的案例。  \n- 其中一条直接记录为：**anomaly_description = “X-Antrieb schwingt.”**，处理步骤是 **“Parameter geändert.”**  \n- 另一条同机型同工位记录为：**“X-Antrieb schwingt beim Fahren”**，历史原因写的是 **“Bei Aktivdämpfung ist der Parameter F216 manchmal zu hoch”**，处理步骤是 **“Anpassen des Parameters”**。  \n- 还有一条同机型同工位记录为：**“X-Antrieb schwingt nach dem Dauerlauf.”**，处理步骤是 **“Neue Firmware (F40.12) auf die Steuerung hochladen. Antriebe optimieren.”**  \n- 同厂但不同设备/工位的相似案例中，出现过 **“X-Antrieb vibriert stark”**，历史原因是 **“Kupplung des X-Antriebs verbogen, X-Antrieb schlecht ausgerichtet”**。  \n- 另有同机型同工位的 X 轴相关案例表现为 **“Maschine schaltet bei Fahrt in X- die Antriebe ab”**，历史原因写的是 **“X-Antrieb fehlerhaft”**，最终处理为 **“Fehlersuche; Austausch Antrieb X”**。  \n\n## 当前怀疑方向\n- **更像的首要怀疑方向**：这次最像历史上的 **Oberkochen / Integration / CONTURA 6206 / X-Drive 的参数或驱动优化类问题**，尤其是原始锚点 **“X-Antrieb schwingt”**、**“X-Antrieb schwingt beim Fahren”** 和 **“Bei Aktivdämpfung ist der Parameter F216 manchmal zu hoch”**。  \n- **第二怀疑方向**：如果现场的“晃得厉害”更接近明显机械振动，而不是特定工况下的调参型振荡，那么历史上较强的另一条原因锚点是 **“Kupplung des X-Antriebs verbogen, X-Antrieb schlecht ausgerichtet”**。不过这条来自同厂但不同设备/工位，所以当前只能作为次级参考，不如前面的同机型同工位证据强。  \n- **较弱但不能完全排除的分支**：若后续伴随 X 方向驱动切断、无法稳定运行，历史上还出现过 **“X-Antrieb fehlerhaft”** 甚至需要 **Austausch Antrieb X** 的情况。但就你现在给出的原话 **“X-Antrieb schwingt”** 来看，它不如参数/F216 这条贴近。  \n\n## 建议先做的检查或操作\n- 先把现象按**低风险方式复现并记录**：  \n  - 只在安全条件下观察，确认是否是 **仅 X 轴运动时** 才出现 **schwingt / 抖动**。  \n  - 记录是在 **刚开机、运动中、还是 Dauerlauf 后** 更明显。  \n- 先检查并记录 **是否近期做过参数、固件、驱动优化相关变更**；如果有，优先把这些变更信息提供给维修。  \n- 让操作员侧先做**不拆机的外观确认**：  \n  - 是否有明显异常噪音、撞击声、周期性抖动；  \n  - 是否只有高速时明显，低速是否减轻；  \n  - 是否伴随驱动关闭、报错或停机。  \n- 若现场允许查看只读信息，可先把 **X-Drive 相关参数版本/固件版本**、是否启用 **Aktivdämpfung**、以及最近一次调参时间记录下来，供维修工程师判断。  \n- **不要**自行做驱动重新对中、联轴器调整、固件上传或参数深改。  \n\n## 何时升级给维修工程师\n- 如果机器已经出现明显**整机晃动厉害**、有持续加重趋势，或操作员无法安全判断是否继续运动，**立即升级**。  \n- 如果复现后确认是 **X 轴运动就抖**，且不是一次性偶发，而是可重复出现，建议直接按 **X-Antrieb / X-Drive 振动** 升级给维修。  \n- 如果出现以下任一情况，不要继续猜测，直接升级：  \n  - 伴随报警、驱动切断、停机；  \n  - 伴随异常机械噪音；  \n  - 经历过近期参数/固件变更后开始出现；  \n  - 同一问题重复发生。  \n- 由于历史证据里既有 **F216/参数类**，也有 **X-Antrieb 对中/联轴器或驱动本体故障类**，一旦现场无法通过简单观察把分支缩小，就应交给维修工程师做进一步判定。",
+          "first_turn_contract": {
+            "observed_mode": "clarification",
+            "present_sections": [],
+            "has_all_sections": false,
+            "sections": {}
+          },
+          "final_turn_contract": {
+            "observed_mode": "structured_answer",
+            "present_sections": [
+              "历史案例事实",
+              "当前怀疑方向",
+              "建议先做的检查或操作",
+              "何时升级给维修工程师"
+            ],
+            "has_all_sections": true,
+            "sections": {
+              "历史案例事实": "在 **Oberkochen (1014) / Integration / CONTURA 6206 configurable / X-Drive** 的历史记录里，有多条与您原话 **“X-Antrieb schwingt”** 高度贴近的案例。  \n- 其中一条直接记录为：**anomaly_description = “X-Antrieb schwingt.”**，处理步骤是 **“Parameter geändert.”**  \n- 另一条同机型同工位记录为：**“X-Antrieb schwingt beim Fahren”**，历史原因写的是 **“Bei Aktivdämpfung ist der Parameter F216 manchmal zu hoch”**，处理步骤是 **“Anpassen des Parameters”**。  \n- 还有一条同机型同工位记录为：**“X-Antrieb schwingt nach dem Dauerlauf.”**，处理步骤是 **“Neue Firmware (F40.12) auf die Steuerung hochladen. Antriebe optimieren.”**  \n- 同厂但不同设备/工位的相似案例中，出现过 **“X-Antrieb vibriert stark”**，历史原因是 **“Kupplung des X-Antriebs verbogen, X-Antrieb schlecht ausgerichtet”**。  \n- 另有同机型同工位的 X 轴相关案例表现为 **“Maschine schaltet bei Fahrt in X- die Antriebe ab”**，历史原因写的是 **“X-Antrieb fehlerhaft”**，最终处理为 **“Fehlersuche; Austausch Antrieb X”**。  \n\n##",
+              "当前怀疑方向": "**更像的首要怀疑方向**：这次最像历史上的 **Oberkochen / Integration / CONTURA 6206 / X-Drive 的参数或驱动优化类问题**，尤其是原始锚点 **“X-Antrieb schwingt”**、**“X-Antrieb schwingt beim Fahren”** 和 **“Bei Aktivdämpfung ist der Parameter F216 manchmal zu hoch”**。  \n- **第二怀疑方向**：如果现场的“晃得厉害”更接近明显机械振动，而不是特定工况下的调参型振荡，那么历史上较强的另一条原因锚点是 **“Kupplung des X-Antriebs verbogen, X-Antrieb schlecht ausgerichtet”**。不过这条来自同厂但不同设备/工位，所以当前只能作为次级参考，不如前面的同机型同工位证据强。  \n- **较弱但不能完全排除的分支**：若后续伴随 X 方向驱动切断、无法稳定运行，历史上还出现过 **“X-Antrieb fehlerhaft”** 甚至需要 **Austausch Antrieb X** 的情况。但就你现在给出的原话 **“X-Antrieb schwingt”** 来看，它不如参数/F216 这条贴近。  \n\n##",
+              "建议先做的检查或操作": "先把现象按**低风险方式复现并记录**：  \n  - 只在安全条件下观察，确认是否是 **仅 X 轴运动时** 才出现 **schwingt / 抖动**。  \n  - 记录是在 **刚开机、运动中、还是 Dauerlauf 后** 更明显。  \n- 先检查并记录 **是否近期做过参数、固件、驱动优化相关变更**；如果有，优先把这些变更信息提供给维修。  \n- 让操作员侧先做**不拆机的外观确认**：  \n  - 是否有明显异常噪音、撞击声、周期性抖动；  \n  - 是否只有高速时明显，低速是否减轻；  \n  - 是否伴随驱动关闭、报错或停机。  \n- 若现场允许查看只读信息，可先把 **X-Drive 相关参数版本/固件版本**、是否启用 **Aktivdämpfung**、以及最近一次调参时间记录下来，供维修工程师判断。  \n- **不要**自行做驱动重新对中、联轴器调整、固件上传或参数深改。  \n\n##",
+              "何时升级给维修工程师": "如果机器已经出现明显**整机晃动厉害**、有持续加重趋势，或操作员无法安全判断是否继续运动，**立即升级**。  \n- 如果复现后确认是 **X 轴运动就抖**，且不是一次性偶发，而是可重复出现，建议直接按 **X-Antrieb / X-Drive 振动** 升级给维修。  \n- 如果出现以下任一情况，不要继续猜测，直接升级：  \n  - 伴随报警、驱动切断、停机；  \n  - 伴随异常机械噪音；  \n  - 经历过近期参数/固件变更后开始出现；  \n  - 同一问题重复发生。  \n- 由于历史证据里既有 **F216/参数类**，也有 **X-Antrieb 对中/联轴器或驱动本体故障类**，一旦现场无法通过简单观察把分支缩小，就应交给维修工程师做进一步判定。"
+            }
+          },
+          "legacy_first_step_check": {
+            "passed": true,
+            "clarification_expected": true,
+            "observed_clarification": true,
+            "answer_signal": true
+          },
+          "legacy_final_answer_check": {
+            "passed": true,
+            "component": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "failure_reason": {
+              "applicable": false,
+              "exact_match": false,
+              "token_coverage": 1,
+              "passed": true
+            },
+            "handling_steps": {
+              "applicable": true,
+              "exact_match": true,
+              "token_coverage": 1,
+              "passed": true
+            }
+          },
+          "response_v2_check": {
+            "passed": true,
+            "mode_check": {
+              "expected_mode": "clarify_then_answer",
+              "observed_first_turn_mode": "clarification",
+              "observed_final_turn_mode": "structured_answer",
+              "passed": true
+            },
+            "first_turn_focus_check": {
+              "applies": true,
+              "passed": true,
+              "required_keywords": [
+                "X",
+                "Z",
+                "哪个轴",
+                "axis"
+              ],
+              "required_keyword_check": {
+                "matched_keywords": [
+                  "X",
+                  "Z"
+                ],
+                "missing_keywords": [
+                  "哪个轴",
+                  "axis"
+                ],
+                "passed": true
+              },
+              "forbidden_keyword_check": {
+                "found_forbidden_keywords": [],
+                "passed": true
+              }
+            },
+            "contract_check": {
+              "passed": true,
+              "required_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ],
+              "present_sections": [
+                "历史案例事实",
+                "当前怀疑方向",
+                "建议先做的检查或操作",
+                "何时升级给维修工程师"
+              ]
+            },
+            "historical_facts_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "Oberkochen",
+                  "Integration",
+                  "X-Antrieb",
+                  "schwingt"
+                ],
+                "missing_keywords": [],
+                "passed": true
+              },
+              "passed": true
+            },
+            "suspected_direction_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "怀疑",
+                  "最像",
+                  "更像",
+                  "X-Drive",
+                  "参数",
+                  "振动"
+                ],
+                "missing_keywords": [
+                  "X轴"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "recommended_action_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "观察",
+                  "参数"
+                ],
+                "missing_keywords": [
+                  "空载",
+                  "复测"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "escalation_check": {
+              "section_present": true,
+              "keyword_check": {
+                "matched_keywords": [
+                  "升级",
+                  "维修工程师"
+                ],
+                "missing_keywords": [
+                  "振动仍在",
+                  "机械干涉"
+                ],
+                "passed": true
+              },
+              "passed": true
+            },
+            "forbidden_claim_check": {
+              "found_forbidden_keywords": [],
+              "passed": true
+            }
+          },
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "agent_name": "factory-troubleshooting-agent",
+    "model_deployment": "gpt-5.4-1",
+    "mcp_server_url": "http://20.205.26.133/azure-search-mcp",
+    "search_index_name": "suzhou-factory-ai-troubleshooting-v1"
+  },
+  "summary": {
+    "datasets": 1,
+    "cases": 5,
+    "mode_passed": 4,
+    "first_turn_focus_passed": 5,
+    "contract_passed": 5,
+    "historical_facts_passed": 5,
+    "suspected_direction_passed": 5,
+    "recommended_action_passed": 5,
+    "escalation_passed": 5,
+    "forbidden_claim_passed": 5,
+    "fully_passed": 4,
+    "structured_final_answers": 5,
+    "legacy_final_answer_passed": 4,
+    "errors": 0
+  }
+}
